@@ -14,6 +14,7 @@
 #include "..\SceneManager\SceneManager.h"
 #include "Title/Title.h"
 #include "Game/Game.h"
+#include "Edit/Edit.h"
 
 // シーンの種類.
 enum class enSceneNo : unsigned char
@@ -23,10 +24,12 @@ enum class enSceneNo : unsigned char
 	Title,		// タイトル.
 	GameMain,	// ゲームメイン.
 
+	Edit,
+
 	Max,
 
 	ResultCheck,		// ゲームクリアかゲームオーバーの確認.
-	Start = Title,		// 初めのシーン.
+	Start = Edit,		// 初めのシーン.
 };
 
 #endif	// #ifndef SCENE_LIST_H.

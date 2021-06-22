@@ -98,6 +98,11 @@ void CSceneManager::ChangeNextScene()
 		m_NowScene	= m_NextScene;
 		m_NextScene	= EScene::GameMain;
 		break;
+	case EScene::Edit:
+		m_pScene	= std::make_shared<CEdit>( this );
+		m_NowScene	= m_NextScene;
+		m_NextScene	= EScene::GameMain;
+		break;
 	default:
 		return;
 	}

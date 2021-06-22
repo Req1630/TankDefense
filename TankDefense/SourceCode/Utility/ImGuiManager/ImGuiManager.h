@@ -83,6 +83,14 @@ public:
 	static void DragFloat( const char* label, float* v, const float& speed = 0.001f );
 	static void DragInt( const char* label, int* v, const float& speed = 1.0f );
 
+	// ヘルプマークの表示.
+	static void HelpMarker( const char* desc );
+
+	// ゲームパッドを有効にする.
+	static void EnableGamepad();
+	// ゲームパッドを無効にする.
+	static void DisableGamepad();
+
 private:
 	std::queue<std::function<void()>> m_RenderQueue;
 	bool m_IsRender;

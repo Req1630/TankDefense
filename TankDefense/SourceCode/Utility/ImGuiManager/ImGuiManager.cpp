@@ -50,7 +50,7 @@ HRESULT CImGuiManager::Init(
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;	// Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;		// Enable Docking
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Multi-Viewport / Platform Windows
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		// Enable Multi-Viewport / Platform Windows
 	ImGuiStyle& style = ImGui::GetStyle();
 
 	style.ScaleAllSizes( FONT_SIZE*0.06f ); // UIの大きさを一括で変更できます。
@@ -138,4 +138,36 @@ void CImGuiManager::DragFloat( const char* label, float* v, const float& speed  
 void CImGuiManager::DragInt( const char* label, int* v, const float& speed )
 {
 	ImGui::DragInt( label, v, speed, -1000, 1000 );
+}
+
+//----------------------.
+// ヘルプマークの表示.
+//----------------------.
+void CImGuiManager::HelpMarker( const char* desc )
+{
+	ImGui::TextDisabled("(?)");
+	if( ImGui::IsItemHovered() )
+	{
+		ImGui::BeginTooltip();
+		ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+		ImGui::TextUnformatted(desc);
+		ImGui::PopTextWrapPos();
+		ImGui::EndTooltip();
+	}
+}
+
+//-----------------------------.
+// ゲームパッドを有効にする.
+//-----------------------------.
+void CImGuiManager::EnableGamepad()
+{
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+}
+
+//-----------------------------.
+// ゲームパッドを無効にする.
+//-----------------------------.
+void CImGuiManager::DisableGamepad()
+{
+	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NavEnableGamepad;
 }

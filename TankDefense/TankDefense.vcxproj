@@ -178,6 +178,8 @@
     <ClCompile Include="SourceCode\Common\Shader\Shader.cpp" />
     <ClCompile Include="SourceCode\Common\Sprite\Sprite.cpp" />
     <ClCompile Include="SourceCode\Common\Sprite\SpriteRender.cpp" />
+    <ClCompile Include="SourceCode\Edit\EditorBase.cpp" />
+    <ClCompile Include="SourceCode\Edit\StageEditor\StageEditor.cpp" />
     <ClCompile Include="SourceCode\Main\Main.cpp" />
     <ClCompile Include="SourceCode\Main\WinMain.cpp" />
     <ClCompile Include="SourceCode\Object\CameraBase\CameraBase.cpp" />
@@ -213,6 +215,7 @@
     <ClCompile Include="SourceCode\Resource\SpriteResource\SpriteResource.cpp" />
     <ClCompile Include="SourceCode\Scene\SceneBase\SceneBase.cpp" />
     <ClCompile Include="SourceCode\Scene\SceneManager\SceneManager.cpp" />
+    <ClCompile Include="SourceCode\Scene\Scenes\Edit\Edit.cpp" />
     <ClCompile Include="SourceCode\Scene\Scenes\Game\Game.cpp" />
     <ClCompile Include="SourceCode\Scene\Scenes\Title\Title.cpp" />
     <ClCompile Include="SourceCode\Utility\Command\Command.cpp" />
@@ -289,6 +292,8 @@
     <ClInclude Include="SourceCode\Common\Sprite\Sprite.h" />
     <ClInclude Include="SourceCode\Common\Sprite\SpriteRender.h" />
     <ClInclude Include="SourceCode\Common\Sprite\SpriteStruct.h" />
+    <ClInclude Include="SourceCode\Edit\EditorBase.h" />
+    <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
     <ClInclude Include="SourceCode\Global.h" />
     <ClInclude Include="SourceCode\Main\Main.h" />
     <ClInclude Include="SourceCode\Object\CameraBase\CameraBase.h" />
@@ -326,6 +331,7 @@
     <ClInclude Include="SourceCode\Resource\SpriteResource\SpriteResource.h" />
     <ClInclude Include="SourceCode\Scene\SceneBase\SceneBase.h" />
     <ClInclude Include="SourceCode\Scene\SceneManager\SceneManager.h" />
+    <ClInclude Include="SourceCode\Scene\Scenes\Edit\Edit.h" />
     <ClInclude Include="SourceCode\Scene\Scenes\Game\Game.h" />
     <ClInclude Include="SourceCode\Scene\Scenes\SceneList.h" />
     <ClInclude Include="SourceCode\Scene\Scenes\Title\Title.h" />
