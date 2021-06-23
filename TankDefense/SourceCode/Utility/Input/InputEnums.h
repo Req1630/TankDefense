@@ -21,6 +21,13 @@ enum class enKeyBind : unsigned char
 	Right,		// 右.
 	Left,		// 左.
 
+	Edit_ActorPut,	// エディタ用アクター追加.
+	Edit_BackMenu,	// エディタ用メニューに戻る.
+	Edit_Up,		// エディタ用上昇.
+	Edit_Down,		// エディタ用下降.
+	Edit_RightRot,	// エディタ用右回転.
+	Edit_LeftRot,	// エディタ用左回転.
+
 	UpAxis,		// 上軸.
 	RightAxis,	// 右軸.
 

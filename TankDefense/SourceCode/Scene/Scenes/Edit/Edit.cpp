@@ -1,5 +1,6 @@
 #include "..\SceneList.h"
 #include "..\..\..\Utility\Input\Input.h"
+#include "..\..\..\Object\CameraBase\CameraManager\CameraManager.h"
 #include "..\..\..\Edit\StageEditor\StageEditor.h"
 
 CEdit::CEdit( CSceneManager* pSceneManager )
@@ -20,7 +21,8 @@ CEdit::~CEdit()
 bool CEdit::Load()
 {
 	if( m_StageEditor->Init() == false ) return false;
-
+	//	フリーカメラを有効化する.
+//	CCameraManager::SetActiveFreeCamera();
 	return true;
 }
 
@@ -56,7 +58,7 @@ void CEdit::SpriteRender()
 		static_cast<float>(CDirectX11::GetWndHeight())
 	};
 	// ImGuiのウィンドウを計算.
-	const float imWnd_size = wnd_size.x/3.0f;
+	const float imWnd_size = wnd_size.x/3.5f;
 
 	// メインビューポートの座標を取得し、ImGuiの座標を設定.
 	const ImGuiViewport* viewport = ImGui::GetMainViewport();

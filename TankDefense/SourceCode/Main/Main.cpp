@@ -75,6 +75,7 @@ HRESULT CMain::Init()
 	m_FPSRender->SetColor( FPS_RENDER_COLOR );
 
 	CInput::SetHWND( m_hWnd );
+	CInput::InitBind();
 
 	return S_OK;
 }

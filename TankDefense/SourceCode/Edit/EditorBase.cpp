@@ -45,7 +45,10 @@ void CEditorBase::LoadButton( const char* filePath )
 //------------------------------------.
 void CEditorBase::MessageRender()
 {
-	if( m_MessageText.empty() == true ) return;
+	if( m_MessageText.empty() == true ){
+		ImGui::NewLine();
+		return;
+	}
 
 	ImGui::Text( m_MessageText.c_str() );
 	m_MessageRenderCount += GetDeltaTime();
@@ -61,8 +64,10 @@ void CEditorBase::MessageRender()
 void CEditorBase::SetParameterWritingMsg( const bool& isSucceeded )
 {
 	if( isSucceeded == true ){
+		m_MessageText = u8"書き込みに成功しました。";
 	} else {
-	};
+		m_MessageText = u8"書き込みに失敗しました。";
+	}
 }
 
 //------------------------------------.
@@ -71,7 +76,9 @@ void CEditorBase::SetParameterWritingMsg( const bool& isSucceeded )
 void CEditorBase::SetParameterLoadingMsg( const bool& isSucceeded )
 {
 	if( isSucceeded == true ){
+		m_MessageText = u8"読み込みに成功しました。";
 	} else {
+		m_MessageText = u8"読み込みに失敗しました。";
 	}
 }
 

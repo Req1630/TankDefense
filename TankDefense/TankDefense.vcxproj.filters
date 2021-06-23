@@ -93,6 +93,7 @@
     <ClCompile Include="SourceCode\Edit\EditorBase.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditor.cpp" />
     <ClCompile Include="SourceCode\Scene\Scenes\Edit\Edit.cpp" />
+    <ClCompile Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -191,6 +192,7 @@
     <ClInclude Include="SourceCode\Edit\EditorBase.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
     <ClInclude Include="SourceCode\Scene\Scenes\Edit\Edit.h" />
+    <ClInclude Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

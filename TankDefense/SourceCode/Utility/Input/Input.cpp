@@ -59,6 +59,13 @@ void CInput::InitKeyBind()
 		{ EKeyBind::Start,			SKeyBindPair( VK_ESCAPE,	XINPUT_GAMEPAD_START )			},
 		{ EKeyBind::Back,			SKeyBindPair( VK_BACK,		XINPUT_GAMEPAD_BACK )			},
 
+		{ EKeyBind::Edit_ActorPut,	SKeyBindPair( VK_SPACE,		XINPUT_GAMEPAD_X )				},
+		{ EKeyBind::Edit_BackMenu,	SKeyBindPair( VK_BACK,		XINPUT_GAMEPAD_BACK )			},
+		{ EKeyBind::Edit_Up,		SKeyBindPair( 'R',			XINPUT_GAMEPAD_B )				},
+		{ EKeyBind::Edit_Down,		SKeyBindPair( 'F',			XINPUT_GAMEPAD_A )				},
+		{ EKeyBind::Edit_RightRot,	SKeyBindPair( 'E',			XINPUT_GAMEPAD_RIGHT_SHOULDER )	},
+		{ EKeyBind::Edit_LeftRot,	SKeyBindPair( 'Q',			XINPUT_GAMEPAD_LEFT_SHOULDER )	},
+
 	};
 }
 
@@ -69,9 +76,11 @@ void CInput::InitAxisBind()
 {
 	GetInstance()->m_AxisBindList = 
 	{
-		// 軸バインドの列挙体		設定するキー、受け取る軸の関数、受け取る最小値、最大値.
-		{ EAxisBind::L_Forward,	SAxisBind( 'S', 'W', [](){ return CXInput::GetLeftThumbY(); }, -1.0f, 1.0f ) },
-		{ EAxisBind::L_Right,	SAxisBind( 'A', 'D', [](){ return CXInput::GetLeftThumbX(); }, -1.0f, 1.0f ) },
+		// 軸バインドの列挙体	設定するキー、					受け取る軸の関数、							受け取る最小値、最大値.
+		{ EAxisBind::L_Forward,	SAxisBind( 'S',		'W',		[](){ return CXInput::GetLeftThumbY(); },	-1.0f, 1.0f ) },
+		{ EAxisBind::L_Right,	SAxisBind( 'A',		'D',		[](){ return CXInput::GetLeftThumbX(); },	-1.0f, 1.0f ) },
+		{ EAxisBind::R_Forward,	SAxisBind( VK_UP,	VK_DOWN,	[](){ return CXInput::GetRightThumbY(); },	-1.0f, 1.0f ) },
+		{ EAxisBind::R_Right,	SAxisBind( VK_LEFT,	VK_RIGHT,	[](){ return CXInput::GetRightThumbX(); },	-1.0f, 1.0f ) },
 	};
 }
 

@@ -180,6 +180,7 @@
     <ClCompile Include="SourceCode\Common\Sprite\SpriteRender.cpp" />
     <ClCompile Include="SourceCode\Edit\EditorBase.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditor.cpp" />
+    <ClCompile Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.cpp" />
     <ClCompile Include="SourceCode\Main\Main.cpp" />
     <ClCompile Include="SourceCode\Main\WinMain.cpp" />
     <ClCompile Include="SourceCode\Object\CameraBase\CameraBase.cpp" />
@@ -294,6 +295,7 @@
     <ClInclude Include="SourceCode\Common\Sprite\SpriteStruct.h" />
     <ClInclude Include="SourceCode\Edit\EditorBase.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
+    <ClInclude Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.h" />
     <ClInclude Include="SourceCode\Global.h" />
     <ClInclude Include="SourceCode\Main\Main.h" />
     <ClInclude Include="SourceCode\Object\CameraBase\CameraBase.h" />

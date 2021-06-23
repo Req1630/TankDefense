@@ -48,7 +48,7 @@ public:  //------ 関数 -------.
 	virtual void Update( const float& deltaTime ) override;
 
 	// オブジェクトをを注視に回転.
-	void RotationLookAtObject( const D3DXVECTOR3& vLookPos, const float& attenRate );
+	void RotationLookAtObject( const D3DXVECTOR3& vLookPos, const float& attenRate, const bool& isVert = false );
 
 	// 横方向の回転.
 	void DegreeHorizontalMove( const float& movePower );
@@ -70,6 +70,11 @@ public:  //------ 関数 -------.
 	void SetVerticalDegree( const float& max, const float& min );
 	// 座標に足し合わせる値の設定.
 	void SetAddPositionValue( const D3DXVECTOR3& addValue );
+
+	// 右方向の回転速度.
+	void SetRightMoveSpeed( const float& speed ){ m_RightMoveSpeed = speed; }
+	// 左方向の回転速度.
+	void SetLeftMoveSpeed( const float& speed ){ m_LeftMoveSpeed = speed; }
 
 private: //------ 変数 -------.
 	D3DXVECTOR2		m_vDegree;			// カメラの角度.

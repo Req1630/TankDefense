@@ -1,6 +1,14 @@
 #include "RotLookAtCenter.h"
 #include "..\..\..\Utility\Input\Input.h"
 
+namespace
+{
+	const float RADIAN_THRESHOLD_X_MAX			= 360.0f;	// ラジアンXの最大しきい値.
+	const float RADIAN_THRESHOLD_X_MIN			= 0.0f;		// ラジアンXの最小しきい値.
+	const float RADIAN_THRESHOLD_Y_MAX			= 90.0f;	// ラジアンYの最大しきい値.
+	const float RADIAN_THRESHOLD_Y_MIN			= -10.0f;	// ラジアンYの最小しきい値.
+};
+
 CRotLookAtCenter::CRotLookAtCenter()
 	: m_vDegree			{ 0.0f, 0.0f }
 	, m_Length			( DEFAULT_LENGTH )
@@ -59,7 +67,7 @@ void CRotLookAtCenter::Update( const float& deltaTime )
 //-------------------------------.
 // オブジェクトをを注視に回転.
 //-------------------------------.
-void CRotLookAtCenter::RotationLookAtObject( const D3DXVECTOR3& vLookPos, const float& attenRate )
+void CRotLookAtCenter::RotationLookAtObject( const D3DXVECTOR3& vLookPos, const float& attenRate,  const bool& isVert )
 {
 	// 注視位置を取得.
 	m_LookPosition = vLookPos;
@@ -67,7 +75,7 @@ void CRotLookAtCenter::RotationLookAtObject( const D3DXVECTOR3& vLookPos, const 
 	D3DXVECTOR3 pos;	// 本来の座標.
 	// カメラ位置を算出.
 	pos.x = m_LookPosition.x + ( sinf(m_vDegree.x) * m_Length );
-	pos.y = m_Tranceform.Position.y;
+	pos.y = isVert == false ? m_Tranceform.Position.y : m_LookPosition.y + ( sinf(m_vDegree.y) * m_Length );
 	pos.z = m_LookPosition.z + ( cosf(m_vDegree.x) * m_Length );
 	// lerp減衰. ( out, 現在の座標, 本来到達している座標, 補正値 ).
 	D3DXVec3Lerp( &m_Tranceform.Position, &m_Tranceform.Position, &pos, attenRate );
@@ -82,6 +90,11 @@ void CRotLookAtCenter::DegreeHorizontalMove( const float& movePower )
 {
 	// 横方向に足し合わせる.
 	m_vDegree.x += movePower;
+	// 規定値を超えないよう調整.
+	if( m_vDegree.x > static_cast<float>(D3DXToRadian(RADIAN_THRESHOLD_X_MAX)) )
+		m_vDegree.x = static_cast<float>(D3DXToRadian(RADIAN_THRESHOLD_X_MIN));
+	if( m_vDegree.x < static_cast<float>(D3DXToRadian(RADIAN_THRESHOLD_X_MIN)) ) 
+		m_vDegree.x = static_cast<float>(D3DXToRadian(RADIAN_THRESHOLD_X_MAX));
 }
 
 //-------------------------------.
@@ -107,6 +120,10 @@ void CRotLookAtCenter::DegreeVerticalMove( const float& movePower )
 {
 	// 縦方向に足し合わせる.
 	m_vDegree.y += movePower;
+	if( m_vDegree.y > static_cast<float>(D3DXToRadian(RADIAN_THRESHOLD_Y_MAX)) )
+		m_vDegree.y = static_cast<float>(D3DXToRadian(RADIAN_THRESHOLD_Y_MAX));
+	if( m_vDegree.y < static_cast<float>(D3DXToRadian(RADIAN_THRESHOLD_Y_MIN)) )
+		m_vDegree.y = static_cast<float>(D3DXToRadian(RADIAN_THRESHOLD_Y_MIN));
 }
 
 //-------------------------------.
