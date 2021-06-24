@@ -7,10 +7,12 @@
 
 namespace
 {
-	constexpr char ACOTR_MESH_LIST_PATH[]	= "Data\\Parameter\\StageObjectList.txt";
-	constexpr char STAGE_OBJECT_LIST_PATH[]	= "Data\\Parameter\\StageObjectList.bin";
-	constexpr char SELECT_COMBO_NAME[]		= u8"配置したいオブジェクトを選択してください";
-	constexpr char DELETE_COMBO_NAME[]		= u8"削除したいオブジェクトを選択してください";
+	constexpr char	ACOTR_MESH_LIST_PATH[]		= "Data\\Parameter\\StageObjectList.txt";
+	constexpr char	STAGE_OBJECT_LIST_PATH[]	= "Data\\Parameter\\StageObjectList.bin";
+	constexpr char	SELECT_COMBO_NAME[]			= u8"配置したいオブジェクトを選択してください";
+	constexpr char	DELETE_COMBO_NAME[]			= u8"削除したいオブジェクトを選択してください";
+	constexpr float	DELETE_ACTOR_COLOR[]		= { 2.5f, 1.5f, 1.5f, 1.0f };
+	constexpr float	NORMAL_ACTOR_COLOR[]		= { 1.0f, 1.0f, 1.0f, 1.0f };
 };
 
 CStageEditor::CStageEditor()
@@ -18,6 +20,7 @@ CStageEditor::CStageEditor()
 	, m_ActorList			()
 	, m_ActorMeshList		()
 	, m_NowSelectActor		()
+	, m_ArrangementCount	( 0 )
 	, m_DeleteActorNo		()
 	, m_IsArrangementActive	( false )
 {
@@ -46,7 +49,9 @@ void CStageEditor::Update()
 	m_EditPlayer->Update();
 
 	if( m_EditPlayer->IsPut() == true ){
-		m_ActorList.emplace_back( m_NowSelectActor.ActorNo, m_EditPlayer->GetPutTranceform() );
+		const int listSize = static_cast<int>(m_ActorList.size());
+		const SActorParam actorParam = { m_NowSelectActor.ActorNo, m_EditPlayer->GetPutTranceform() };
+		m_ActorList.insert( m_ActorList.begin()+listSize, actorParam );
 	}
 }
 
@@ -61,11 +66,12 @@ void CStageEditor::ImGuiRender()
 	ChangeArrangement();
 	DelteActorMeshSelectDraw();	ImGui::SameLine();
 	DeleteActor();
+	UndoRedoDraw();
 
 	SaveButton( STAGE_OBJECT_LIST_PATH ); 	ImGui::SameLine();
 	LoadButton( STAGE_OBJECT_LIST_PATH ); 	ImGui::SameLine();
 	MessageRender();
-
+	ImGui::Separator();
 	ControllerDraw();
 	
 
@@ -79,9 +85,14 @@ void CStageEditor::ModelRender()
 {
 	m_EditPlayer->Render();
 
+	int i = 0;
 	for( auto& actor : m_ActorList ){
-		m_ActorMeshList[actor.ActorNo].pStaticMesh->SetTranceform(actor.Tranceform);
-		m_ActorMeshList[actor.ActorNo].pStaticMesh->Render();
+		CDX9StaticMesh*	pStaticMesh = m_ActorMeshList[actor.ActorNo].pStaticMesh;
+		const D3DXVECTOR4 color = m_DeleteActorNo == i ? DELETE_ACTOR_COLOR : NORMAL_ACTOR_COLOR;
+		pStaticMesh->SetColor( color );
+		pStaticMesh->SetTranceform(actor.Tranceform);
+		pStaticMesh->Render();
+		i++;
 	}
 
 	if( m_NowSelectActor.MeshName.empty() == true ) return;
@@ -107,11 +118,13 @@ void CStageEditor::ChangeArrangement()
 		m_IsArrangementActive = true;
 		// ImGuiでコントローラー操作を無効化.
 		CImGuiManager::DisableGamepad();
+		ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.4f;
 	}
 	if( CInput::IsMomentPress(EKeyBind::Edit_BackMenu) ){
 		m_IsArrangementActive = false;
 		// ImGuiでコントローラー操作を有効化.
 		CImGuiManager::EnableGamepad();
+		ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.9f;
 	}
 }
 
@@ -174,6 +187,20 @@ void CStageEditor::DelteActorMeshSelectDraw()
 		}
 
 		ImGui::EndCombo();
+	}
+}
+
+//------------------------------------.
+// アンドゥ/リドゥの表示.
+//------------------------------------.
+void CStageEditor::UndoRedoDraw()
+{
+	if( ImGui::Button( u8"<- 元に戻す" ) ){
+
+	}
+	ImGui::SameLine();
+	if( ImGui::Button( u8"やり直し ->" ) ){
+
 	}
 }
 

@@ -296,6 +296,7 @@
     <ClInclude Include="SourceCode\Edit\EditorBase.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.h" />
+    <ClInclude Include="SourceCode\Edit\StageEditor\StageStruct.h" />
     <ClInclude Include="SourceCode\Global.h" />
     <ClInclude Include="SourceCode\Main\Main.h" />
     <ClInclude Include="SourceCode\Object\CameraBase\CameraBase.h" />

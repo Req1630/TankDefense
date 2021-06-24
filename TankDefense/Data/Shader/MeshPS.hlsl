@@ -52,7 +52,7 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	finalColor.rgb *= saturate(ambient+diffuse+specular) * lightIntensity * g_vColor.xyz;
 //	finalColor.rgb = g_vDiffuse;
 //	finalColor.xyz *= saturate(lightColor.xyz * lightIntensity) * g_vColor.xyz;
-	finalColor.a = 1.0f;
+	finalColor.a *= g_vColor.a;
 	
 	// -1 ~ 1 ‚ð 0 ~ 1 ‚É•ÏŠ·.
 	bumpNormal = normalize(bumpNormal)*0.5+0.5f;

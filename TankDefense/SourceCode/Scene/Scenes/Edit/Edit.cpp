@@ -53,7 +53,7 @@ void CEdit::SpriteRender()
 {
 	// ウィンドウのサイズを取得.
 	const ImVec2 wnd_size = 
-	{ 
+	{
 		static_cast<float>(CDirectX11::GetWndWidth()), 
 		static_cast<float>(CDirectX11::GetWndHeight())
 	};

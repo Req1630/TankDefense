@@ -2,37 +2,42 @@
 #define STAGE_EDITOR_H
 
 #include "..\EditorBase.h"
-
-enum enActorList
-{
-	EActorNo_None,
-
-	EActorNo_Player = 0,
-	EActorNo_Ground,
-	EActorNo_Ground_I,
-	EActorNo_Ground_L,
-	EActorNo_Tree,
-	EActorNo_ItemSpeed,
-
-	EActorNo_Max,
-
-	EActorNo_Begin	= EActorNo_Player,
-	EActorNo_End	= EActorNo_Max,
-} typedef EActorNo;
-
-struct stActorParam
-{
-	EActorNo	ActorNo;
-	STranceform	Tranceform;
-
-	stActorParam() : ActorNo(), Tranceform() 
-	{}
-	stActorParam( const EActorNo& no, const STranceform& t ) 
-		: ActorNo( no ), Tranceform( t )
-	{}
-} typedef SActorParam;
+#include "StageStruct.h"
+#include <queue>
+#include <functional>
 
 class CStageEditPlayer;
+
+class CUndoRedo
+{
+	struct stPram
+	{
+		int						VecotPos;
+		SActorParam				ActorParam;
+		std::function<void()>	Func;
+	} typedef SPram;
+
+	void Undo()
+	{
+		m_UndoQueue.back().Func();
+	}
+	void Redo()
+	{
+	}
+
+	void PushUndo( const SPram& param )
+	{
+		m_UndoQueue.push(param);
+	}
+	void PushRedo( const SPram& param )
+	{
+		m_RedoQueue.push(param);
+	}
+
+private:
+	std::queue<SPram> m_UndoQueue;
+	std::queue<SPram> m_RedoQueue;
+};
 
 /*****************************************
 *	ステージエディタ.
@@ -77,6 +82,8 @@ private:
 	void ActorMeshSelectDraw();
 	// 削除するアクターメッシュ選択の表示.
 	void DelteActorMeshSelectDraw();
+	// アンドゥ/リドゥの表示.
+	void UndoRedoDraw();
 	// 操作説明の表示.
 	void ControllerDraw();
 	// アクターメッシュリストの初期化.
@@ -92,6 +99,7 @@ private:
 	std::vector<SActorParam>			m_ActorList;			// 保存用のアクターリスト.
 	actor_mesh_list						m_ActorMeshList;		// アクターメッシュリスト.
 	SActorMesh							m_NowSelectActor;		// 現在選択しているアクター.
+	int									m_ArrangementCount;		// アクターを追加した数.
 	int									m_DeleteActorNo;		// 削除するアクターの番号.
 	bool								m_IsArrangementActive;	// 配置動作か.
 };

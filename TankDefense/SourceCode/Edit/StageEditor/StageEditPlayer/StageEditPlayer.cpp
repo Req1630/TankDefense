@@ -149,8 +149,8 @@ void CStageEditPlayer::PutPositionUpdate()
 {
 	const float leght = 2.0f;
 	m_PutTranceform.Position = m_Tranceform.Position;
-	m_PutTranceform.Position.x -= sinf( m_Tranceform.Rotation.y ) * leght;
-	m_PutTranceform.Position.z -= cosf( m_Tranceform.Rotation.y ) * leght;
+//	m_PutTranceform.Position.x -= sinf( m_Tranceform.Rotation.y ) * leght;
+//	m_PutTranceform.Position.z -= cosf( m_Tranceform.Rotation.y ) * leght;
 
 #if 0
 	auto set = []( float* pPos )

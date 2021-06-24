@@ -193,6 +193,7 @@
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
     <ClInclude Include="SourceCode\Scene\Scenes\Edit\Edit.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.h" />
+    <ClInclude Include="SourceCode\Edit\StageEditor\StageStruct.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

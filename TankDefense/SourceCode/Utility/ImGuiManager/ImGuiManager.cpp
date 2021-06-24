@@ -59,7 +59,7 @@ HRESULT CImGuiManager::Init(
 
 	if( io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable ){
 		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 0.9f;
 	}
 
 	if( ImGui_ImplWin32_Init( hWnd ) == false ) return E_FAIL;
