@@ -82,5 +82,5 @@ void CEdit::SpriteRender()
 	ImGui::End();
 
 	// ImGuiデモウィンドウ表示.
-	ImGui::ShowDemoWindow();
+//	ImGui::ShowDemoWindow();
 }

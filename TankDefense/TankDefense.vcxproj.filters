@@ -94,6 +94,7 @@
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditor.cpp" />
     <ClCompile Include="SourceCode\Scene\Scenes\Edit\Edit.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.cpp" />
+    <ClCompile Include="SourceCode\Edit\UndoRedo\UndoRedo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="SourceCode\Scene\Scenes\Edit\Edit.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageStruct.h" />
+    <ClInclude Include="SourceCode\Edit\UndoRedo\UndoRedo.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

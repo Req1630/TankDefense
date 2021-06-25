@@ -181,6 +181,7 @@
     <ClCompile Include="SourceCode\Edit\EditorBase.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.cpp" />
+    <ClCompile Include="SourceCode\Edit\UndoRedo\UndoRedo.cpp" />
     <ClCompile Include="SourceCode\Main\Main.cpp" />
     <ClCompile Include="SourceCode\Main\WinMain.cpp" />
     <ClCompile Include="SourceCode\Object\CameraBase\CameraBase.cpp" />
@@ -297,6 +298,7 @@
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageStruct.h" />
+    <ClInclude Include="SourceCode\Edit\UndoRedo\UndoRedo.h" />
     <ClInclude Include="SourceCode\Global.h" />
     <ClInclude Include="SourceCode\Main\Main.h" />
     <ClInclude Include="SourceCode\Object\CameraBase\CameraBase.h" />

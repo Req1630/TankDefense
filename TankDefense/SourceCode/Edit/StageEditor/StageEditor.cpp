@@ -17,6 +17,7 @@ namespace
 
 CStageEditor::CStageEditor()
 	: m_EditPlayer			( std::make_unique<CStageEditPlayer>() )
+	, m_pUndoRedo			( std::make_unique<CUndoRedo<SActorParam>>( &m_ActorList ))
 	, m_ActorList			()
 	, m_ActorMeshList		()
 	, m_NowSelectActor		()
@@ -52,6 +53,7 @@ void CStageEditor::Update()
 		const int listSize = static_cast<int>(m_ActorList.size());
 		const SActorParam actorParam = { m_NowSelectActor.ActorNo, m_EditPlayer->GetPutTranceform() };
 		m_ActorList.insert( m_ActorList.begin()+listSize, actorParam );
+		m_pUndoRedo->PushUndo( listSize, false, actorParam );
 	}
 }
 
@@ -62,6 +64,7 @@ void CStageEditor::ImGuiRender()
 {
 	if( BeginTab("StageEdit") == false ) return;
 
+	ImGui::TextWrapped( u8"配置しているオブジェクトの数 : %d", m_ActorList.size() );
 	ActorMeshSelectDraw();		ImGui::SameLine();
 	ChangeArrangement();
 	DelteActorMeshSelectDraw();	ImGui::SameLine();
@@ -135,7 +138,9 @@ void CStageEditor::DeleteActor()
 {
 	if( ImGui::Button( u8"削除" ) ){
 		if( m_ActorList.empty() == true ) return;
+		const SActorParam parm = m_ActorList[m_DeleteActorNo];
 		m_ActorList.erase( m_ActorList.begin() + m_DeleteActorNo );
+		m_pUndoRedo->PushUndo( m_DeleteActorNo, true, parm );
 		m_DeleteActorNo = 0;
 	}
 }
@@ -195,13 +200,28 @@ void CStageEditor::DelteActorMeshSelectDraw()
 //------------------------------------.
 void CStageEditor::UndoRedoDraw()
 {
+	int size = 0;
+	auto setInvalidButtonColor = [&size]()
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text,			ImVec4( 0.50f, 0.50f, 0.50f, 0.40f  ) );
+		ImGui::PushStyleColor(ImGuiCol_Button,			ImVec4( 0.26f/2.0f, 0.59f/2.0f, 0.98f/2.0f, 0.40f  ) );
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered,	ImVec4( 0.26f/2.0f, 0.59f/2.0f, 0.98f/2.0f, 0.40f  ) );
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive,	ImVec4( 0.26f/2.0f, 0.59f/2.0f, 0.98f/2.0f, 0.40f  ) );
+		size = 4;
+	};
+	if( m_pUndoRedo->IsUndo() == false ) setInvalidButtonColor();
 	if( ImGui::Button( u8"<- 元に戻す" ) ){
-
+		m_pUndoRedo->Undo();
 	}
+	ImGui::PopStyleColor(size);
+
+	size = 0;
+	if( m_pUndoRedo->IsRedo() == false )  setInvalidButtonColor();
 	ImGui::SameLine();
 	if( ImGui::Button( u8"やり直し ->" ) ){
-
+		m_pUndoRedo->Redo();
 	}
+	ImGui::PopStyleColor(size);
 }
 
 //------------------------------------.
@@ -278,4 +298,6 @@ void CStageEditor::ParameterWriting( const char* filePath )
 void CStageEditor::ParameterLoading( const char* filePath )
 {
 	SetParameterLoadingMsg( fileManager::BinaryVectorReading( filePath, m_ActorList ) );
+	m_DeleteActorNo = 0;
+	m_pUndoRedo->StackClear();
 }

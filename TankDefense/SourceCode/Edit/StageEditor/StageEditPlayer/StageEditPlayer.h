@@ -6,7 +6,7 @@
 class CRotLookAtCenter;
 
 /*****************************************
-*	ステージエディタ用のプレイヤー.
+* ステージエディタ用のプレイヤー.
 **/
 class CStageEditPlayer : public CObject
 {
