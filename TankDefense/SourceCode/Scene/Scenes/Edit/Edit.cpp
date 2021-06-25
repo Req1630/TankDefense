@@ -2,13 +2,20 @@
 #include "..\..\..\Utility\Input\Input.h"
 #include "..\..\..\Object\CameraBase\CameraManager\CameraManager.h"
 #include "..\..\..\Edit\StageEditor\StageEditor.h"
+#include "..\..\..\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.h"
 
 CEdit::CEdit( CSceneManager* pSceneManager )
-	: CSceneBase		( pSceneManager )
-	, m_StageEditor		( std::make_unique<CStageEditor>() )
-	, m_WindowFlags		( ImGuiWindowFlags_None )
+	: CSceneBase				( pSceneManager )
+	, m_Editors					()
+	, m_pActiveEditor			( nullptr )
+	, m_WindowFlags				( ImGuiWindowFlags_None )
 {
 	m_WindowFlags |= ImGuiWindowFlags_NoTitleBar;	// タイトルバーを消す.
+
+	m_Editors.emplace_back( std::make_unique<CStageEditor>() );
+	m_Editors.emplace_back( std::make_unique<CEnemySpawnRangeEditor>() );
+
+	m_pActiveEditor = m_Editors.front().get();
 }
 
 CEdit::~CEdit()
@@ -20,7 +27,9 @@ CEdit::~CEdit()
 //============================.
 bool CEdit::Load()
 {
-	if( m_StageEditor->Init() == false ) return false;
+	for( auto& editor : m_Editors ){
+		if( editor->Init() == false ) return false;
+	}
 	//	フリーカメラを有効化する.
 //	CCameraManager::SetActiveFreeCamera();
 	return true;
@@ -31,10 +40,10 @@ bool CEdit::Load()
 //============================.
 void CEdit::Update()
 {
-	if( CKeyInput::IsMomentPress('G') == true ){
-		SetSceneChange();
-	}
-	m_StageEditor->Update();
+	m_pActiveEditor->Update();
+//	if( CKeyInput::IsMomentPress('G') == true ){
+//		SetSceneChange();
+//}
 }
 
 //============================.
@@ -42,8 +51,8 @@ void CEdit::Update()
 //============================.
 void CEdit::ModelRender()
 {
-	m_StageEditor->ModelRender();
-	m_StageEditor->EffectRneder();
+	m_pActiveEditor->ModelRender();
+	m_pActiveEditor->EffectRneder();
 }
 
 //============================.
@@ -74,7 +83,11 @@ void CEdit::SpriteRender()
 
 	// 各エディタ画面をタブ形式で描画.
 	if( ImGui::BeginTabBar("TabBar") ){
-		m_StageEditor->ImGuiRender();
+		for( auto& editor : m_Editors ){
+			if( editor->ImGuiRender() == true ){
+				m_pActiveEditor = editor.get();
+			}
+		}
 
 		ImGui::EndTabBar();
 	}
@@ -82,5 +95,5 @@ void CEdit::SpriteRender()
 	ImGui::End();
 
 	// ImGuiデモウィンドウ表示.
-//	ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 }

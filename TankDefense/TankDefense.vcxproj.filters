@@ -6,6 +6,7 @@
     <FxCompile Include="Data\Shader\RenderTexture\Bloom\DownSampling.hlsl" />
     <FxCompile Include="Data\Shader\RenderTexture\OutLine\OutLine_PS.hlsl" />
     <FxCompile Include="Data\Shader\RenderTexture\WatercolorPainting\WatercolorPainting_PS.hlsl" />
+    <FxCompile Include="Data\Shader\Aura.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\ImGui\imgui.cpp" />
@@ -95,6 +96,8 @@
     <ClCompile Include="SourceCode\Scene\Scenes\Edit\Edit.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.cpp" />
     <ClCompile Include="SourceCode\Edit\UndoRedo\UndoRedo.cpp" />
+    <ClCompile Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.cpp" />
+    <ClCompile Include="SourceCode\Common\Mesh\AuraMesh\AuraMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -196,6 +199,8 @@
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageStruct.h" />
     <ClInclude Include="SourceCode\Edit\UndoRedo\UndoRedo.h" />
+    <ClInclude Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.h" />
+    <ClInclude Include="SourceCode\Common\Mesh\AuraMesh\AuraMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

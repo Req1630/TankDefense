@@ -1,77 +1,82 @@
-#include "StageEditor.h"
+#include "EnemySpawnRangeEditor.h"
 #include "..\..\Utility\FileManager\FileManager.h"
 #include "..\..\Resource\MeshResource\MeshResource.h"
 #include "..\..\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h"
 #include "..\..\Utility\Input\Input.h"
-#include "StageEditPlayer/StageEditPlayer.h"
+#include "..\StageEditor\StageEditPlayer\StageEditPlayer.h"
+#include "..\..\Common\Mesh\AuraMesh\AuraMesh.h"
 
 namespace
 {
-	constexpr char	ACOTR_MESH_LIST_PATH[]		= "Data\\Parameter\\StageObjectList.txt";
-	constexpr char	STAGE_OBJECT_LIST_PATH[]	= "Data\\Parameter\\StageObjectList.bin";
-	constexpr char	SELECT_COMBO_NAME[]			= u8"配置したいオブジェクトを選択してください";
-	constexpr char	DELETE_COMBO_NAME[]			= u8"削除したいオブジェクトを選択してください";
-	constexpr float	DELETE_ACTOR_COLOR[]		= { 2.5f, 1.5f, 1.5f, 1.0f };
-	constexpr float	NORMAL_ACTOR_COLOR[]		= { 1.0f, 1.0f, 1.0f, 1.0f };
+	constexpr char	ACOTR_MESH_LIST_PATH[]			= "Data\\Parameter\\StageObjectList.txt";
+	constexpr char	STAGE_OBJECT_LIST_PATH[]		= "Data\\Parameter\\StageObjectList.bin";
+	constexpr char	ENEMY_SPAWN_RANGE_LIST_PATH[]	= "Data\\Parameter\\EnemySpawnRangeList.bin";
+	constexpr char	SELECT_COMBO_NAME[]				= u8"配置したい出現範囲を変更してください";
+	constexpr char	DELETE_COMBO_NAME[]				= u8"削除したいオブジェクトを選択してください";
+	constexpr float	DELETE_ACTOR_COLOR[]			= { 2.5f, 1.5f, 1.5f, 1.0f };
+	constexpr float	NORMAL_ACTOR_COLOR[]			= { 1.0f, 1.0f, 1.0f, 1.0f };
 };
 
-CStageEditor::CStageEditor()
+CEnemySpawnRangeEditor::CEnemySpawnRangeEditor()
 	: m_EditPlayer			( std::make_unique<CStageEditPlayer>() )
-	, m_pUndoRedo			( std::make_unique<CUndoRedo<SActorParam>>( &m_ActorList ))
-	, m_ActorList			()
-	, m_ActorMeshList		()
+	, m_pAuraMesh			( std::make_unique<CAuraMesh>() )
+	, m_pUndoRedo			( std::make_unique<CUndoRedo<SBoxRange>>( &m_BoxRangeList ))
+	, m_BoxRangeList		()
 	, m_NowSelectActor		()
-	, m_DeleteActorNo		()
+	, m_DeleteActorNo		( 0 )
 	, m_IsArrangementActive	( false )
 {
 }
 
-CStageEditor::~CStageEditor()
+CEnemySpawnRangeEditor::~CEnemySpawnRangeEditor()
 {
 }
 
 //------------------------------------.
 // 初期化.
 //------------------------------------.
-bool CStageEditor::Init()
+bool CEnemySpawnRangeEditor::Init()
 {
-	if( m_EditPlayer->Init()	== false ) return false;
-	if( InitActorMeshList()		== false ) return false;
+	if( m_EditPlayer->Init()	== false )	return false;
+	if( InitActorMeshList()		== false )	return false;
+	if( FAILED( m_pAuraMesh->Init() ))		return false;
 	return true;
 }
 
 //------------------------------------.
 // 更新.
 //------------------------------------.
-void CStageEditor::Update()
+void CEnemySpawnRangeEditor::Update()
 {
 	if( m_IsArrangementActive == false ) return;
 	m_EditPlayer->Update();
 
 	if( m_EditPlayer->IsPut() == true ){
-		const int listSize = static_cast<int>(m_ActorList.size());
-		const SActorParam actorParam = { m_NowSelectActor.ActorNo, m_EditPlayer->GetPutTranceform() };
-		m_ActorList.insert( m_ActorList.begin()+listSize, actorParam );
+		const int listSize = static_cast<int>(m_BoxRangeList.size());
+		const SBoxRange actorParam = { m_NowSelectActor.Range, m_EditPlayer->GetPutTranceform() };
+		m_BoxRangeList.insert( m_BoxRangeList.begin()+listSize, actorParam );
 		m_pUndoRedo->PushUndo( listSize, false, actorParam );
 	}
+
+	m_pAuraMesh->Update();
 }
 
 //------------------------------------.
 // ImGui描画.
 //------------------------------------.
-bool CStageEditor::ImGuiRender()
+bool CEnemySpawnRangeEditor::ImGuiRender()
 {
-	if( BeginTab("StageEdit") == false ) return false;
+	if( BeginTab("EnemySpawnEdit") == false ) return false;
 
-	ImGui::TextWrapped( u8"配置しているオブジェクトの数 : %d", m_ActorList.size() );
-	ActorMeshSelectDraw();		ImGui::SameLine();
+	ImGui::TextWrapped( u8"配置しているオブジェクトの数 : %d", m_BoxRangeList.size() );
+	ChangeRangeDraw();
 	ChangeArrangement();
 	DelteActorMeshSelectDraw();	ImGui::SameLine();
 	DeleteActor();
 	UndoRedoDraw();
 
-	SaveButton( STAGE_OBJECT_LIST_PATH ); 	ImGui::SameLine();
-	LoadButton( STAGE_OBJECT_LIST_PATH ); 	ImGui::SameLine();
+	SaveButton( ENEMY_SPAWN_RANGE_LIST_PATH ); 	ImGui::SameLine();
+	LoadButton( ENEMY_SPAWN_RANGE_LIST_PATH ); 	ImGui::SameLine();
 	MessageRender();
 	ImGui::Separator();
 	ControllerDraw();
@@ -84,38 +89,44 @@ bool CStageEditor::ImGuiRender()
 //------------------------------------.
 // モデル描画.
 //------------------------------------.
-void CStageEditor::ModelRender()
+void CEnemySpawnRangeEditor::ModelRender()
 {
 	m_EditPlayer->Render();
 
-	int i = 0;
+
 	for( auto& actor : m_ActorList ){
 		CDX9StaticMesh*	pStaticMesh = m_ActorMeshList[actor.ActorNo].pStaticMesh;
-		const D3DXVECTOR4 color = m_DeleteActorNo == i ? DELETE_ACTOR_COLOR : NORMAL_ACTOR_COLOR;
-		pStaticMesh->SetColor( color );
 		pStaticMesh->SetTranceform(actor.Tranceform);
 		pStaticMesh->Render();
-		i++;
 	}
 
-	if( m_NowSelectActor.MeshName.empty() == true ) return;
-	m_NowSelectActor.pStaticMesh->SetTranceform( m_EditPlayer->GetPutTranceform() );
-	m_NowSelectActor.pStaticMesh->SetRasterizerState( ERS_STATE::Wire );
-	m_NowSelectActor.pStaticMesh->Render();
-	m_NowSelectActor.pStaticMesh->SetRasterizerState( ERS_STATE::None );
+	
+	for( auto& box : m_BoxRangeList ){
+		D3DXVECTOR3 scale = { box.Range.x, 1.0f, box.Range.y };
+		m_pAuraMesh->SetTranceform( box.Tranceform );
+		m_pAuraMesh->SetScale( scale );
+		m_pAuraMesh->Render();
+	}
+
+	D3DXVECTOR3 scale = { m_NowSelectActor.Range.x, 1.0f, m_NowSelectActor.Range.y };
+	m_pAuraMesh->SetTranceform( m_EditPlayer->GetPutTranceform() );
+	m_pAuraMesh->SetScale( scale );
+	m_pAuraMesh->Render();
+
+
 }
 
 //------------------------------------.
 // エフェクト描画.
 //------------------------------------.
-void CStageEditor::EffectRneder()
+void CEnemySpawnRangeEditor::EffectRneder()
 {
 }
 
 //------------------------------------.
 // 配置処理の切り替え.
 //------------------------------------.
-void CStageEditor::ChangeArrangement()
+void CEnemySpawnRangeEditor::ChangeArrangement()
 {
 	if( ImGui::Button( u8"配置" ) ){
 		m_IsArrangementActive = true;
@@ -134,58 +145,43 @@ void CStageEditor::ChangeArrangement()
 //------------------------------------.
 // アクターの削除処理.
 //------------------------------------.
-void CStageEditor::DeleteActor()
+void CEnemySpawnRangeEditor::DeleteActor()
 {
 	if( ImGui::Button( u8"削除" ) ){
-		if( m_ActorList.empty() == true ) return;
-		const SActorParam parm = m_ActorList[m_DeleteActorNo];
-		m_ActorList.erase( m_ActorList.begin() + m_DeleteActorNo );
+		if( m_BoxRangeList.empty() == true ) return;
+		const SBoxRange parm = m_BoxRangeList[m_DeleteActorNo];
+		m_BoxRangeList.erase( m_BoxRangeList.begin() + m_DeleteActorNo );
 		m_pUndoRedo->PushUndo( m_DeleteActorNo, true, parm );
 		m_DeleteActorNo = 0;
 	}
 }
 
 //------------------------------------.
-// アクターメッシュ選択の表示.
+// 配置する範囲の変更表示.
 //------------------------------------.
-void CStageEditor::ActorMeshSelectDraw()
+void CEnemySpawnRangeEditor::ChangeRangeDraw()
 {
 	ImGui::Text( SELECT_COMBO_NAME );
-	if( ImGui::BeginCombo( "##1", m_NowSelectActor.MeshName.c_str() ) ){
-
-		for( auto& actorMesh : m_ActorMeshList ){
-			const bool isSelected = ( actorMesh.MeshName == m_NowSelectActor.MeshName );
-			if( ImGui::Selectable( actorMesh.MeshName.c_str(), isSelected ) )
-				m_NowSelectActor = actorMesh;
-
-			if( isSelected ) ImGui::SetItemDefaultFocus();
-		}
-
-		ImGui::EndCombo();
-	}
+	ImGui::DragFloat( u8"Ｘ方向のサイズ", &m_NowSelectActor.Range.x, 1.0f, 1.0f, 100.0f );
+	ImGui::DragFloat( u8"Ｚ方向のサイズ", &m_NowSelectActor.Range.y, 1.0f, 1.0f, 100.0f );
 }
 
 //------------------------------------.
 // 削除するアクターメッシュ選択の表示.
 //------------------------------------.
-void CStageEditor::DelteActorMeshSelectDraw()
+void CEnemySpawnRangeEditor::DelteActorMeshSelectDraw()
 {
 	ImGui::Text( DELETE_COMBO_NAME );
 
-	EActorNo no = EActorNo_None;
-	std::string meshName = "";
-	if( m_ActorList.empty() == false ){
-		no = m_ActorList[m_DeleteActorNo].ActorNo;
-		meshName =  std::to_string(m_DeleteActorNo) + "_" + m_ActorMeshList[no].MeshName;
-	}
-	if( ImGui::BeginCombo( "##2", meshName.c_str() ) ){
+	int no = 0;
+	std::string name = "range : " + std::to_string(m_DeleteActorNo);
+	if( ImGui::BeginCombo( "##2", name.c_str() ) ){
 		int i = 0;
-		for( auto& actorMesh : m_ActorList ){
+		for( auto& actorMesh : m_BoxRangeList ){
 			const bool isSelected = ( i == m_DeleteActorNo );
-			no = m_ActorList[i].ActorNo;
-			meshName =  std::to_string(i) + "_" + m_ActorMeshList[no].MeshName;
 
-			if( ImGui::Selectable( meshName.c_str(), isSelected ) ) m_DeleteActorNo = i;
+			name = "range : " + std::to_string(i);
+			if( ImGui::Selectable( name.c_str(), isSelected ) ) m_DeleteActorNo = i;
 			if( isSelected ) ImGui::SetItemDefaultFocus();
 
 			i++;
@@ -198,7 +194,7 @@ void CStageEditor::DelteActorMeshSelectDraw()
 //------------------------------------.
 // アンドゥ/リドゥの表示.
 //------------------------------------.
-void CStageEditor::UndoRedoDraw()
+void CEnemySpawnRangeEditor::UndoRedoDraw()
 {
 	int size = 0;
 	auto setInvalidButtonColor = [&size]()
@@ -227,7 +223,7 @@ void CStageEditor::UndoRedoDraw()
 //------------------------------------.
 // 操作説明の表示.
 //------------------------------------.
-void CStageEditor::ControllerDraw()
+void CEnemySpawnRangeEditor::ControllerDraw()
 {
 	if( ImGui::CollapsingHeader( u8"操作説明 : GamePad" ) ){
 		ImGui::TextWrapped( u8"  左スティック ---------  プレイヤー移動" );
@@ -235,8 +231,6 @@ void CStageEditor::ControllerDraw()
 		ImGui::TextWrapped( u8"  Ｘボタン -------------  オブジェクト配置" );
 		ImGui::TextWrapped( u8"  Ｂボタン -------------  プレイヤー上昇" );
 		ImGui::TextWrapped( u8"  Ａボタン -------------  プレイヤー下降" );
-		ImGui::TextWrapped( u8"  Ｒボタン -------------  オブジェクト右回転" );
-		ImGui::TextWrapped( u8"  Ｌボタン -------------  オブジェクト左回転" );
 		ImGui::TextWrapped( u8"  Ｒトリガー -----------  ズームアウト" );
 		ImGui::TextWrapped( u8"  Ｌトリガー -----------  ズームイン" );
 		ImGui::TextWrapped( u8"  セレクトボタン -------  メニューに戻る" );
@@ -247,8 +241,6 @@ void CStageEditor::ControllerDraw()
 		ImGui::TextWrapped( u8"  スペースキー ---------  オブジェクト配置" );
 		ImGui::TextWrapped( u8"  Ｒキー ---------------  プレイヤー上昇" );
 		ImGui::TextWrapped( u8"  Ｆキー ---------------  プレイヤー下降" );
-		ImGui::TextWrapped( u8"  Ｅキー ---------------  オブジェクト右回転" );
-		ImGui::TextWrapped( u8"  Ｑキー ---------------  オブジェクト左回転" );
 		ImGui::TextWrapped( u8"  Ｘキー ---------------  ズームアウト" );
 		ImGui::TextWrapped( u8"  Ｚキー ---------------  ズームイン" );
 		ImGui::TextWrapped( u8"  バックスペースキー ---  メニューに戻る" );
@@ -258,7 +250,7 @@ void CStageEditor::ControllerDraw()
 //------------------------------------.
 // アクターメッシュリストの初期化.
 //------------------------------------.
-bool CStageEditor::InitActorMeshList()
+bool CEnemySpawnRangeEditor::InitActorMeshList()
 {
 	const std::vector<std::string> meshNameList = fileManager::TextLoading(ACOTR_MESH_LIST_PATH);
 
@@ -275,29 +267,27 @@ bool CStageEditor::InitActorMeshList()
 		const int no = static_cast<int>(actorNo)+1;
 		actorNo = static_cast<EActorNo>(no);
 	}
-	m_NowSelectActor = m_ActorMeshList[EActorNo_Player];
-
-	return true;
+	return SetParameterLoadingMsg( fileManager::BinaryVectorReading( STAGE_OBJECT_LIST_PATH, m_ActorList ) );
 }
 
 //------------------------------------.
 // パラメータの書き込み.
 //------------------------------------.
-void CStageEditor::ParameterWriting( const char* filePath )
+void CEnemySpawnRangeEditor::ParameterWriting( const char* filePath )
 {
-	if( m_ActorList.empty() == true ){
+	if( m_BoxRangeList.empty() == true ){
 		m_MessageText = u8"オブジェクトが配置されていません。";
 		return;
 	}
-	SetParameterWritingMsg( fileManager::BinaryVectorWriting( filePath, m_ActorList ) );
+	SetParameterWritingMsg( fileManager::BinaryVectorWriting( filePath, m_BoxRangeList ) );
 }
 
 //------------------------------------.
 // パラメータの読み込み.
 //------------------------------------.
-void CStageEditor::ParameterLoading( const char* filePath )
+void CEnemySpawnRangeEditor::ParameterLoading( const char* filePath )
 {
-	SetParameterLoadingMsg( fileManager::BinaryVectorReading( filePath, m_ActorList ) );
+	SetParameterLoadingMsg( fileManager::BinaryVectorReading( filePath, m_BoxRangeList ) );
 	m_DeleteActorNo = 0;
 	m_pUndoRedo->StackClear();
 }

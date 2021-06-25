@@ -552,14 +552,16 @@ HRESULT CDirectX11::InitBlend()
 
 	BlendDesc.IndependentBlendEnable				= false;
 	BlendDesc.AlphaToCoverageEnable					= false;
-	BlendDesc.RenderTarget[0].BlendEnable			= true;
-	BlendDesc.RenderTarget[0].SrcBlend				= D3D11_BLEND_SRC_ALPHA;
-	BlendDesc.RenderTarget[0].DestBlend				= D3D11_BLEND_INV_SRC_ALPHA;
-	BlendDesc.RenderTarget[0].BlendOp				= D3D11_BLEND_OP_ADD;
-	BlendDesc.RenderTarget[0].SrcBlendAlpha			= D3D11_BLEND_ONE;
-	BlendDesc.RenderTarget[0].DestBlendAlpha		= D3D11_BLEND_ZERO;
-	BlendDesc.RenderTarget[0].BlendOpAlpha			= D3D11_BLEND_OP_ADD;
-	BlendDesc.RenderTarget[0].RenderTargetWriteMask	= D3D11_COLOR_WRITE_ENABLE_ALL;
+	for( int i = 0; i < 8; i++ ){
+		BlendDesc.RenderTarget[i].BlendEnable			= true;
+		BlendDesc.RenderTarget[i].SrcBlend				= D3D11_BLEND_SRC_ALPHA;
+		BlendDesc.RenderTarget[i].DestBlend				= D3D11_BLEND_INV_SRC_ALPHA;
+		BlendDesc.RenderTarget[i].BlendOp				= D3D11_BLEND_OP_ADD;
+		BlendDesc.RenderTarget[i].SrcBlendAlpha			= D3D11_BLEND_ONE;
+		BlendDesc.RenderTarget[i].DestBlendAlpha		= D3D11_BLEND_ZERO;
+		BlendDesc.RenderTarget[i].BlendOpAlpha			= D3D11_BLEND_OP_ADD;
+		BlendDesc.RenderTarget[i].RenderTargetWriteMask	= D3D11_COLOR_WRITE_ENABLE_ALL;
+	}
 
 	// ブレンドステート作成.
 	if( FAILED( m_pDevice11->CreateBlendState( &BlendDesc, &m_pAlphaBlend ) ) ){
@@ -575,7 +577,9 @@ HRESULT CDirectX11::InitBlend()
 	}
 
 	// ブレンドステート無効状態の作成.
-	BlendDesc.RenderTarget[0].BlendEnable	= false;
+	for( int i = 0; i < 8; i++ ){
+		BlendDesc.RenderTarget[i].BlendEnable	= false;
+	}
 	BlendDesc.AlphaToCoverageEnable			= false;
 	if( FAILED( m_pDevice11->CreateBlendState( &BlendDesc, &m_pNoAlphaBlend ) ) ){
 		ERROR_MESSAGE( "ブレンドステート無効状態作成 : 失敗" );

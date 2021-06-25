@@ -26,6 +26,7 @@ CStageEditPlayer::CStageEditPlayer()
 	, m_CameraMoveSpeed	( 0.05f )
 	, m_CameraLength	( CAMERA_LENGTH )
 	, m_IsPut			( false )
+	, m_IsRotController	( true )
 {
 }
 
@@ -125,6 +126,7 @@ void CStageEditPlayer::MoveController()
 //-------------------------------------.
 void CStageEditPlayer::RotationController()
 {
+	if( m_IsRotController == false ) return;
 	if( CInput::IsHold( EKeyBind::Edit_RightRot ) )	m_PutTranceform.Rotation.y += ACTOR_ROT_SPEED;
 	if( CInput::IsHold( EKeyBind::Edit_LeftRot ) )	m_PutTranceform.Rotation.y -= ACTOR_ROT_SPEED;
 

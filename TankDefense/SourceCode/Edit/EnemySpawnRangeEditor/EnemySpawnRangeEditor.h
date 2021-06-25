@@ -1,34 +1,26 @@
-#ifndef STAGE_EDITOR_H
-#define STAGE_EDITOR_H
+#ifndef ENEMY_SPAEN_RANGE_EDITOR_H
+#define ENEMY_SPAEN_RANGE_EDITOR_H
 
 #include "..\EditorBase.h"
-#include "StageStruct.h"
 #include "..\UndoRedo\UndoRedo.h"
+#include "..\StageEditor\StageEditor.h"
 
 class CStageEditPlayer;	// ステージエディタ用のプレイヤー.
+class CAuraMesh;		// オーラメッシュクラス.
 
-struct stActorMesh
-{
-	EActorNo		ActorNo;
-	std::string		MeshName;
-	CDX9StaticMesh*	pStaticMesh;
-	stActorMesh() : ActorNo ( EActorNo_None ), MeshName ("") , pStaticMesh ( nullptr )
-	{}
-	stActorMesh( const EActorNo& no, const std::string& name, CDX9StaticMesh* pMesh) 
-		: ActorNo ( no ), MeshName ( name ) , pStaticMesh ( pMesh )
-	{}
-
-} typedef SActorMesh;
-using actor_mesh_list = std::vector<SActorMesh>;
-
-/*****************************************
-*	ステージエディタ.
+/***************************************************
+* 敵スポーン範囲エディタ.
 **/
-class CStageEditor : public CEditorBase
+class CEnemySpawnRangeEditor : public CEditorBase
 {
+	struct stBoxRange
+	{
+		D3DXVECTOR2 Range;		// 範囲,
+		STranceform	Tranceform;
+	} typedef SBoxRange;
 public:
-	CStageEditor();
-	virtual ~CStageEditor();
+	CEnemySpawnRangeEditor();
+	virtual ~CEnemySpawnRangeEditor();
 
 	// 初期化.
 	virtual bool Init() override;
@@ -46,8 +38,8 @@ private:
 	void ChangeArrangement();
 	// アクターの削除処理.
 	void DeleteActor();
-	// アクターメッシュ選択の表示.
-	void ActorMeshSelectDraw();
+	// 配置する範囲の変更表示.
+	void ChangeRangeDraw();
 	// 削除するアクターメッシュ選択の表示.
 	void DelteActorMeshSelectDraw();
 	// アンドゥ/リドゥの表示.
@@ -64,12 +56,14 @@ private:
 
 private:
 	std::unique_ptr<CStageEditPlayer>		m_EditPlayer;			// エディタ用プレイヤー.
-	std::unique_ptr<CUndoRedo<SActorParam>>	m_pUndoRedo;			// 元に戻す操作クラス.
+	std::unique_ptr<CAuraMesh>				m_pAuraMesh;
+	std::unique_ptr<CUndoRedo<SBoxRange>>	m_pUndoRedo;			// 元に戻す操作クラス.
+	std::vector<SBoxRange>					m_BoxRangeList;
 	std::vector<SActorParam>				m_ActorList;			// 保存用のアクターリスト.
 	actor_mesh_list							m_ActorMeshList;		// アクターメッシュリスト.
-	SActorMesh								m_NowSelectActor;		// 現在選択しているアクター.
+	SBoxRange								m_NowSelectActor;		// 現在選択しているアクター.
 	int										m_DeleteActorNo;		// 削除するアクターの番号.
 	bool									m_IsArrangementActive;	// 配置動作か.
 };
 
-#endif	// #ifndef STAGE_EDITOR_H.
+#endif	// #ifndef ENEMY_SPAEN_RANGE_EDITOR_H.

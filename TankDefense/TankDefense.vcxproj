@@ -162,6 +162,7 @@
     <ClCompile Include="SourceCode\Common\Effect\EffectManager.cpp" />
     <ClCompile Include="SourceCode\Common\Font\Font.cpp" />
     <ClCompile Include="SourceCode\Common\Font\FontCreate.cpp" />
+    <ClCompile Include="SourceCode\Common\Mesh\AuraMesh\AuraMesh.cpp" />
     <ClCompile Include="SourceCode\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.cpp" />
     <ClCompile Include="SourceCode\Common\Mesh\Dx9SkinMesh\Parser\CDX9SkinMeshParser.cpp" />
     <ClCompile Include="SourceCode\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.cpp" />
@@ -179,6 +180,7 @@
     <ClCompile Include="SourceCode\Common\Sprite\Sprite.cpp" />
     <ClCompile Include="SourceCode\Common\Sprite\SpriteRender.cpp" />
     <ClCompile Include="SourceCode\Edit\EditorBase.cpp" />
+    <ClCompile Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.cpp" />
     <ClCompile Include="SourceCode\Edit\UndoRedo\UndoRedo.cpp" />
@@ -276,6 +278,7 @@
     <ClInclude Include="SourceCode\Common\Effect\EffectManager.h" />
     <ClInclude Include="SourceCode\Common\Font\Font.h" />
     <ClInclude Include="SourceCode\Common\Font\FontCreate.h" />
+    <ClInclude Include="SourceCode\Common\Mesh\AuraMesh\AuraMesh.h" />
     <ClInclude Include="SourceCode\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.h" />
     <ClInclude Include="SourceCode\Common\Mesh\Dx9SkinMesh\Parser\CDX9SkinMeshParser.h" />
     <ClInclude Include="SourceCode\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h" />
@@ -295,6 +298,7 @@
     <ClInclude Include="SourceCode\Common\Sprite\SpriteRender.h" />
     <ClInclude Include="SourceCode\Common\Sprite\SpriteStruct.h" />
     <ClInclude Include="SourceCode\Edit\EditorBase.h" />
+    <ClInclude Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageStruct.h" />
@@ -361,6 +365,18 @@
     <ClInclude Include="SourceCode\Utility\XAudio2\XAudio2Play\XAudio2PlaySE.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Data\Shader\Aura.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Domain</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Domain</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Domain</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Domain</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </FxCompile>
     <FxCompile Include="Data\Shader\RayMesh.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>

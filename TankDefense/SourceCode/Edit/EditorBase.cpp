@@ -61,24 +61,26 @@ void CEditorBase::MessageRender()
 //------------------------------------.
 // パラメータの書き込み.
 //------------------------------------.
-void CEditorBase::SetParameterWritingMsg( const bool& isSucceeded )
+bool CEditorBase::SetParameterWritingMsg( const bool& isSucceeded )
 {
 	if( isSucceeded == true ){
 		m_MessageText = u8"書き込みに成功しました。";
 	} else {
 		m_MessageText = u8"書き込みに失敗しました。";
 	}
+	return isSucceeded;
 }
 
 //------------------------------------.
 // パラメータの読み込み.
 //------------------------------------.
-void CEditorBase::SetParameterLoadingMsg( const bool& isSucceeded )
+bool CEditorBase::SetParameterLoadingMsg( const bool& isSucceeded )
 {
 	if( isSucceeded == true ){
 		m_MessageText = u8"読み込みに成功しました。";
 	} else {
 		m_MessageText = u8"読み込みに失敗しました。";
 	}
+	return isSucceeded;
 }
 

@@ -22,7 +22,7 @@ public:
 	// 更新.
 	virtual void Update() = 0;
 	// ImGui描画.
-	virtual void ImGuiRender() = 0;
+	virtual bool ImGuiRender() = 0;
 	// モデル描画.
 	virtual void ModelRender() = 0;
 	// エフェクト描画.
@@ -47,13 +47,14 @@ protected:
 	virtual void ParameterLoading( const char* filePath ) = 0;
 
 	// パラメータの書き込みメッセージの設定.
-	void SetParameterWritingMsg( const bool& isSucceeded );
+	bool SetParameterWritingMsg( const bool& isSucceeded );
 	// パラメータの読み込みメッセージの設定.
-	void SetParameterLoadingMsg( const bool& isSucceeded );
+	bool SetParameterLoadingMsg( const bool& isSucceeded );
 
 protected:
 	std::string		m_MessageText;			// メッセージテキスト.
 	float			m_MessageRenderCount;	// メッセージ描画カウント.
+	bool			m_IsActive;
 
 };
 

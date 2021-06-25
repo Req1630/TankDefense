@@ -21,7 +21,7 @@ float4 PS_Main( VS_OUTPUT input ) : SV_Target
 	
 	// ブルームのサンプル数文.
 	for( int i = 0; i < BLOOM_SAMPLE_NUM; i++ ){
-		color += g_TextureBloom[i].Sample(g_SamLinear, input.Tex);
+		color.rgb += g_TextureBloom[i].Sample(g_SamLinear, input.Tex).rgb;
 	}
 	
 	// 画像や、エフェクトなどを描画.

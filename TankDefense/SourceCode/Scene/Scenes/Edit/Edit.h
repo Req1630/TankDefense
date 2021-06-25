@@ -4,7 +4,9 @@
 #include "..\..\SceneBase\SceneBase.h"
 #include "..\..\..\Utility\ImGuiManager\ImGuiManager.h"
 
+class CEditorBase;
 class CStageEditor;
+class CEnemySpawnRangeEditor;
 
 /**********************************
 *	エディタシーンクラス.
@@ -29,8 +31,9 @@ public:
 private:
 
 private:
-	std::unique_ptr<CStageEditor>	m_StageEditor;
-	ImGuiWindowFlags				m_WindowFlags;
+	std::vector<std::unique_ptr<CEditorBase>>	m_Editors;
+	CEditorBase*								m_pActiveEditor;
+	ImGuiWindowFlags							m_WindowFlags;
 };
 
 #endif	// #ifndef EDIT_H.

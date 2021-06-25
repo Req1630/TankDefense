@@ -48,6 +48,7 @@ private:
 	float								m_CameraMoveSpeed;
 	float								m_CameraLength;
 	bool								m_IsPut;
+	bool								m_IsRotController;
 };
 
 #endif	// #ifndef STAGE_EDIT_PLAYER_H.
