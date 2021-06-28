@@ -38,7 +38,7 @@ VS_OUTPUT VS_Main(float4 Pos : POSITION, float2 tex : TEXCOORD )
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 	output.Pos	= mul(Pos, g_mWVP);
-	output.PosW	= mul(Pos, g_mW);
+	output.PosW	= Pos.xyz;
 	output.Tex = tex;
 	if (tex.x != 0.0f || tex.y != 0.0f )
 	{
@@ -55,7 +55,7 @@ PS_OUTPUT PS_Main(VS_OUTPUT input )
 	float v = input.PosW.y / 10.0f;
 	float alpha = lerp( 1.0f, 0.0f, v );
 	float4 color = g_vColor;
-	color.a *= alpha * alpha * a;
+	color.a = alpha * alpha * a;
 	clip(color.a);
 	
 	

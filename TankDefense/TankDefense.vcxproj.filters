@@ -98,6 +98,11 @@
     <ClCompile Include="SourceCode\Edit\UndoRedo\UndoRedo.cpp" />
     <ClCompile Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.cpp" />
     <ClCompile Include="SourceCode\Common\Mesh\AuraMesh\AuraMesh.cpp" />
+    <ClCompile Include="SourceCode\Edit\MovieEdtor\MovieEdtor.cpp" />
+    <ClCompile Include="SourceCode\Object\CameraBase\MovieCamera\MovieCamera.cpp" />
+    <ClCompile Include="SourceCode\Edit\MovieEdtor\CameraEditor\CameraEditor.cpp" />
+    <ClCompile Include="SourceCode\Object\CameraBase\NormalCamera\NormalCamera.cpp" />
+    <ClCompile Include="SourceCode\Edit\StageEditor\StageRender\StageRender.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -201,6 +206,11 @@
     <ClInclude Include="SourceCode\Edit\UndoRedo\UndoRedo.h" />
     <ClInclude Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.h" />
     <ClInclude Include="SourceCode\Common\Mesh\AuraMesh\AuraMesh.h" />
+    <ClInclude Include="SourceCode\Edit\MovieEdtor\MovieEdtor.h" />
+    <ClInclude Include="SourceCode\Object\CameraBase\MovieCamera\MovieCamera.h" />
+    <ClInclude Include="SourceCode\Edit\MovieEdtor\CameraEditor\CameraEditor.h" />
+    <ClInclude Include="SourceCode\Object\CameraBase\NormalCamera\NormalCamera.h" />
+    <ClInclude Include="SourceCode\Edit\StageEditor\StageRender\StageRender.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

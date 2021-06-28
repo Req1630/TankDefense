@@ -43,7 +43,7 @@ void CCameraBase::AnySecondsMove( const SCameraState& newState,const SCameraStat
 void CCameraBase::AnySecondsMovePosition( const D3DXVECTOR3& newPos, const D3DXVECTOR3& oldPos, const float& sec )
 {
 	const float seconds = sec <= 0.0f ? 0.0f : sec;
-	D3DXVec3Lerp( &m_Tranceform.Position, &newPos, &oldPos, sec );
+	D3DXVec3Lerp( &m_Tranceform.Position, &newPos, &oldPos, seconds );
 }
 
 //-----------------------------------------------.
@@ -52,7 +52,7 @@ void CCameraBase::AnySecondsMovePosition( const D3DXVECTOR3& newPos, const D3DXV
 void CCameraBase::AnySecondsMoveLookPosition( const D3DXVECTOR3& newPos, const D3DXVECTOR3& oldPos, const float& sec )
 {
 	const float seconds = sec <= 0.0f ? 0.0f : sec;
-	D3DXVec3Lerp( &m_LookPosition, &newPos, &oldPos, sec );
+	D3DXVec3Lerp( &m_LookPosition, &newPos, &oldPos, seconds );
 }
 
 

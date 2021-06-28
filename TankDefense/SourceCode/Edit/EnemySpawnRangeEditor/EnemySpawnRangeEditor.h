@@ -7,6 +7,7 @@
 
 class CStageEditPlayer;	// ステージエディタ用のプレイヤー.
 class CAuraMesh;		// オーラメッシュクラス.
+class CStageRender;		// ステージ描画クラス.
 
 /***************************************************
 * 敵スポーン範囲エディタ.
@@ -16,7 +17,15 @@ class CEnemySpawnRangeEditor : public CEditorBase
 	struct stBoxRange
 	{
 		D3DXVECTOR2 Range;		// 範囲,
-		STranceform	Tranceform;
+		STranceform	Tranceform;	// 座標など.
+		stBoxRange()
+			: Range			( 10.0f, 10.0f )
+			, Tranceform	()
+		{}
+		stBoxRange( const D3DXVECTOR2& range, const STranceform& t )
+			: Range			( range )
+			, Tranceform	( t )
+		{}
 	} typedef SBoxRange;
 public:
 	CEnemySpawnRangeEditor();
@@ -46,8 +55,6 @@ private:
 	void UndoRedoDraw();
 	// 操作説明の表示.
 	void ControllerDraw();
-	// アクターメッシュリストの初期化.
-	bool InitActorMeshList();
 
 	// パラメータの書き込み.
 	virtual void ParameterWriting( const char* filePath ) override;
@@ -58,9 +65,8 @@ private:
 	std::unique_ptr<CStageEditPlayer>		m_EditPlayer;			// エディタ用プレイヤー.
 	std::unique_ptr<CAuraMesh>				m_pAuraMesh;
 	std::unique_ptr<CUndoRedo<SBoxRange>>	m_pUndoRedo;			// 元に戻す操作クラス.
+	std::unique_ptr<CStageRender>			m_pStageRender;
 	std::vector<SBoxRange>					m_BoxRangeList;
-	std::vector<SActorParam>				m_ActorList;			// 保存用のアクターリスト.
-	actor_mesh_list							m_ActorMeshList;		// アクターメッシュリスト.
 	SBoxRange								m_NowSelectActor;		// 現在選択しているアクター.
 	int										m_DeleteActorNo;		// 削除するアクターの番号.
 	bool									m_IsArrangementActive;	// 配置動作か.

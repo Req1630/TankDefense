@@ -1,4 +1,4 @@
-#ifndef EDIT_CAMERA_H
+#ifndef FREE_CAMERA_H
 #define FREE_CAMERA_H
 
 #include "..\CameraBase.h"

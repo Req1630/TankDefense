@@ -5,6 +5,7 @@
 #include "..\..\Utility\Input\Input.h"
 #include "..\StageEditor\StageEditPlayer\StageEditPlayer.h"
 #include "..\..\Common\Mesh\AuraMesh\AuraMesh.h"
+#include "..\StageEditor\StageRender\StageRender.h"
 
 namespace
 {
@@ -21,6 +22,7 @@ CEnemySpawnRangeEditor::CEnemySpawnRangeEditor()
 	: m_EditPlayer			( std::make_unique<CStageEditPlayer>() )
 	, m_pAuraMesh			( std::make_unique<CAuraMesh>() )
 	, m_pUndoRedo			( std::make_unique<CUndoRedo<SBoxRange>>( &m_BoxRangeList ))
+	, m_pStageRender		( std::make_unique<CStageRender>() )
 	, m_BoxRangeList		()
 	, m_NowSelectActor		()
 	, m_DeleteActorNo		( 0 )
@@ -38,7 +40,7 @@ CEnemySpawnRangeEditor::~CEnemySpawnRangeEditor()
 bool CEnemySpawnRangeEditor::Init()
 {
 	if( m_EditPlayer->Init()	== false )	return false;
-	if( InitActorMeshList()		== false )	return false;
+	if( m_pStageRender->Init()	== false )	return false;
 	if( FAILED( m_pAuraMesh->Init() ))		return false;
 	return true;
 }
@@ -94,21 +96,17 @@ void CEnemySpawnRangeEditor::ModelRender()
 	m_EditPlayer->Render();
 
 
-	for( auto& actor : m_ActorList ){
-		CDX9StaticMesh*	pStaticMesh = m_ActorMeshList[actor.ActorNo].pStaticMesh;
-		pStaticMesh->SetTranceform(actor.Tranceform);
-		pStaticMesh->Render();
-	}
+	m_pStageRender->Render();
 
 	
 	for( auto& box : m_BoxRangeList ){
-		D3DXVECTOR3 scale = { box.Range.x, 1.0f, box.Range.y };
+		const D3DXVECTOR3 scale = { box.Range.x, 1.0f, box.Range.y };
 		m_pAuraMesh->SetTranceform( box.Tranceform );
 		m_pAuraMesh->SetScale( scale );
 		m_pAuraMesh->Render();
 	}
 
-	D3DXVECTOR3 scale = { m_NowSelectActor.Range.x, 1.0f, m_NowSelectActor.Range.y };
+	const D3DXVECTOR3 scale = { m_NowSelectActor.Range.x, 1.0f, m_NowSelectActor.Range.y };
 	m_pAuraMesh->SetTranceform( m_EditPlayer->GetPutTranceform() );
 	m_pAuraMesh->SetScale( scale );
 	m_pAuraMesh->Render();
@@ -245,29 +243,6 @@ void CEnemySpawnRangeEditor::ControllerDraw()
 		ImGui::TextWrapped( u8"  Ｚキー ---------------  ズームイン" );
 		ImGui::TextWrapped( u8"  バックスペースキー ---  メニューに戻る" );
 	}
-}
-
-//------------------------------------.
-// アクターメッシュリストの初期化.
-//------------------------------------.
-bool CEnemySpawnRangeEditor::InitActorMeshList()
-{
-	const std::vector<std::string> meshNameList = fileManager::TextLoading(ACOTR_MESH_LIST_PATH);
-
-	if( meshNameList.empty() == true ) return false;
-
-	EActorNo actorNo = EActorNo_Begin;
-	for( auto& meshName : meshNameList ){
-		m_ActorMeshList.emplace_back( actorNo, meshName, CMeshResorce::GetStatic(meshName) );
-
-		if( m_ActorMeshList[actorNo].pStaticMesh == nullptr ){
-			m_ActorMeshList.clear();
-			return false;
-		}
-		const int no = static_cast<int>(actorNo)+1;
-		actorNo = static_cast<EActorNo>(no);
-	}
-	return SetParameterLoadingMsg( fileManager::BinaryVectorReading( STAGE_OBJECT_LIST_PATH, m_ActorList ) );
 }
 
 //------------------------------------.

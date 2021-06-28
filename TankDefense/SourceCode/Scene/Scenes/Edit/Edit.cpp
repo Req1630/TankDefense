@@ -3,6 +3,7 @@
 #include "..\..\..\Object\CameraBase\CameraManager\CameraManager.h"
 #include "..\..\..\Edit\StageEditor\StageEditor.h"
 #include "..\..\..\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.h"
+#include "..\..\..\Edit\MovieEdtor\MovieEdtor.h"
 
 CEdit::CEdit( CSceneManager* pSceneManager )
 	: CSceneBase				( pSceneManager )
@@ -14,6 +15,7 @@ CEdit::CEdit( CSceneManager* pSceneManager )
 
 	m_Editors.emplace_back( std::make_unique<CStageEditor>() );
 	m_Editors.emplace_back( std::make_unique<CEnemySpawnRangeEditor>() );
+	m_Editors.emplace_back( std::make_unique<CMovieEditor>() );
 
 	m_pActiveEditor = m_Editors.front().get();
 }
