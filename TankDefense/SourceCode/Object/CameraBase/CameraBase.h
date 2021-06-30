@@ -21,6 +21,16 @@ public:
 		D3DXVECTOR3 LookPosition;	// 視点座標.
 	} typedef SCameraState;
 
+	// カメラを揺らすための情報.
+	struct stShakeState
+	{
+		float			Amplitube;	// 振れ幅(値が大きければ大きく揺れる).
+		float			Frequency;	// 周波数(一秒間に何回揺らすか).
+		float			Time;		// 揺らす時間.
+		D3DXVECTOR3		BasePos;	// 基準となる座標.
+		float			Attenuation;// 減衰値 0.0f ~ 1.0fの値を入れると減衰する.
+	} typedef SShakeState;
+
 public:
 	CCameraBase();
 	virtual ~CCameraBase();
@@ -34,6 +44,66 @@ public:
 	void AnySecondsMovePosition( const D3DXVECTOR3& newPos, const D3DXVECTOR3& oldPos, const float& sec );
 	// 指定秒で、指定座標に移動するカメラ動作.
 	void AnySecondsMoveLookPosition( const D3DXVECTOR3& newPos, const D3DXVECTOR3& oldPos, const float& sec );
+
+	// 座標を縦方向に揺らす.
+	//	amplitube	振れ幅(値が大きければ大きく揺れる).
+	//	frequency	周波数(一秒間に何回揺らすか).
+	//	time		揺らす時間.
+	//	basePos		基準となる座標.
+	//	attenuation	減衰値 0.0f ~ 1.0fの値を入れると減衰する.
+	void ShakePositoinVertical(
+		const float& amplitube,
+		const float& frequency,
+		const float& time,
+		const D3DXVECTOR3& basePos,
+		const float& attenuation = 1.0f );
+	// 座標を縦方向に揺らす.
+	void ShakePositoinVertical( const SShakeState& state );
+
+	// 座標を横方向に揺らす.
+	//	amplitube	振れ幅(値が大きければ大きく揺れる).
+	//	frequency	周波数(一秒間に何回揺らすか).
+	//	time		揺らす時間.
+	//	basePos		基準となる座標.
+	//	attenuation	減衰値 0.0f ~ 1.0fの値を入れると減衰する.
+	void ShakePositoinHorizontal(
+		const float& amplitube,
+		const float& frequency,
+		const float& time,
+		const D3DXVECTOR3& basePos,
+		const float& attenuation = 1.0f );
+	// 座標を横方向に揺らす.
+	void ShakePositoinHorizontal( const SShakeState& state );
+
+	// 視点座標を縦方向に揺らす.
+	//	amplitube	振れ幅(値が大きければ大きく揺れる).
+	//	frequency	周波数(一秒間に何回揺らすか).
+	//	time		揺らす時間.
+	//	basePos		基準となる座標.
+	//	attenuation	減衰値 0.0f ~ 1.0fの値を入れると減衰する.
+	void ShakeLookPositoinVertical(
+		const float& amplitube,
+		const float& frequency,
+		const float& time,
+		const D3DXVECTOR3& basePos,
+		const float& attenuation = 1.0f );
+	// 視点座標を縦方向に揺らす.
+	void ShakeLookPositoinVertical( const SShakeState& state );
+
+	// 視点座標を横方向に揺らす.
+	//	amplitube	振れ幅(値が大きければ大きく揺れる).
+	//	frequency	周波数(一秒間に何回揺らすか).
+	//	time		揺らす時間.
+	//	basePos		基準となる座標.
+	//	attenuation	減衰値 0.0f ~ 1.0fの値を入れると減衰する.
+	void ShakeLookPositoinHorizontal(
+		const float& amplitube,
+		const float& frequency,
+		const float& time,
+		const D3DXVECTOR3& basePos,
+		const float& attenuation = 1.0f );
+	// 視点座標を横方向に揺らす.
+	void ShakeLookPositoinHorizontal( const SShakeState& state );
 
 	// ビュー・プロジェクションの更新.
 	void UpdateViewProj();

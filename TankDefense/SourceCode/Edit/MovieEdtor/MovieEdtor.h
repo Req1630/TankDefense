@@ -4,7 +4,7 @@
 #include "..\EditorBase.h"
 #include "..\..\Object\CameraBase\MovieCamera\MovieCamera.h"
 
-class CCameraEditor;
+class CCameraEditor;	// カメラエディタ.
 class CStageRender;		// ステージ描画クラス.
 
 /******************************************
@@ -28,15 +28,20 @@ public:
 	virtual void EffectRneder() override;
 
 private:
+	// 再生の表示.
+	void PlayDraw();
 	// パラメータの書き込み.
 	virtual void ParameterWriting( const char* filePath ) override;
 	// パラメータの読み込み.
 	virtual void ParameterLoading( const char* filePath ) override;
 
 private:
-	std::unique_ptr<CCameraEditor>	m_pCameraEdit;
-	std::unique_ptr<CStageRender>	m_pStageRender;
-	float	m_MovieEndSecTime;		// 動画終了時間.
+	std::unique_ptr<CCameraEditor>	m_pCameraEdit;		// カメラエディタ.
+	std::unique_ptr<CStageRender>	m_pStageRender;		// ステージの描画.
+	std::vector<SMovieCamera>		m_pMovieCameraList;	// カメラリスト.
+	float							m_MovieEndSecTime;	// 動画終了時間.
+
+	bool							m_IsMoviePlaying;	// 再生中かどうか.
 
 };
 

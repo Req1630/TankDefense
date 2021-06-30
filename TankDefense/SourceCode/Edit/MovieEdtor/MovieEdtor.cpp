@@ -3,9 +3,11 @@
 #include "..\StageEditor\StageRender\StageRender.h"
 
 CMovieEditor::CMovieEditor()
-	: m_pCameraEdit		( std::make_unique<CCameraEditor>() )
-	, m_pStageRender	( std::make_unique<CStageRender>() )
-	, m_MovieEndSecTime	( 1.0f )
+	: m_pCameraEdit			( std::make_unique<CCameraEditor>() )
+	, m_pStageRender		( std::make_unique<CStageRender>() )
+	, m_pMovieCameraList	()
+	, m_MovieEndSecTime		( 1.0f )
+	, m_IsMoviePlaying		( false )
 {
 }
 
@@ -27,7 +29,11 @@ bool CMovieEditor::Init()
 //-----------------------------------.
 void CMovieEditor::Update()
 {
-	m_pCameraEdit->Update();
+
+	if( m_IsMoviePlaying == true ){
+	} else {
+		m_pCameraEdit->Update();
+	}
 }
 
 //-----------------------------------.
@@ -37,10 +43,19 @@ bool CMovieEditor::ImGuiRender()
 {
 	if( BeginTab("MovieEdit") == false ) return false;
 	
+	ImGui::Text( u8"カメラオブジェクトの数 : %d", m_pMovieCameraList.size() );
+
+	PlayDraw();
+
+	ImGui::Separator();
 	ImGui::DragFloat( u8"演出再生時間(秒)", &m_MovieEndSecTime, 0.5f, 1.0f, 180.0f );
 
 	if( ImGui::TreeNode( u8"カメラの追加" ) ){
-		m_pCameraEdit->ImGuiRender();
+		m_pCameraEdit->ImGuiRender(); ImGui::SameLine();
+		if( ImGui::Button( u8"カメラを追加" ) ){
+			m_pMovieCameraList.emplace_back( m_pCameraEdit->GetMovieCameraState() );
+		}
+
 		ImGui::TreePop();
 	}
 
@@ -61,6 +76,19 @@ void CMovieEditor::ModelRender()
 //-----------------------------------.
 void CMovieEditor::EffectRneder()
 {
+}
+
+//-----------------------------------.
+// 再生の表示.
+//-----------------------------------.
+void CMovieEditor::PlayDraw()
+{
+	if( ImGui::Button( u8"再生") ){
+		m_IsMoviePlaying = true;
+		// ImGuiでコントローラー操作を無効化.
+		CImGuiManager::DisableGamepad();
+		ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.4f;
+	}
 }
 
 //-----------------------------------.

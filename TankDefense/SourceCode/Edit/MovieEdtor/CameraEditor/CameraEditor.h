@@ -3,13 +3,25 @@
 
 #include "..\..\..\Object\CameraBase\MovieCamera\MovieCamera.h"
 
-class CNormalCamera;
+class CMovieCamera;
 
 /********************************
 *	演出用カメラエディタ.
 **/
 class CCameraEditor
 {
+	enum enShakePosFlags : unsigned char
+	{
+		EShakePosFlag_None		= 0,
+
+		EShakePosFlag_PosVer		= 1 << 0,	// 座標の縦方向.
+		EShakePosFlag_PosHor		= 1 << 1,	// 座標の横方向.
+		EShakePosFlag_LookPosVer	= 1 << 2,	// 視点座標の縦方向.
+		EShakePosFlag_LookPosHor	= 1 << 3,	// 視点ア票の横方向.
+
+		EShakePosFlag_max,
+	} typedef EShakePosFlag;
+	using shake_pos_flag = unsigned int;
 public:
 	CCameraEditor();
 	~CCameraEditor();
@@ -22,7 +34,7 @@ public:
 	void ModelRender();
 
 	// 演出カメラ情報の取得.
-	inline SMovieCamera GetMovieCameraState() { return m_MovieCamera; }
+	inline SMovieMoveCamera GetMovieCameraState() { return m_MovieMoveCamera; }
 
 private:
 	// カメラ操作.
@@ -37,14 +49,19 @@ private:
 	// カメラ移動処理の切り替え.
 	void ChangeMoveCamera();
 
+	// 移動カメラの表示.
+	void MoveCameraDraw();
+	// 揺れカメラの表示.
+	void ShakeCameraDraw();
+
 private:
-	std::unique_ptr<CNormalCamera>	m_pCamera;
+	std::unique_ptr<CMovieCamera>	m_pCamera;
 	CCameraBase::SCameraState		m_CameraState;
-	SMovieCamera					m_MovieCamera;
+	SMovieMoveCamera				m_MovieMoveCamera;
+	SMovieShakeCamera				m_MovieShakeCamera;
 	D3DXVECTOR2						m_Radian;			// ラジアン.
+	shake_pos_flag					m_ShakePosFlag;		// 揺れ座標のフラグ.
 	float							m_DeltaTime;		// デルタタイム.
-	float							m_PosMoveTime;		// 移動時間.
-	float							m_LookPosMoveTime;	// 注視位置移動時間.
 	bool							m_IsCameraControll;	// カメラ操作できるか.
 	bool							m_IsCameraPlaying;	// カメラ再生中か.
 };

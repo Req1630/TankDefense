@@ -1,4 +1,5 @@
 #include "CameraBase.h"
+#include "..\..\Utility\Math\Math.h"
 
 namespace
 {
@@ -55,6 +56,109 @@ void CCameraBase::AnySecondsMoveLookPosition( const D3DXVECTOR3& newPos, const D
 	D3DXVec3Lerp( &m_LookPosition, &newPos, &oldPos, seconds );
 }
 
+//-----------------------------------------------.
+// 座標を縦方向に揺らす.
+//-----------------------------------------------.
+void CCameraBase::ShakePositoinVertical(
+	const float& amplitube,
+	const float& frequency,
+	const float& time,
+	const D3DXVECTOR3& basePos,
+	const float& attenuation )
+{
+	m_Tranceform.Position.y = basePos.y + amplitube * sinf(Math::M_2PI*frequency*time)*attenuation;
+}
+
+//-----------------------------------------------.
+// 座標を縦方向に揺らす.
+//-----------------------------------------------.
+void CCameraBase::ShakePositoinVertical( const SShakeState& state )
+{
+	ShakePositoinVertical( state.Amplitube, state.Frequency, state.Time, state.BasePos, state.Attenuation );
+}
+
+//-----------------------------------------------.
+// 座標を横方向に揺らす.
+//-----------------------------------------------.
+void CCameraBase::ShakePositoinHorizontal(
+	const float& amplitube,
+	const float& frequency,
+	const float& time,
+	const D3DXVECTOR3& basePos,
+	const float& attenuation )
+{
+	const D3DXVECTOR3 vec = m_Tranceform.Position - m_LookPosition;
+	D3DXMATRIX mRot;
+	D3DXMatrixRotationYawPitchRoll( &mRot, atan2f( vec.x, vec.z ), 0.0f, 0.0f );
+	// 軸ベクトルを用意.
+	D3DXVECTOR3 vecAxisX = Math::X_AXIS;
+	// X軸ベクトルそのものを回転状態により変換する.
+	D3DXVec3TransformCoord( &vecAxisX, &vecAxisX, &mRot );
+
+	const float sample = amplitube * sinf(Math::M_2PI*frequency*time)*attenuation;
+	m_Tranceform.Position.x = basePos.x + vecAxisX.x * sample;
+	m_Tranceform.Position.z = basePos.z + vecAxisX.z * sample;
+}
+
+//-----------------------------------------------.
+// 座標を横方向に揺らす.
+//-----------------------------------------------.
+void CCameraBase::ShakePositoinHorizontal( const SShakeState& state )
+{
+	ShakePositoinHorizontal( state.Amplitube, state.Frequency, state.Time, state.BasePos, state.Attenuation );
+}
+
+//-----------------------------------------------.
+// 視点座標を縦方向に揺らす.
+//-----------------------------------------------.
+void CCameraBase::ShakeLookPositoinVertical(
+	const float& amplitube,
+	const float& frequency,
+	const float& time,
+	const D3DXVECTOR3& basePos,
+	const float& attenuation )
+{
+	m_LookPosition.y = basePos.y + amplitube * sinf(Math::M_2PI*frequency*time)*attenuation;
+}
+
+//-----------------------------------------------.
+// 視点座標を縦方向に揺らす.
+//-----------------------------------------------.
+void CCameraBase::ShakeLookPositoinVertical( const SShakeState& state )
+{
+	ShakeLookPositoinVertical( state.Amplitube, state.Frequency, state.Time, state.BasePos, state.Attenuation );
+}
+
+//-----------------------------------------------.
+// 視点座標を横方向に揺らす.
+//-----------------------------------------------.
+void CCameraBase::ShakeLookPositoinHorizontal(
+	const float& amplitube,
+	const float& frequency,
+	const float& time,
+	const D3DXVECTOR3& basePos,
+	const float& attenuation )
+{
+	const D3DXVECTOR3 vec = m_Tranceform.Position - m_LookPosition;
+	D3DXMATRIX mRot;
+	D3DXMatrixRotationYawPitchRoll( &mRot, atan2f( vec.x, vec.z ), 0.0f, 0.0f );
+	// 軸ベクトルを用意.
+	D3DXVECTOR3 vecAxisX = Math::X_AXIS;
+	// X軸ベクトルそのものを回転状態により変換する.
+	D3DXVec3TransformCoord( &vecAxisX, &vecAxisX, &mRot );
+
+	const float sample = amplitube * sinf(Math::M_2PI*frequency*time)*attenuation;
+	m_LookPosition.x = basePos.x + vecAxisX.x * sample;
+	m_LookPosition.z = basePos.z + vecAxisX.z * sample;
+}
+
+//-----------------------------------------------.
+// 視点座標を横方向に揺らす.
+//-----------------------------------------------.
+void CCameraBase::ShakeLookPositoinHorizontal( const SShakeState& state )
+{
+	ShakeLookPositoinHorizontal( state.Amplitube, state.Frequency, state.Time, state.BasePos, state.Attenuation );
+}
 
 //-----------------------------------------------.
 // ビュー・プロジェクションの更新.
