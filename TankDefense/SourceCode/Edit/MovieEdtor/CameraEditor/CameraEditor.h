@@ -34,7 +34,7 @@ public:
 	void ModelRender();
 
 	// 演出カメラ情報の取得.
-	inline SMovieMoveCamera GetMovieCameraState() { return m_MovieMoveCamera; }
+	inline std::vector<SMovieCamera>& GetMovieCameraState(){ return m_MovieCameraList; }
 
 private:
 	// カメラ操作.
@@ -51,16 +51,25 @@ private:
 
 	// 移動カメラの表示.
 	void MoveCameraDraw();
+	// 移動カメラ設定の表示.
+	void MoveCameraSettigDraw( const char* msg, CCameraBase::SCameraState& state );
 	// 揺れカメラの表示.
 	void ShakeCameraDraw();
+	// 再生の表示.
+	void PlayDraw();
+
+	// 座標の表示.
+	void PositionDraw( const char* msg, const D3DXVECTOR3& pos );
+
 
 private:
 	std::unique_ptr<CMovieCamera>	m_pCamera;
+	std::vector<SMovieCamera>		m_MovieCameraList;	// カメラリスト.
 	CCameraBase::SCameraState		m_CameraState;
-	SMovieMoveCamera				m_MovieMoveCamera;
-	SMovieShakeCamera				m_MovieShakeCamera;
+	SMovieMoveCamera*				m_pMovieMoveCamera;
+	SMovieShakeCamera*				m_pMovieShakeCamera;
 	D3DXVECTOR2						m_Radian;			// ラジアン.
-	shake_pos_flag					m_ShakePosFlag;		// 揺れ座標のフラグ.
+	int								m_NowSelectIndex;
 	float							m_DeltaTime;		// デルタタイム.
 	bool							m_IsCameraControll;	// カメラ操作できるか.
 	bool							m_IsCameraPlaying;	// カメラ再生中か.

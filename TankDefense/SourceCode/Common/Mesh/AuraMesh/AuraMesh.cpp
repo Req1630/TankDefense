@@ -5,7 +5,6 @@
 namespace
 {
 	constexpr char SHADER_NAME[]	= "Data\\Shader\\Aura.hlsl";	// シェーダー名.
-	constexpr char TEXTURE_NAME[]	= "Data\\Mesh\\Fog.png";	// シェーダー名.
 };
 
 CAuraMesh::CAuraMesh()
@@ -15,8 +14,6 @@ CAuraMesh::CAuraMesh()
 	, m_pPixelShader	( nullptr )
 	, m_pVertexLayout	( nullptr )
 	, m_pConstantBuffer	( nullptr )
-	, m_pTexture		( nullptr )
-	, m_pSampleLinear	( nullptr )
 	, m_ScrollTime		( 0.0f )
 {
 }
@@ -34,7 +31,6 @@ HRESULT CAuraMesh::Init()
 	if( FAILED( InitModel()))	return E_FAIL;	// モデルの読み込み.
 	if( FAILED( InitShader()))	return E_FAIL;	// シェーダーの初期化.
 	if( FAILED( shader::CreateConstantBuffer( m_pDevice11, &m_pConstantBuffer, sizeof(C_BUFFER) ))) return E_FAIL;
-	if( FAILED( CreateTexture( TEXTURE_NAME ) )) return E_FAIL;
 
 	return S_OK;
 }
@@ -50,9 +46,6 @@ void CAuraMesh::Release()
 	SAFE_RELEASE( m_pVertexLayout );
 	SAFE_RELEASE( m_pConstantBuffer );
 
-	SAFE_RELEASE( m_pTexture );
-	SAFE_RELEASE( m_pSampleLinear );
-
 	m_pContext11 = nullptr;
 	m_pDevice11 = nullptr;
 }
@@ -61,7 +54,6 @@ void CAuraMesh::Release()
 void CAuraMesh::Update()
 {
 	m_ScrollTime -= GetDeltaTime() * 0.25f;
-	if( m_ScrollTime > 1.0f ) m_ScrollTime = 0.0f;
 }
 
 // 描画.
@@ -84,7 +76,7 @@ void CAuraMesh::Render()
 		cb.mWVP = mWorld * CCameraManager::GetViewProjMatrix();
 		D3DXMatrixTranspose( &cb.mWVP, &cb.mWVP );//行列を転置する.
 
-		cb.vColor = { 0.7f, 0.3f, 0.3f, 1.0f };
+		cb.vColor = { 0.7f, 0.2f, 0.2f, 0.7f };
 		cb.vUV.x += m_ScrollTime;
 		cb.vUV.y += m_ScrollTime;
 
@@ -102,9 +94,6 @@ void CAuraMesh::Render()
 	m_pContext11->VSSetConstantBuffers( 0, 1, &m_pConstantBuffer );
 	m_pContext11->PSSetConstantBuffers( 0, 1, &m_pConstantBuffer );
 
-	m_pContext11->PSSetShaderResources( 0, 1, &m_pTexture );
-	m_pContext11->PSSetSamplers( 0, 1, &m_pSampleLinear );
-
 	// 頂点バッファをセット.
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
@@ -116,7 +105,11 @@ void CAuraMesh::Render()
 	m_pContext11->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
 	SetBlend( true );
+	SetRasterizerState( ERS_STATE::Front );
 	m_pContext11->DrawIndexed( 30, 0, 0 );
+	SetRasterizerState( ERS_STATE::Back );
+	m_pContext11->DrawIndexed( 30, 0, 0 );
+	SetRasterizerState( ERS_STATE::None );
 	SetBlend( false );
 }
 
@@ -129,30 +122,30 @@ HRESULT CAuraMesh::InitModel()
 	VERTEX vertices[]=
 	{
 		//頂点座標(x,y,z)				 
-		D3DXVECTOR3( boxSize, 0.0f,		-boxSize ),	D3DXVECTOR2( 0.0f, 0.0f ),//頂点１(左下).
-		D3DXVECTOR3(-boxSize, 0.0f,		 boxSize ),	D3DXVECTOR2( 0.0f, 0.0f ),//頂点２(左上).
-		D3DXVECTOR3(-boxSize, 0.0f,		-boxSize ),	D3DXVECTOR2( 0.0f, 0.0f ),//頂点３(右下).
-		D3DXVECTOR3( boxSize, 0.0f,		 boxSize ),	D3DXVECTOR2( 0.0f, 0.0f ),//頂点４(右上).
+		D3DXVECTOR3( boxSize, 0.0f,		-boxSize ),
+		D3DXVECTOR3(-boxSize, 0.0f,		 boxSize ),
+		D3DXVECTOR3(-boxSize, 0.0f,		-boxSize ),
+		D3DXVECTOR3( boxSize, 0.0f,		 boxSize ),
 
-		D3DXVECTOR3( boxSize, height,	-boxSize ),	D3DXVECTOR2( 1.0f, 0.0f ),//頂点１(左上奥).
-		D3DXVECTOR3( boxSize, 0.0f,		 boxSize ),	D3DXVECTOR2( 0.1f, 0.1f ),//頂点２(右上奥).
-		D3DXVECTOR3( boxSize, 0.0f,		-boxSize ),	D3DXVECTOR2( 0.0f, 1.0f ),//頂点３(左下奥).
-		D3DXVECTOR3( boxSize, height,	 boxSize ),	D3DXVECTOR2( 1.0f, 1.0f ),//頂点４(右下奥).
+		D3DXVECTOR3( boxSize, height,	-boxSize ),
+		D3DXVECTOR3( boxSize, 0.0f,		 boxSize ),
+		D3DXVECTOR3( boxSize, 0.0f,		-boxSize ),
+		D3DXVECTOR3( boxSize, height,	 boxSize ),
 
-		D3DXVECTOR3( boxSize, height,	 boxSize ),	D3DXVECTOR2( 1.0f, 0.0f ),//頂点１(左上手前).
-		D3DXVECTOR3(-boxSize, 0.0f,		 boxSize ),	D3DXVECTOR2( 0.1f, 0.1f ),//頂点２(左下手前).
-		D3DXVECTOR3( boxSize, 0.0f,		 boxSize ),	D3DXVECTOR2( 0.0f, 1.0f ),//頂点３(右上手前).
-		D3DXVECTOR3(-boxSize, height,	 boxSize ),	D3DXVECTOR2( 1.0f, 1.0f ),//頂点４(右下手前).
+		D3DXVECTOR3( boxSize, height,	 boxSize ),
+		D3DXVECTOR3(-boxSize, 0.0f,		 boxSize ),
+		D3DXVECTOR3( boxSize, 0.0f,		 boxSize ),
+		D3DXVECTOR3(-boxSize, height,	 boxSize ),
 
-		D3DXVECTOR3(-boxSize, height,	 boxSize ),	D3DXVECTOR2( 1.0f, 0.0f ),//頂点１(左上手前).
-		D3DXVECTOR3(-boxSize, 0.0f,		-boxSize ),	D3DXVECTOR2( 0.1f, 0.1f ),//頂点２(左上奥).
-		D3DXVECTOR3(-boxSize, 0.0f,		 boxSize ),	D3DXVECTOR2( 0.0f, 1.0f ),//頂点３(左下手前).
-		D3DXVECTOR3(-boxSize, height,	-boxSize ),	D3DXVECTOR2( 1.0f, 1.0f ),//頂点４(左下奥).
+		D3DXVECTOR3(-boxSize, height,	 boxSize ),
+		D3DXVECTOR3(-boxSize, 0.0f,		-boxSize ),
+		D3DXVECTOR3(-boxSize, 0.0f,		 boxSize ),
+		D3DXVECTOR3(-boxSize, height,	-boxSize ),
 
-		D3DXVECTOR3(-boxSize, height,	-boxSize ),	D3DXVECTOR2( 1.0f, 0.0f ),//頂点１(右上手前).
-		D3DXVECTOR3( boxSize, 0.0f,		-boxSize ),	D3DXVECTOR2( 0.1f, 0.1f ),//頂点２(右下手前).
-		D3DXVECTOR3(-boxSize, 0.0f,		-boxSize ),	D3DXVECTOR2( 0.0f, 1.0f ),//頂点３(右上奥).
-		D3DXVECTOR3( boxSize, height,	-boxSize ),	D3DXVECTOR2( 1.0f, 1.0f ),//頂点４(右下奥).
+		D3DXVECTOR3(-boxSize, height,	-boxSize ),
+		D3DXVECTOR3( boxSize, 0.0f,		-boxSize ),
+		D3DXVECTOR3(-boxSize, 0.0f,		-boxSize ),
+		D3DXVECTOR3( boxSize, height,	-boxSize ),
 
 	};
 	WORD indexList[]{
@@ -246,7 +239,6 @@ HRESULT CAuraMesh::InitShader()
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		shader::GetPositionInputElement(),
-		shader::GetTexcoordInputElement(),
 	};
 
 	// 頂点インプットレイアウトの配列要素数を算出.
@@ -289,40 +281,5 @@ HRESULT CAuraMesh::InitShader()
 	}
 	SAFE_RELEASE(pCompiledShader);
 
-	return S_OK;
-}
-
-//---------------------------------------.
-// テクスチャ作成.
-//---------------------------------------.
-HRESULT CAuraMesh::CreateTexture( const char* texturePath )
-{
-	if( FAILED( D3DX11CreateShaderResourceViewFromFile(
-		m_pDevice11,	// リソースを使用するデバイスのポインタ.
-		texturePath,	// テクスチャパス名.
-		nullptr,
-		nullptr,
-		&m_pTexture,		// (out)テクスチャ.
-		nullptr ))){
-		std::string err = texturePath;
-		err += " : テクスチャ読み込み : 失敗";
-		ERROR_MESSAGE( err );
-		return E_FAIL;
-	}
-	
-	// テクスチャ用のサンプラ構造体.
-	D3D11_SAMPLER_DESC samDesc;
-	ZeroMemory( &samDesc, sizeof(samDesc) );
-	samDesc.Filter		= D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	samDesc.AddressU	= D3D11_TEXTURE_ADDRESS_MIRROR;
-	samDesc.AddressV	= D3D11_TEXTURE_ADDRESS_MIRROR;
-	samDesc.AddressW	= D3D11_TEXTURE_ADDRESS_MIRROR;
-
-	// サンプラ作成.
-	if( FAILED( m_pDevice11->CreateSamplerState( &samDesc, &m_pSampleLinear ))){
-		ERROR_MESSAGE("サンプラ作成 : 失敗");
-		return E_FAIL;
-	}
-	
 	return S_OK;
 }

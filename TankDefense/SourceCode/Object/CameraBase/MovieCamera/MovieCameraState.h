@@ -23,12 +23,14 @@ struct stMovieShakeCamera
 		float		Time;			// —h‚êŠÔ(•b).
 		D3DXVECTOR3	BasePosition;	// Šî’ê‚ÌÀ•W.
 		bool		IsAttenuation;	// Œ¸Š‚·‚é‚©.
+		bool		IsPlaying;		// “®ì‚·‚é‚©.
 		stShakeState()
 			: Amplitube		( 0.0f )
 			, Frequency		( 0.0f )
 			, Time			( 0.0f )
 			, BasePosition	( 0.0f, 0.0f, 0.0f )
 			, IsAttenuation	( false )
+			, IsPlaying		( false )
 
 		{}
 	} typedef SShakeState;
@@ -61,6 +63,10 @@ struct stMovieCamera
 	stMovieCamera()
 		: MoveState		()
 		, ShakeState	()
+	{}
+	stMovieCamera( const stMovieCamera& movieCamera )
+		: MoveState		( movieCamera.MoveState )
+		, ShakeState	( movieCamera.ShakeState )
 	{}
 	stMovieCamera( const SMovieMoveCamera& moveCamera, const SMovieShakeCamera& shakeCamera )
 		: MoveState		( moveCamera )

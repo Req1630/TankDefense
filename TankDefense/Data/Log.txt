@@ -1,74 +1,77 @@
-[2021/6/30 18:54] >> App launch
+[2021/7/1 19:14] >> App launch
 
-[18:54:3] >> ウィンドウ作成 : 成功
-[18:54:3] >> DIrectX9デバイス作成 : 成功
-[18:54:3] >> DirectX11デバイス作成 : 成功
-[18:54:3] >> 画像描画クラス作成 : 成功
-[18:54:3] >> ------ エフェクト読み込み開始 -------
-[18:54:3] >> Data\Effect\barrier_effect\barrier_effect.efk 読み込み : 成功
-[18:54:3] >> Data\Effect\barrier_effect\barrier_effect_9.efk 読み込み : 成功
-[18:54:3] >> Data\Effect\b_attackeffkt\b_attackeffkt.efk 読み込み : 成功
-[18:54:3] >> Data\Effect\c_dead_effect\c_deadEffect.efk 読み込み : 成功
-[18:54:3] >> Data\Effect\Explosion\Explosion.efk 読み込み : 成功
-[18:54:3] >> Data\Effect\hiteffekt\hiteffekt.efk 読み込み : 成功
-[18:54:3] >> Data\Effect\item effect\item_effect_ability.efk 読み込み : 成功
-[18:54:3] >> Data\Effect\item effect\item_effect_attack.efk 読み込み : 成功
-[18:54:3] >> Data\Effect\item effect\item_effect_cure.efk 読み込み : 成功
-[18:54:3] >> Data\Effect\item effect\item_effect_speed.efk 読み込み : 成功
-[18:54:3] >> Data\Effect\itemGet\item_get_ability.efk 読み込み : 成功
-[18:54:4] >> Data\Effect\itemGet\item_get_attack.efk 読み込み : 成功
-[18:54:4] >> Data\Effect\itemGet\item_get_cure.efk 読み込み : 成功
-[18:54:4] >> Data\Effect\itemGet\item_get_speed.efk 読み込み : 成功
-[18:54:4] >> Data\Effect\key\key.efk 読み込み : 成功
-[18:54:4] >> Data\Effect\sand_smoke effect\sandSmoke.efk 読み込み : 成功
-[18:54:4] >> Data\Effect\slash_base\slash_effect.efk 読み込み : 成功
-[18:54:4] >> Data\Effect\slash_effect\slash_effect_1.efk 読み込み : 成功
-[18:54:4] >> Data\Effect\slash_effect\slash_effect_2.efk 読み込み : 成功
-[18:54:5] >> Data\Effect\slash_effect\slash_effect_3.efk 読み込み : 成功
-[18:54:5] >> Data\Effect\spawn effect\spawnEffect.efk 読み込み : 成功
-[18:54:5] >> Data\Effect\test\uvtest.efk 読み込み : 成功
-[18:54:5] >> Data\Effect\ultemate attack effeck\ultemateAttackEffeck.efk 読み込み : 成功
-[18:54:5] >> ------ エフェクト読み込み終了 -------
-[18:54:5] >> ------- スレッドロード開始 ------
-[18:54:5] >> 画像描画クラス作成 : 成功
-[18:54:5] >> 画像描画クラス作成 : 成功
-[18:54:5] >> Data\Sprite\Fade.png 読み込み : 成功
-[18:54:6] >> Data\Sprite\Mask.png 読み込み : 成功
-[18:54:6] >> ------ 画像読み込み開始 -------
-[18:54:6] >> Data\Sprite\debugBack.png 読み込み : 成功
-[18:54:6] >> Data\Sprite\Fade.png 読み込み : 成功
-[18:54:6] >> Data\Sprite\GageTest\fire.jpg 読み込み : 成功
-[18:54:6] >> Data\Sprite\GageTest\GageMask.png 読み込み : 成功
-[18:54:6] >> Data\Sprite\loadBase.png 読み込み : 成功
-[18:54:6] >> Data\Sprite\loadBase.png 読み込み : 成功
-[18:54:6] >> Data\Sprite\loadUfo.png 読み込み : 成功
-[18:54:6] >> Data\Sprite\Mask.png 読み込み : 成功
-[18:54:6] >> Data\Sprite\pokemon.png 読み込み : 成功
-[18:54:6] >> Data\Sprite\WatercolorPainting\noise.jpg 読み込み : 成功
-[18:54:6] >> Data\Sprite\WatercolorPainting\norm.jpg 読み込み : 成功
-[18:54:6] >> ------ 画像読み込み終了 -------
-[18:54:6] >> ------ メッシュ読み込み開始 -------
-[18:54:7] >> Data\Mesh\Alien\a\a_s.X 読み込み : 成功
-[18:54:8] >> Data\Mesh\Alien\b\b_s.X 読み込み : 成功
-[18:54:9] >> Data\Mesh\Alien\c\c_s.Xにテクスチャがないため別のテクスチャを差し込みます。
-[18:54:9] >> Data\Mesh\Alien\c\c_s.X 読み込み : 成功
-[18:54:10] >> Data\Mesh\Alien\d\ultemate_s.X 読み込み : 成功
-[18:54:10] >> Data\Mesh\Box.xにテクスチャがないため別のテクスチャを差し込みます。
-[18:54:10] >> Data\Mesh\Box.x 読み込み : 成功
-[18:54:10] >> Data\Mesh\Capsule.xにテクスチャがないため別のテクスチャを差し込みます。
-[18:54:10] >> Data\Mesh\Capsule.x 読み込み : 成功
-[18:54:10] >> Data\Mesh\moon\moon.X 読み込み : 成功
-[18:54:12] >> Data\Mesh\Player\kaito\kaito_s.X 読み込み : 成功
-[18:54:12] >> Data\Mesh\space\space.X 読み込み : 成功
-[18:54:12] >> Data\Mesh\Sphere.xにテクスチャがないため別のテクスチャを差し込みます。
-[18:54:12] >> Data\Mesh\Sphere.x 読み込み : 成功
-[18:54:12] >> Data\Mesh\Stage\stage.X 読み込み : 成功
-[18:54:12] >> Data\Mesh\Stage\StageObject\Ground\Ground.X 読み込み : 成功
-[18:54:12] >> Data\Mesh\Stage\StageObject\Ground\Ground_I.X 読み込み : 成功
-[18:54:12] >> Data\Mesh\Stage\StageObject\Ground\Ground_L.X 読み込み : 成功
-[18:54:12] >> Data\Mesh\Stage\StageObject\itemSpeed.X 読み込み : 成功
-[18:54:12] >> Data\Mesh\Stage\StageObject\Tree\Tree.Xにテクスチャがないため別のテクスチャを差し込みます。
-[18:54:12] >> Data\Mesh\Stage\StageObject\Tree\Tree.X 読み込み : 成功
-[18:54:12] >> Data\Mesh\test\normTest.x 読み込み : 成功
-[18:54:13] >> Data\Mesh\ufo\ufo.X 読み込み : 成功
-[18:54:13] >> ------ メッシュ読み込み終了 -------
+[19:14:28] >> ウィンドウ作成 : 成功
+[19:14:28] >> DIrectX9デバイス作成 : 成功
+[19:14:28] >> DirectX11デバイス作成 : 成功
+[19:14:28] >> 画像描画クラス作成 : 成功
+[19:14:28] >> ------ エフェクト読み込み開始 -------
+[19:14:28] >> Data\Effect\barrier_effect\barrier_effect.efk 読み込み : 成功
+[19:14:28] >> Data\Effect\barrier_effect\barrier_effect_9.efk 読み込み : 成功
+[19:14:28] >> Data\Effect\b_attackeffkt\b_attackeffkt.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\c_dead_effect\c_deadEffect.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\Explosion\Explosion.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\hiteffekt\hiteffekt.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\item effect\item_effect_ability.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\item effect\item_effect_attack.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\item effect\item_effect_cure.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\item effect\item_effect_speed.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\itemGet\item_get_ability.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\itemGet\item_get_attack.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\itemGet\item_get_cure.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\itemGet\item_get_speed.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\key\key.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\sand_smoke effect\sandSmoke.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\slash_base\slash_effect.efk 読み込み : 成功
+[19:14:29] >> Data\Effect\slash_effect\slash_effect_1.efk 読み込み : 成功
+[19:14:30] >> Data\Effect\slash_effect\slash_effect_2.efk 読み込み : 成功
+[19:14:30] >> Data\Effect\slash_effect\slash_effect_3.efk 読み込み : 成功
+[19:14:30] >> Data\Effect\spawn effect\spawnEffect.efk 読み込み : 成功
+[19:14:30] >> Data\Effect\test\uvtest.efk 読み込み : 成功
+[19:14:30] >> Data\Effect\ultemate attack effeck\ultemateAttackEffeck.efk 読み込み : 成功
+[19:14:30] >> ------ エフェクト読み込み終了 -------
+[19:14:30] >> ------- スレッドロード開始 ------
+[19:14:30] >> 画像描画クラス作成 : 成功
+[19:14:30] >> 画像描画クラス作成 : 成功
+[19:14:30] >> Data\Sprite\Fade.png 読み込み : 成功
+[19:14:31] >> Data\Sprite\Mask.png 読み込み : 成功
+[19:14:31] >> ------ 画像読み込み開始 -------
+[19:14:31] >> Data\Sprite\debugBack.png 読み込み : 成功
+[19:14:31] >> Data\Sprite\Fade.png 読み込み : 成功
+[19:14:31] >> Data\Sprite\GageTest\fire.jpg 読み込み : 成功
+[19:14:31] >> Data\Sprite\GageTest\GageMask.png 読み込み : 成功
+[19:14:31] >> Data\Sprite\loadBase.png 読み込み : 成功
+[19:14:31] >> Data\Sprite\loadBase.png 読み込み : 成功
+[19:14:31] >> Data\Sprite\loadUfo.png 読み込み : 成功
+[19:14:31] >> Data\Sprite\Mask.png 読み込み : 成功
+[19:14:31] >> Data\Sprite\pokemon.png 読み込み : 成功
+[19:14:31] >> Data\Sprite\WatercolorPainting\noise.jpg 読み込み : 成功
+[19:14:31] >> Data\Sprite\WatercolorPainting\norm.jpg 読み込み : 成功
+[19:14:31] >> ------ 画像読み込み終了 -------
+[19:14:31] >> ------ メッシュ読み込み開始 -------
+[19:14:32] >> Data\Mesh\Alien\a\a_s.X 読み込み : 成功
+[19:14:33] >> Data\Mesh\Alien\b\b_s.X 読み込み : 成功
+[19:14:33] >> Data\Mesh\Alien\c\c_s.Xにテクスチャがないため別のテクスチャを差し込みます。
+[19:14:33] >> Data\Mesh\Alien\c\c_s.X 読み込み : 成功
+[19:14:34] >> Data\Mesh\Alien\d\ultemate_s.X 読み込み : 成功
+[19:14:34] >> Data\Mesh\Box.xにテクスチャがないため別のテクスチャを差し込みます。
+[19:14:34] >> Data\Mesh\Box.x 読み込み : 成功
+[19:14:34] >> Data\Mesh\Capsule.xにテクスチャがないため別のテクスチャを差し込みます。
+[19:14:34] >> Data\Mesh\Capsule.x 読み込み : 成功
+[19:14:34] >> Data\Mesh\moon\moon.X 読み込み : 成功
+[19:14:35] >> Data\Mesh\Player\kaito\kaito_s.X 読み込み : 成功
+[19:14:35] >> Data\Mesh\space\space.X 読み込み : 成功
+[19:14:35] >> Data\Mesh\Sphere.xにテクスチャがないため別のテクスチャを差し込みます。
+[19:14:35] >> Data\Mesh\Sphere.x 読み込み : 成功
+[19:14:35] >> Data\Mesh\Stage\stage.X 読み込み : 成功
+[19:14:35] >> Data\Mesh\Stage\StageObject\Ground\Ground.X 読み込み : 成功
+[19:14:35] >> Data\Mesh\Stage\StageObject\Ground\Ground_I.X 読み込み : 成功
+[19:14:35] >> Data\Mesh\Stage\StageObject\Ground\Ground_L.X 読み込み : 成功
+[19:14:36] >> Data\Mesh\Stage\StageObject\itemSpeed.X 読み込み : 成功
+[19:14:36] >> Data\Mesh\Stage\StageObject\Tree\Tree.Xにテクスチャがないため別のテクスチャを差し込みます。
+[19:14:36] >> Data\Mesh\Stage\StageObject\Tree\Tree.X 読み込み : 成功
+[19:14:36] >> Data\Mesh\test\normTest.x 読み込み : 成功
+[19:14:36] >> Data\Mesh\ufo\ufo.X 読み込み : 成功
+[19:14:36] >> ------ メッシュ読み込み終了 -------
+[19:14:36] >> ------- スレッドロード終了 ------
+
+[19:15:11] >> App End

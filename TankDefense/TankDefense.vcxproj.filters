@@ -104,6 +104,7 @@
     <ClCompile Include="SourceCode\Object\CameraBase\NormalCamera\NormalCamera.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageRender\StageRender.cpp" />
     <ClCompile Include="SourceCode\Object\Movie\Movie.cpp" />
+    <ClCompile Include="SourceCode\Object\Movie\LoadCameraData\LoadCameraData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="SourceCode\Edit\StageEditor\StageRender\StageRender.h" />
     <ClInclude Include="SourceCode\Object\CameraBase\MovieCamera\MovieCameraState.h" />
     <ClInclude Include="SourceCode\Object\Movie\Movie.h" />
+    <ClInclude Include="SourceCode\Object\Movie\LoadCameraData\LoadCameraData.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

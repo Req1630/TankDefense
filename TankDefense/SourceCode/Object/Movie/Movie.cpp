@@ -18,9 +18,7 @@ CMovie::~CMovie()
 //--------------------------.
 void CMovie::Play()
 {
-	m_pCamera->SetCameraState( m_CameraStateQueue.front() );
-	m_CameraStateQueue.pop();
-	CCameraManager::ChangeCamera( m_pCamera.get() );
+	SettingCamera();
 }
 
 //--------------------------.
@@ -46,4 +44,27 @@ void CMovie::Update()
 	}
 
 	m_PlayTime -= deltaTime;
+}
+
+//--------------------------.
+// ƒJƒƒ‰î•ñ‚Ìİ’è.
+//--------------------------.
+void CMovie::SetCameraQueue( const std::vector<SMovieCamera>& movieList )
+{
+	for( auto& m : movieList ){
+		m_CameraStateQueue.push( m );
+	}
+}
+
+//--------------------------.
+// ƒJƒƒ‰‚Ìİ’è,
+//--------------------------.
+void CMovie::SettingCamera()
+{
+	if( m_CameraStateQueue.empty() == false ){
+		m_pCamera->SetCameraState( m_CameraStateQueue.front() );
+		m_pCamera->Play();
+		m_CameraStateQueue.pop();
+	}
+	CCameraManager::ChangeCamera( m_pCamera.get() );
 }

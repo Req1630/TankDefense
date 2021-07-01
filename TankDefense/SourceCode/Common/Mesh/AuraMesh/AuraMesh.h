@@ -21,7 +21,6 @@ class CAuraMesh : public CCommon
 	struct VERTEX
 	{
 		D3DXVECTOR3 Pos;	// 頂点座標.
-		D3DXVECTOR2 UV;		// テクスチャ座標.
 	};
 public:
 	CAuraMesh();
@@ -43,8 +42,6 @@ private:
 	HRESULT InitModel();
 	// シェーダ作成.
 	HRESULT InitShader();
-	// テクスチャ作成.
-	HRESULT CreateTexture( const char* texturePath );
 
 private:
 	ID3D11Buffer*		m_pVertexBuffer;	// 頂点バッファ.
@@ -54,9 +51,6 @@ private:
 	ID3D11PixelShader*	m_pPixelShader;		// ピクセルシェーダー.
 	ID3D11InputLayout*	m_pVertexLayout;	// 頂点レイアウト.
 	ID3D11Buffer*		m_pConstantBuffer;	// コンスタントバッファ.
-
-	ID3D11ShaderResourceView*	m_pTexture;
-	ID3D11SamplerState*			m_pSampleLinear;
 
 	float				m_ScrollTime;
 };

@@ -1,11 +1,3 @@
-//-----------------------------------------------.
-// テクスチャ.
-//-----------------------------------------------.
-Texture2D g_Texture : register(t0); // 色情報.
-//-----------------------------------------------.
-// サンプラ.
-//-----------------------------------------------.
-SamplerState g_SamLinear : register(s0);
 
 struct PS_OUTPUT
 {
@@ -30,34 +22,24 @@ struct VS_OUTPUT
 {
 	float4	Pos			: SV_Position;
 	float3	PosW		: TEXCOORD0;
-	float2	Tex			: TEXCOORD1;
 };
 
 // 頂点シェーダー.
-VS_OUTPUT VS_Main(float4 Pos : POSITION, float2 tex : TEXCOORD )
+VS_OUTPUT VS_Main(float4 Pos : POSITION )
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
 	output.Pos	= mul(Pos, g_mWVP);
 	output.PosW	= Pos.xyz;
-	output.Tex = tex;
-	if (tex.x != 0.0f || tex.y != 0.0f )
-	{
-		output.Tex.x += g_vUV.x;
-		output.Tex.y += g_vUV.y;
-	}
 	return output;
 }
 
 // ピクセルシェーダー.
 PS_OUTPUT PS_Main(VS_OUTPUT input )
 {
-	float a = g_Texture.Sample(g_SamLinear, input.Tex).r;
-	float v = input.PosW.y / 10.0f;
-	float alpha = lerp( 1.0f, 0.0f, v );
+	float alpha = lerp(0.7f, 0.0f, input.PosW.y / 20.0f);
 	float4 color = g_vColor;
-	color.a = alpha * alpha * a;
-	clip(color.a);
 	
+	color.a *= (1.0f - frac(input.PosW.y * 0.5f + g_vUV.x * 5.0f)) * alpha;
 	
 	float z = input.Pos.z / input.Pos.w;
 	PS_OUTPUT output = (PS_OUTPUT) 0;

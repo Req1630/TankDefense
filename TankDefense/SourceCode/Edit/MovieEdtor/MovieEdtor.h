@@ -4,6 +4,7 @@
 #include "..\EditorBase.h"
 #include "..\..\Object\CameraBase\MovieCamera\MovieCamera.h"
 
+class CMovie;			// ムービー(演出)クラス.
 class CCameraEditor;	// カメラエディタ.
 class CStageRender;		// ステージ描画クラス.
 
@@ -36,9 +37,9 @@ private:
 	virtual void ParameterLoading( const char* filePath ) override;
 
 private:
+	std::unique_ptr<CMovie>			m_pMovie;			// ムービー.
 	std::unique_ptr<CCameraEditor>	m_pCameraEdit;		// カメラエディタ.
 	std::unique_ptr<CStageRender>	m_pStageRender;		// ステージの描画.
-	std::vector<SMovieCamera>		m_pMovieCameraList;	// カメラリスト.
 	float							m_MovieEndSecTime;	// 動画終了時間.
 
 	bool							m_IsMoviePlaying;	// 再生中かどうか.

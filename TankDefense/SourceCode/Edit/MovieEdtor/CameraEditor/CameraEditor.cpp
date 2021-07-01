@@ -4,6 +4,7 @@
 #include "..\..\..\Utility\ImGuiManager\ImGuiManager.h"
 #include "..\..\..\Utility\Input\Input.h"
 #include "..\..\..\Object\CameraBase\CameraManager\CameraManager.h"
+#include "..\..\..\Object\Movie\LoadCameraData\LoadCameraData.h"
 
 namespace
 {
@@ -19,12 +20,13 @@ namespace
 
 CCameraEditor::CCameraEditor()
 	: m_pCamera				( std::make_unique<CMovieCamera>() )
+	, m_MovieCameraList		()
 	, m_CameraState			()
-	, m_MovieMoveCamera		()
-	, m_MovieShakeCamera	()
+	, m_pMovieMoveCamera	( nullptr )
+	, m_pMovieShakeCamera	( nullptr )
 	, m_Radian				( 0.0f, 0.0f )
+	, m_NowSelectIndex		( -1 )
 	, m_DeltaTime			( 0.0f )
-	, m_ShakePosFlag		( EShakePosFlag_None )
 	, m_IsCameraControll	( false )
 	, m_IsCameraPlaying		( false )
 {
@@ -50,18 +52,66 @@ void CCameraEditor::Update()
 //-----------------------------.
 bool CCameraEditor::ImGuiRender()
 {
+#if 1
+	static std::vector<std::string> m;
+	if( ImGui::Button("TEST") ){
+		m = CLoadCameraData::ToString( m_MovieCameraList );
+		CLoadCameraData::ToList( m );
+	}
+	if( m.empty() == false ){
+		for( auto& a : m )
+			ImGui::TextWrapped(a.c_str());
+	}
+#endif 
+
+	std::string noName = "No_" + std::to_string(m_NowSelectIndex+1);
+	if( m_NowSelectIndex < 0 ) noName = "None";
+	if( ImGui::BeginCombo( "##2", noName.c_str() ) ){
+		int i = 0;
+		for( auto& actorMesh : m_MovieCameraList ){
+			const bool isSelected = ( i == m_NowSelectIndex );
+			noName =  "No_" + std::to_string(i+1);
+
+			if( ImGui::Selectable( noName.c_str(), isSelected ) ) m_NowSelectIndex = i;
+			if( isSelected ) ImGui::SetItemDefaultFocus();
+
+			i++;
+		}
+		if( m_NowSelectIndex >= 0 ){
+			m_pMovieMoveCamera	= &m_MovieCameraList[m_NowSelectIndex].MoveState;
+			m_pMovieShakeCamera	= &m_MovieCameraList[m_NowSelectIndex].ShakeState;
+		}
+		ImGui::EndCombo();
+	}
+
+	ImGui::SameLine();
+	if( ImGui::Button( u8"新しく追加" ) ){
+		m_MovieCameraList.emplace_back();
+		m_NowSelectIndex	= m_MovieCameraList.size()-1;
+		m_pMovieMoveCamera	= &m_MovieCameraList.back().MoveState;
+		m_pMovieShakeCamera	= &m_MovieCameraList.back().ShakeState;
+	}
+
+	PlayDraw();
+
+	ImGui::Separator();
+
 	ChangeMoveCamera();
-	if( ImGui::TreeNode( u8"現在の位置情報##1" ) ){
-		ImGui::Text( u8"Position \n x : %f\n y : %f\n z : %f\n", 
-			m_pCamera->GetPosition().x,
-			m_pCamera->GetPosition().y,
-			m_pCamera->GetPosition().z );
-		ImGui::Text( u8"Look Position \n x : %f\n y : %f\n z : %f\n", 
-			m_pCamera->GetLookPosition().x,
-			m_pCamera->GetLookPosition().y,
-			m_pCamera->GetLookPosition().z );
+	ImGui::Indent();
+	if( ImGui::TreeNode( u8"移動カメラの位置情報" ) ){
+		PositionDraw( u8"Position", m_pCamera->GetPosition() );
+		ImGui::SameLine();
+		PositionDraw( u8"Look Position", m_pCamera->GetLookPosition() );
 		ImGui::TreePop();
 	}
+	ImGui::Unindent();
+
+	if( m_pMovieMoveCamera	== nullptr ) return false;
+	if( m_pMovieShakeCamera	== nullptr ) return false;
+
+	if( m_NowSelectIndex < 0 ) return false;
+
+	MoveCameraSettigDraw( u8"基底となるカメラの設定", m_pMovieMoveCamera->StartState );
 	ImGui::Separator();
 
 	if( ImGui::TreeNode( u8"移動情報の設定" ) ){
@@ -74,21 +124,7 @@ bool CCameraEditor::ImGuiRender()
 		ImGui::TreePop();
 	}
 
-	if( ImGui::Button( u8"再生" ) && m_IsCameraPlaying == false ){
-		m_IsCameraPlaying	= true;
-		shake_pos_flag flag = EShakePosFlag_PosVer;
-		int i = 0;
-		SMovieShakeCamera shakeCamera;
-		for( auto& state : m_MovieShakeCamera.ShakeState ){
-			ImGui::Indent();
-			if( bit::IsBitFlag( m_ShakePosFlag, flag ) ){
-				shakeCamera.ShakeState[i] = state;
-			}
-			flag <<= 1; i++;
-		}
-		m_pCamera->SetCameraState( { m_MovieMoveCamera, shakeCamera } );
-		m_pCamera->Play();
-	}
+	
 
 	return true;
 }
@@ -221,63 +257,54 @@ void CCameraEditor::ChangeMoveCamera()
 //-----------------------------.
 void CCameraEditor::MoveCameraDraw()
 {
-	if( ImGui::Button( u8"現在の位置を開始位置として保存" ) ){
-		m_MovieMoveCamera.StartState.Position = m_CameraState.Position;
-	}
-
-	if( ImGui::Button( u8"現在の注視位置を開始位置として保存" ) ){
-		m_MovieMoveCamera.StartState.LookPosition = m_CameraState.LookPosition;
-	}
-
-	if( ImGui::Button( u8"開始位置の情報をカメラに設定" ) ){
-		m_pCamera->SetPosition( m_MovieMoveCamera.StartState.Position );
-		m_pCamera->SetLookPosition( m_MovieMoveCamera.StartState.LookPosition );
-	}
-
-	if( ImGui::TreeNode( u8"位置情報##2" ) ){
-		ImGui::Text( u8"開始位置\n x : %f\n y : %f\n z : %f\n", 
-					 m_MovieMoveCamera.StartState.Position.x,
-					 m_MovieMoveCamera.StartState.Position.y,
-					 m_MovieMoveCamera.StartState.Position.z );
-		ImGui::Text( u8"開始視点位置\n x : %f\n y : %f\n z : %f\n", 
-					 m_MovieMoveCamera.StartState.LookPosition.x,
-					 m_MovieMoveCamera.StartState.LookPosition.y,
-					 m_MovieMoveCamera.StartState.LookPosition.z );
-		ImGui::TreePop();
-	}
-
-	ImGui::Separator();
-
-	if( ImGui::Button( u8"現在の位置を終了位置として保存" ) ){
-		m_MovieMoveCamera.EndState.Position = m_CameraState.Position;
-	}
-
-	if( ImGui::Button( u8"現在の注視位置を終了位置として保存" ) ){
-		m_MovieMoveCamera.EndState.LookPosition = m_CameraState.LookPosition;
-	}
-	if( ImGui::Button( u8"終了位置の情報をカメラに設定" ) ){
-		m_pCamera->SetPosition( m_MovieMoveCamera.EndState.Position );
-		m_pCamera->SetLookPosition( m_MovieMoveCamera.EndState.LookPosition );
-	}
-
-	if( ImGui::TreeNode( u8"位置情報##3" ) ){
-		ImGui::Text( u8"終了位置\n x : %f\n y : %f\n z : %f\n", 
-					 m_MovieMoveCamera.EndState.Position.x,
-					 m_MovieMoveCamera.EndState.Position.y,
-					 m_MovieMoveCamera.EndState.Position.z );
-		ImGui::Text( u8"終了視点位置\n x : %f\n y : %f\n z : %f\n", 
-					 m_MovieMoveCamera.EndState.LookPosition.x,
-					 m_MovieMoveCamera.EndState.LookPosition.y,
-					 m_MovieMoveCamera.EndState.LookPosition.z );
-		ImGui::TreePop();
-	}
-
-	ImGui::Separator();
+	ImGui::BulletText( u8"移動時間の設定" );
+	ImGui::Indent();
 
 	ImGui::PushItemWidth( 150.0f );
-	ImGui::DragFloat( u8"位置移動時間(秒)", &m_MovieMoveCamera.PosMoveTime,		0.1f, 0.1f, 180.0f );
-	ImGui::DragFloat( u8"視点移動時間(秒)", &m_MovieMoveCamera.LookPosMoveTime,	0.1f, 0.1f, 180.0f );
+	ImGui::DragFloat( u8"位置 移動時間(秒)", &m_pMovieMoveCamera->PosMoveTime,		0.1f, 0.1f, 180.0f );
+	ImGui::DragFloat( u8"視点 移動時間(秒)", &m_pMovieMoveCamera->LookPosMoveTime,	0.1f, 0.1f, 180.0f );
 	ImGui::PopItemWidth();
+
+	ImGui::Unindent();
+
+	
+	MoveCameraSettigDraw( u8"終了位置の設定", m_pMovieMoveCamera->EndState );
+}
+
+//-----------------------------.
+// 移動カメラ設定の表示.
+//-----------------------------.
+void CCameraEditor::MoveCameraSettigDraw( const char* msg, CCameraBase::SCameraState& state )
+{
+	ImGui::BulletText( msg );
+	ImGui::PushID( msg );
+	ImGui::Indent();
+
+	if( ImGui::Button( u8" 現在の位置を保存" ) ){
+		state.Position = m_CameraState.Position;
+	}
+	ImGui::SameLine();
+	if( ImGui::Button( u8" 現在の注視位置を保存" ) ){
+		state.LookPosition = m_CameraState.LookPosition;
+	}
+
+	if( ImGui::Button( u8"保存した位置情報を移動カメラの座標に設定" ) ){
+		m_CameraState = state;
+		m_pCamera->SetPosition( state.Position );
+		m_pCamera->SetLookPosition( state.LookPosition );
+	}
+
+	ImGui::Indent();
+	if( ImGui::TreeNode( u8"位置情報" ) ){
+		PositionDraw( u8"Position", state.Position );
+		ImGui::SameLine();
+		PositionDraw( u8"Look Position", state.LookPosition );
+		ImGui::TreePop();
+	}
+	ImGui::Unindent();
+
+	ImGui::PopID();
+	ImGui::Unindent();
 }
 
 //-----------------------------.
@@ -289,46 +316,66 @@ void CCameraEditor::ShakeCameraDraw()
 	{
 		u8"座標の縦方向の揺れ",
 		u8"座標の横方向の揺れ",
-		u8"視点座標の縦方向の揺れ",
-		u8"視点座標の横方向の揺れ",
+		u8"視点 座標の縦方向の揺れ",
+		u8"視点 座標の横方向の揺れ",
 	};
 
-	shake_pos_flag flag = EShakePosFlag_PosVer;
 	int i = 0;
-	for( auto& state : m_MovieShakeCamera.ShakeState ){
-		ImGui::CheckboxFlags( chekboxMsgList[i], &m_ShakePosFlag, flag );
-		ImGui::Indent();
-		if( bit::IsBitFlag( m_ShakePosFlag, flag ) ){
-			ImGui::PushItemWidth( 100.0f );
-			ImGui::PushID( i );
-			if( ImGui::TreeNode( u8"設定情報##1" ) ){
-				ImGui::DragFloat(	u8"振れ幅",		&state.Amplitube );
-				ImGui::DragFloat(	u8"周波数",		&state.Frequency );
-				ImGui::DragFloat(	u8"揺れ時間",	&state.Time );
-				ImGui::Checkbox(	u8"減衰するか",	&state.IsAttenuation );
-				if( i < 2 ){
-					if( ImGui::Button(	u8"現在の位置を基底座標として設定" ) ){
-						state.BasePosition = m_CameraState.Position;
-					}
-					ImGui::Text( u8"Position \n x : %f\n y : %f\n z : %f\n", 
-								 state.BasePosition.x,
-								 state.BasePosition.y,
-								 state.BasePosition.z );
-				} else {
-					if( ImGui::Button(	u8"現在の視点位置を基底座標として設定" ) ){
-						state.BasePosition = m_CameraState.LookPosition;
-					}
-					ImGui::Text( u8"Look Position \n x : %f\n y : %f\n z : %f\n", 
-								 state.BasePosition.x,
-								 state.BasePosition.y,
-								 state.BasePosition.z );
-				}
-				ImGui::TreePop();
-			}
-			ImGui::PopID();
-			ImGui::PopItemWidth();
+	for( auto& state : m_pMovieShakeCamera->ShakeState ){
+		ImGui::Checkbox( chekboxMsgList[i], &state.IsPlaying );
+		if( state.IsPlaying == false ){
+			i++; 
+			continue;
 		}
+
+		ImGui::Indent();
+		ImGui::PushItemWidth( 100.0f );
+		ImGui::PushID( i );
+		if( ImGui::TreeNode( u8"設定情報##1" ) ){
+			ImGui::DragFloat(	u8"振れ幅",		&state.Amplitube,	0.1f, 0.0f, 180.0f );
+			ImGui::DragFloat(	u8"周波数",		&state.Frequency,	0.1f, 0.0f, 180.0f );
+			ImGui::DragFloat(	u8"揺れ時間",	&state.Time,		0.1f, 0.0f, 180.0f );
+			ImGui::Checkbox(	u8"減衰するか",	&state.IsAttenuation );
+			if( i < 2 ){
+				if( ImGui::Button(	u8"現在の位置を基底座標として設定" ) ){
+					state.BasePosition = m_CameraState.Position;
+				}
+				PositionDraw( u8"Position", state.BasePosition );
+			} else {
+				if( ImGui::Button(	u8"現在の視点位置を基底座標として設定" ) ){
+					state.BasePosition = m_CameraState.LookPosition;
+				}
+				PositionDraw( u8"Look Position", state.BasePosition );
+			}
+			ImGui::TreePop();
+		}
+
+		ImGui::PopID();
+		ImGui::PopItemWidth();
 		ImGui::Unindent();
-		flag <<= 1; i++;
+		i++;
 	}
+}
+
+//-----------------------------.
+// 再生の表示.
+//-----------------------------.
+void CCameraEditor::PlayDraw()
+{
+	if( ImGui::Button( u8"再生" ) && m_IsCameraPlaying == false ){
+		m_IsCameraPlaying	= true;
+		m_pCamera->SetCameraState( { *m_pMovieMoveCamera, *m_pMovieShakeCamera } );
+		m_pCamera->Play();
+		CCameraManager::ChangeCamera( m_pCamera.get() );
+	}
+}
+
+//-----------------------------.
+// 座標の表示.
+//-----------------------------.
+void CCameraEditor::PositionDraw( const char* c, const D3DXVECTOR3& pos )
+{
+	std::string msg = c;
+	msg += "\n x : %f\n y : %f\n z : %f\n";
+	ImGui::Text( msg.c_str(), pos.x, pos.y, pos.z );
 }

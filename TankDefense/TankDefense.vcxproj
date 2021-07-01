@@ -215,6 +215,7 @@
     <ClCompile Include="SourceCode\Object\LightBase\LightManager\LightManager.cpp" />
     <ClCompile Include="SourceCode\Object\LightBase\NormalLight\NormalLight.cpp" />
     <ClCompile Include="SourceCode\Object\LoadRender\LoadRender.cpp" />
+    <ClCompile Include="SourceCode\Object\Movie\LoadCameraData\LoadCameraData.cpp" />
     <ClCompile Include="SourceCode\Object\Movie\Movie.cpp" />
     <ClCompile Include="SourceCode\Object\Object.cpp" />
     <ClCompile Include="SourceCode\Resource\EffectResource\EffectResource.cpp" />
@@ -342,6 +343,7 @@
     <ClInclude Include="SourceCode\Object\LightBase\LightManager\LightManager.h" />
     <ClInclude Include="SourceCode\Object\LightBase\NormalLight\NormalLight.h" />
     <ClInclude Include="SourceCode\Object\LoadRender\LoadRender.h" />
+    <ClInclude Include="SourceCode\Object\Movie\LoadCameraData\LoadCameraData.h" />
     <ClInclude Include="SourceCode\Object\Movie\Movie.h" />
     <ClInclude Include="SourceCode\Object\Object.h" />
     <ClInclude Include="SourceCode\resource.h" />

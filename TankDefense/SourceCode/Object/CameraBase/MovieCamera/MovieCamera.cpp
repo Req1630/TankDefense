@@ -42,11 +42,19 @@ void CMovieCamera::Play()
 	m_IsMoveCameraPlaying	= true;
 	m_IsShakeCameraPlaying	= true;
 	m_IsActive				= true;
-	m_PosMoveTime		= 1.0f;
-	m_LookPosMoveTime	= 1.0f;
+	m_PosMoveTime			= 1.0f;
+	m_LookPosMoveTime		= 1.0f;
+	m_Tranceform.Position	= m_MovieCameraState.MoveState.StartState.Position;
+	m_LookPosition			= m_MovieCameraState.MoveState.StartState.LookPosition;
+
+	if( m_MovieCameraState.MoveState.PosMoveTime		<= 0.0f || 
+		m_MovieCameraState.MoveState.LookPosMoveTime	<= 0.0f ){
+		m_IsMoveCameraPlaying = false;
+	}
 
 	for( int i = 0; i < SMovieShakeCamera::EShakePosNo_Max; i++ ){
-		m_PlayShakeState[i].Time			= m_MovieCameraState.ShakeState.ShakeState[i].Time;
+		const bool isPlay = m_MovieCameraState.ShakeState.ShakeState[i].IsPlaying;
+		m_PlayShakeState[i].Time			= isPlay ? m_MovieCameraState.ShakeState.ShakeState[i].Time : 0.0f;
 		m_PlayShakeState[i].IsAttenuation	= m_MovieCameraState.ShakeState.ShakeState[i].IsAttenuation;
 		m_PlayShakeState[i].Attenuation		= 1.0f;
 	}
@@ -65,6 +73,8 @@ void CMovieCamera::Reset()
 //------------------------------.
 void CMovieCamera::MoveCamera()
 {
+	if( m_IsMoveCameraPlaying == false ) return;
+
 	const SMovieMoveCamera& moveState = m_MovieCameraState.MoveState;
 
 	// 指定秒で、指定座標に移動するカメラ動作.
@@ -80,10 +90,8 @@ void CMovieCamera::MoveCamera()
 
 	m_PosMoveTime		-= m_DeltaTime / moveState.PosMoveTime;
 	m_LookPosMoveTime	-= m_DeltaTime / moveState.LookPosMoveTime;
-	if( m_PosMoveTime		<= 0.0f ) m_PosMoveTime		= 0.0f;
-	if( m_LookPosMoveTime	<= 0.0f ) m_LookPosMoveTime	= 0.0f;
 
-	if( m_PosMoveTime <= 0.0f && m_LookPosMoveTime <= 0.0f ){
+	if( m_PosMoveTime < 0.0f && m_LookPosMoveTime < 0.0f ){
 		m_IsMoveCameraPlaying = false;
 	}
 }
@@ -93,6 +101,8 @@ void CMovieCamera::MoveCamera()
 //------------------------------.
 void CMovieCamera::ShakeCamera()
 {
+	if( m_IsShakeCameraPlaying == false ) return;
+
 	const SMovieShakeCamera& shakeState = m_MovieCameraState.ShakeState;
 
 	int playEndCount = 0;
@@ -127,7 +137,7 @@ void CMovieCamera::ShakeCamera()
 			break;
 		}
 		m_PlayShakeState[i].Time -= m_DeltaTime;
-		if( m_PlayShakeState[i].Time <= 0.0f ){
+		if( m_PlayShakeState[i].Time < 0.0f ){
 			playEndCount++;
 		}
 	}
