@@ -1,23 +1,2 @@
 CameraState Start {
-	//---------------------
-	// CameraState No.1
-	#ActiveTime, 0
-	// StartState
-	#Position, 0, 0, 0
-	#Look Position, 0, 0, 0
-	// EndState
-	#Position, 0, 0, 0
-	#Look Position, 0, 0, 0
-	#PosMoveTime, 0
-	#LookPosMoveTime, 0
-	// shakeState No.0
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying, false
-	// shakeState No.1
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying, false
-	// shakeState No.2
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying, false
-	// shakeState No.3
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying, false
-	//---------------------
-
 } CameraState End

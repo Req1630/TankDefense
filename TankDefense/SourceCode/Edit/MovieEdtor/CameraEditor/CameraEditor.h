@@ -49,6 +49,8 @@ private:
 	// カメラ移動処理の切り替え.
 	void ChangeMoveCamera();
 
+	// コンボの表示.
+	void ComboDraw();
 	// 移動カメラの表示.
 	void MoveCameraDraw();
 	// 移動カメラ設定の表示.
@@ -69,7 +71,7 @@ private:
 	SMovieMoveCamera*				m_pMovieMoveCamera;
 	SMovieShakeCamera*				m_pMovieShakeCamera;
 	D3DXVECTOR2						m_Radian;			// ラジアン.
-	int								m_NowSelectIndex;
+	int								m_NowSelectIndex;	// 現在選択しているインデックス.
 	float							m_DeltaTime;		// デルタタイム.
 	bool							m_IsCameraControll;	// カメラ操作できるか.
 	bool							m_IsCameraPlaying;	// カメラ再生中か.

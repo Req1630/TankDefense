@@ -11,6 +11,9 @@ enum class enObjectTagList : unsigned int
 {
 	None,
 
+	Player,			// ƒvƒŒƒCƒ„[.
+	Enemy,			// G‹›“G.
+
 	Max,
 
 } typedef EObjectTag;

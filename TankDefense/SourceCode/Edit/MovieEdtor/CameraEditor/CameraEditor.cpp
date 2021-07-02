@@ -52,7 +52,7 @@ void CCameraEditor::Update()
 //-----------------------------.
 bool CCameraEditor::ImGuiRender()
 {
-#if 1
+#if 0
 	static std::vector<std::string> m;
 	if( ImGui::Button("TEST") ){
 //		m = CCameraDataConverter::ToString( m_MovieCameraList );
@@ -63,35 +63,9 @@ bool CCameraEditor::ImGuiRender()
 		for( auto& a : m )
 			ImGui::TextWrapped(a.c_str());
 	}
-#endif 
+#endif
 
-	std::string noName = "No_" + std::to_string(m_NowSelectIndex+1);
-	if( m_NowSelectIndex < 0 ) noName = "None";
-	if( ImGui::BeginCombo( "##2", noName.c_str() ) ){
-		int i = 0;
-		for( auto& actorMesh : m_MovieCameraList ){
-			const bool isSelected = ( i == m_NowSelectIndex );
-			noName =  "No_" + std::to_string(i+1);
-
-			if( ImGui::Selectable( noName.c_str(), isSelected ) ) m_NowSelectIndex = i;
-			if( isSelected ) ImGui::SetItemDefaultFocus();
-
-			i++;
-		}
-		if( m_NowSelectIndex >= 0 ){
-			m_pMovieMoveCamera	= &m_MovieCameraList[m_NowSelectIndex].MoveState;
-			m_pMovieShakeCamera	= &m_MovieCameraList[m_NowSelectIndex].ShakeState;
-		}
-		ImGui::EndCombo();
-	}
-
-	ImGui::SameLine();
-	if( ImGui::Button( u8"新しく追加" ) ){
-		m_MovieCameraList.emplace_back();
-		m_NowSelectIndex	= m_MovieCameraList.size()-1;
-		m_pMovieMoveCamera	= &m_MovieCameraList.back().MoveState;
-		m_pMovieShakeCamera	= &m_MovieCameraList.back().ShakeState;
-	}
+	ComboDraw();
 
 	PlayDraw();
 
@@ -107,9 +81,10 @@ bool CCameraEditor::ImGuiRender()
 	}
 	ImGui::Unindent();
 
+
+
 	if( m_pMovieMoveCamera	== nullptr ) return false;
 	if( m_pMovieShakeCamera	== nullptr ) return false;
-
 	if( m_NowSelectIndex < 0 ) return false;
 
 	MoveCameraSettigDraw( u8"基底となるカメラの設定", m_pMovieMoveCamera->StartState );
@@ -251,6 +226,54 @@ void CCameraEditor::ChangeMoveCamera()
 		CImGuiManager::EnableGamepad();
 		ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.9f;
 	}
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker(
+		u8"ボタンを押すことで カメラを操作することでき\n"
+		u8"動かした位置に 基底となる座標などを 設定することができる\n"
+		u8"以下のボタンを押せば エディタ画面に戻れる\n"
+		u8" GamePad -> Select ボタン\n keyboard -> Back Space キー"
+	);
+}
+
+//-----------------------------.
+// コンボの表示.
+//-----------------------------.
+void CCameraEditor::ComboDraw()
+{
+	ImGui::PushItemWidth( 160.0f );
+	std::string noName = "No_" + std::to_string(m_NowSelectIndex+1);
+	if( m_NowSelectIndex < 0 ) noName = "None";
+	if( ImGui::BeginCombo( "##2", noName.c_str() ) ){
+		int i = 0;
+		for( auto& actorMesh : m_MovieCameraList ){
+			const bool isSelected = ( i == m_NowSelectIndex );
+			noName =  "No_" + std::to_string(i+1);
+
+			if( ImGui::Selectable( noName.c_str(), isSelected ) ) m_NowSelectIndex = i;
+			if( isSelected ) ImGui::SetItemDefaultFocus();
+
+			i++;
+		}
+		if( m_NowSelectIndex >= 0 ){
+			m_pMovieMoveCamera	= &m_MovieCameraList[m_NowSelectIndex].MoveState;
+			m_pMovieShakeCamera	= &m_MovieCameraList[m_NowSelectIndex].ShakeState;
+		}
+		ImGui::EndCombo();
+	}
+	ImGui::PopItemWidth();
+
+	ImGui::SameLine();
+	if( ImGui::Button( u8"新しく追加" ) ){
+		m_MovieCameraList.emplace_back();
+		m_NowSelectIndex	= m_MovieCameraList.size()-1;
+		m_pMovieMoveCamera	= &m_MovieCameraList.back().MoveState;
+		m_pMovieShakeCamera	= &m_MovieCameraList.back().ShakeState;
+	}
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( 
+		u8"ボタンを押すことで 新しいカメラを追加することができる\n"
+		u8"また リストから指定のカメラを選択すれば\n指定したカメラを 編集することができる\n"
+	);
 }
 
 //-----------------------------.
@@ -262,8 +285,8 @@ void CCameraEditor::MoveCameraDraw()
 	ImGui::Indent();
 
 	ImGui::PushItemWidth( 150.0f );
-	ImGui::DragFloat( u8"位置 移動時間(秒)", &m_pMovieMoveCamera->PosMoveTime,		0.1f, 0.1f, 180.0f );
-	ImGui::DragFloat( u8"視点 移動時間(秒)", &m_pMovieMoveCamera->LookPosMoveTime,	0.1f, 0.1f, 180.0f );
+	ImGui::DragFloat( u8"位置 移動時間(秒)", &m_pMovieMoveCamera->PosMoveTime,		0.1f, 0.0f, 180.0f );
+	ImGui::DragFloat( u8"視点 移動時間(秒)", &m_pMovieMoveCamera->LookPosMoveTime,	0.1f, 0.0f, 180.0f );
 	ImGui::PopItemWidth();
 
 	ImGui::Unindent();
@@ -364,11 +387,17 @@ void CCameraEditor::ShakeCameraDraw()
 void CCameraEditor::PlayDraw()
 {
 	if( ImGui::Button( u8"再生" ) && m_IsCameraPlaying == false ){
+		if( m_pMovieMoveCamera	== nullptr ) return;
+		if( m_pMovieShakeCamera	== nullptr ) return;
 		m_IsCameraPlaying	= true;
 		m_pCamera->SetCameraState( { *m_pMovieMoveCamera, *m_pMovieShakeCamera } );
 		m_pCamera->Play();
 		CCameraManager::ChangeCamera( m_pCamera.get() );
 	}
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( 
+		u8"ボタンを押すことで 現在選択しているカメラ情報の動きを確認することができる\n"
+	);
 }
 
 //-----------------------------.

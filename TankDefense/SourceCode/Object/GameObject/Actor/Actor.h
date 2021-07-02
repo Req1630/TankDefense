@@ -21,6 +21,13 @@ public:
 	CActor();
 	virtual ~CActor();
 
+	// 相手座標の設定関数.
+	virtual void SetTargetPos( CActor& actor ) {}
+	// ベクトルの取得.
+	virtual void SetVector( const D3DXVECTOR3& vec ) {}
+	// 目的の座標へ回転.
+	bool TargetRotation( const D3DXVECTOR3& targetVec, const float& rotSpeed, const float& ToleranceRadian );
+
 	// 当たり判定関数.
 	virtual void Collision( CActor* pActor ) = 0;
 

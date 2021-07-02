@@ -1,11 +1,13 @@
 #include "MovieEdtor.h"
 #include "..\..\Object\Movie\Movie.h"
 #include "CameraEditor/CameraEditor.h"
+#include "ActorEditor/ActorEditor.h"
 #include "..\StageEditor\StageRender\StageRender.h"
 
 CMovieEditor::CMovieEditor()
 	: m_pMovie				( std::make_unique<CMovie>() )
 	, m_pCameraEdit			( std::make_unique<CCameraEditor>() )
+	, m_pActorEdit			( std::make_unique<CActorEditor>() )
 	, m_pStageRender		( std::make_unique<CStageRender>() )
 	, m_MovieEndSecTime		( 1.0f )
 	, m_IsMoviePlaying		( false )
@@ -41,6 +43,7 @@ void CMovieEditor::Update()
 		}
 	} else {
 		m_pCameraEdit->Update();
+		m_pActorEdit->Update();
 	}
 }
 
@@ -64,6 +67,12 @@ bool CMovieEditor::ImGuiRender()
 		ImGui::TreePop();
 	}
 
+	if( ImGui::TreeNode( u8"キャラクターの編集" ) ){
+		m_pActorEdit->ImGuiRender();
+
+		ImGui::TreePop();
+	}
+
 	EndTab();
 	return true;
 }
@@ -74,6 +83,8 @@ bool CMovieEditor::ImGuiRender()
 void CMovieEditor::ModelRender()
 {
 	m_pStageRender->Render();
+
+	m_pActorEdit->ModelRender();
 }
 
 //-----------------------------------.

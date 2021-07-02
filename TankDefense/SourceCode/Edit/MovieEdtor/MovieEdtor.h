@@ -6,6 +6,7 @@
 
 class CMovie;			// ムービー(演出)クラス.
 class CCameraEditor;	// カメラエディタ.
+class CActorEditor;		// アクターエディタ.
 class CStageRender;		// ステージ描画クラス.
 
 /******************************************
@@ -39,6 +40,7 @@ private:
 private:
 	std::unique_ptr<CMovie>			m_pMovie;			// ムービー.
 	std::unique_ptr<CCameraEditor>	m_pCameraEdit;		// カメラエディタ.
+	std::unique_ptr<CActorEditor>	m_pActorEdit;		// アクターエディタ.
 	std::unique_ptr<CStageRender>	m_pStageRender;		// ステージの描画.
 	float							m_MovieEndSecTime;	// 動画終了時間.
 

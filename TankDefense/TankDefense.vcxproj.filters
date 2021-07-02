@@ -107,6 +107,9 @@
     <ClCompile Include="SourceCode\Object\Movie\LoadCameraData\LoadCameraData.cpp" />
     <ClCompile Include="SourceCode\Object\Movie\MovieDataLoader\MovieDataLoader.cpp" />
     <ClCompile Include="SourceCode\Edit\MovieEdtor\ActorEditor\ActorEditor.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemyBase.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -220,6 +223,9 @@
     <ClInclude Include="SourceCode\Object\Movie\LoadCameraData\LoadCameraData.h" />
     <ClInclude Include="SourceCode\Object\Movie\MovieDataLoader\MovieDataLoader.h" />
     <ClInclude Include="SourceCode\Edit\MovieEdtor\ActorEditor\ActorEditor.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemyBase.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

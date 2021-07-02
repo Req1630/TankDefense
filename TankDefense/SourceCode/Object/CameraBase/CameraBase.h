@@ -19,6 +19,9 @@ public:
 	{
 		D3DXVECTOR3 Position;		// 座標.
 		D3DXVECTOR3 LookPosition;	// 視点座標.
+
+//		float	operator[] ( size_t i ) const	{ return (&*Position)[i]; }
+//		float&	operator[] ( size_t i )			{ return (&*Position)[i]; }
 	} typedef SCameraState;
 
 	// カメラを揺らすための情報.

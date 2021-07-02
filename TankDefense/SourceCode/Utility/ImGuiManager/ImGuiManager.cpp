@@ -145,7 +145,16 @@ void CImGuiManager::DragInt( const char* label, int* v, const float& speed )
 //----------------------.
 void CImGuiManager::HelpMarker( const char* desc )
 {
-	ImGui::TextDisabled("(?)");
+	// コントローラーにも対応させたいので,
+	//	ボタンで表示する。その際、ボタンの色をすべて消す.
+	ImGui::PushStyleColor( ImGuiCol_Text,			ImGui::GetStyle().Colors[ImGuiCol_TextDisabled] );
+	ImGui::PushStyleColor( ImGuiCol_Button,			ImVec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
+	ImGui::PushStyleColor( ImGuiCol_ButtonHovered,	ImVec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
+	ImGui::PushStyleColor( ImGuiCol_ButtonActive,	ImVec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
+	ImGui::PushID(desc);
+	ImGui::Button("(?)");
+	ImGui::PopID();
+	ImGui::PopStyleColor( 4 );
 	if( ImGui::IsItemHovered() )
 	{
 		ImGui::BeginTooltip();
