@@ -181,6 +181,7 @@
     <ClCompile Include="SourceCode\Common\Sprite\SpriteRender.cpp" />
     <ClCompile Include="SourceCode\Edit\EditorBase.cpp" />
     <ClCompile Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.cpp" />
+    <ClCompile Include="SourceCode\Edit\MovieEdtor\ActorEditor\ActorEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\MovieEdtor\CameraEditor\CameraEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\MovieEdtor\MovieEdtor.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditor.cpp" />
@@ -217,6 +218,7 @@
     <ClCompile Include="SourceCode\Object\LoadRender\LoadRender.cpp" />
     <ClCompile Include="SourceCode\Object\Movie\LoadCameraData\LoadCameraData.cpp" />
     <ClCompile Include="SourceCode\Object\Movie\Movie.cpp" />
+    <ClCompile Include="SourceCode\Object\Movie\MovieDataLoader\MovieDataLoader.cpp" />
     <ClCompile Include="SourceCode\Object\Object.cpp" />
     <ClCompile Include="SourceCode\Resource\EffectResource\EffectResource.cpp" />
     <ClCompile Include="SourceCode\Resource\FontResource\FontResource.cpp" />
@@ -306,6 +308,7 @@
     <ClInclude Include="SourceCode\Common\Sprite\SpriteStruct.h" />
     <ClInclude Include="SourceCode\Edit\EditorBase.h" />
     <ClInclude Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.h" />
+    <ClInclude Include="SourceCode\Edit\MovieEdtor\ActorEditor\ActorEditor.h" />
     <ClInclude Include="SourceCode\Edit\MovieEdtor\CameraEditor\CameraEditor.h" />
     <ClInclude Include="SourceCode\Edit\MovieEdtor\MovieEdtor.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
@@ -345,6 +348,7 @@
     <ClInclude Include="SourceCode\Object\LoadRender\LoadRender.h" />
     <ClInclude Include="SourceCode\Object\Movie\LoadCameraData\LoadCameraData.h" />
     <ClInclude Include="SourceCode\Object\Movie\Movie.h" />
+    <ClInclude Include="SourceCode\Object\Movie\MovieDataLoader\MovieDataLoader.h" />
     <ClInclude Include="SourceCode\Object\Object.h" />
     <ClInclude Include="SourceCode\resource.h" />
     <ClInclude Include="SourceCode\Resource\EffectResource\EffectResource.h" />

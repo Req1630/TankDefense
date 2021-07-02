@@ -4,7 +4,7 @@
 #include "..\..\..\Utility\ImGuiManager\ImGuiManager.h"
 #include "..\..\..\Utility\Input\Input.h"
 #include "..\..\..\Object\CameraBase\CameraManager\CameraManager.h"
-#include "..\..\..\Object\Movie\LoadCameraData\LoadCameraData.h"
+#include "..\..\..\Object\Movie\MovieDataLoader\MovieDataLoader.h"
 
 namespace
 {
@@ -55,8 +55,9 @@ bool CCameraEditor::ImGuiRender()
 #if 1
 	static std::vector<std::string> m;
 	if( ImGui::Button("TEST") ){
-		m = CLoadCameraData::ToString( m_MovieCameraList );
-		CLoadCameraData::ToList( m );
+//		m = CCameraDataConverter::ToString( m_MovieCameraList );
+		CMovieDataLoader::DataWriting( m_MovieCameraList );
+		CMovieDataLoader::DataLoading();
 	}
 	if( m.empty() == false ){
 		for( auto& a : m )
