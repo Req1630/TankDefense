@@ -1,9 +1,9 @@
-#include "StageEditPlayer.h"
-#include "..\..\..\Resource\MeshResource\MeshResource.h"
-#include "..\..\..\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.h"
-#include "..\..\..\Object\CameraBase\RotLookAtCenter\RotLookAtCenter.h"
-#include "..\..\..\Object\CameraBase\CameraManager\CameraManager.h"
-#include "..\..\..\Utility\Input\Input.h"
+#include "EditPlayer.h"
+#include "..\..\Resource\MeshResource\MeshResource.h"
+#include "..\..\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.h"
+#include "..\..\Object\CameraBase\RotLookAtCenter\RotLookAtCenter.h"
+#include "..\..\Object\CameraBase\CameraManager\CameraManager.h"
+#include "..\..\Utility\Input\Input.h"
 
 namespace
 {
@@ -17,7 +17,7 @@ namespace
 	constexpr float	CAMERA_ZOOM_MIN		= 1.0f;
 };
 
-CStageEditPlayer::CStageEditPlayer()
+CEditPlayer::CEditPlayer()
 	: m_pLookCamera		( std::make_unique<CRotLookAtCenter>() )
 	, m_pSkinMesh		( nullptr )
 	, m_MoveVector		( 0.0f, 0.0f, 0.0f )
@@ -30,14 +30,14 @@ CStageEditPlayer::CStageEditPlayer()
 {
 }
 
-CStageEditPlayer::~CStageEditPlayer()
+CEditPlayer::~CEditPlayer()
 {
 }
 
 //-------------------------------------.
 // 初期化関数.
 //-------------------------------------.
-bool CStageEditPlayer::Init()
+bool CEditPlayer::Init()
 {
 	if( mesh::AttachSkinMesh( &m_pSkinMesh, MESH_NAME ) == false ) return false;
 
@@ -52,7 +52,7 @@ bool CStageEditPlayer::Init()
 //-------------------------------------.
 // 更新関数.
 //-------------------------------------.
-void CStageEditPlayer::Update()
+void CEditPlayer::Update()
 {
 	CameraController();		// カメラ操作.
 	MoveController();		// 移動操作.
@@ -71,7 +71,7 @@ void CStageEditPlayer::Update()
 //-------------------------------------.
 // 描画関数.
 //-------------------------------------.
-void CStageEditPlayer::Render()
+void CEditPlayer::Render()
 {
 	m_pSkinMesh->SetAnimSpeed( GetDeltaTime() );
 	m_pSkinMesh->SetTranceform( m_Tranceform );
@@ -81,7 +81,7 @@ void CStageEditPlayer::Render()
 //-------------------------------------.
 // カメラ操作.
 //-------------------------------------.
-void CStageEditPlayer::CameraController()
+void CEditPlayer::CameraController()
 {
 	const float axisX = CInput::GetAxisValue(EAxisBind::R_Right);
 	const float axisY = CInput::GetAxisValue(EAxisBind::R_Forward);
@@ -104,7 +104,7 @@ void CStageEditPlayer::CameraController()
 //-------------------------------------.
 // 移動操作.
 //-------------------------------------.
-void CStageEditPlayer::MoveController()
+void CEditPlayer::MoveController()
 {
 	if( CInput::IsHold( EKeyBind::Edit_Up ) ) m_Tranceform.Position.y += 0.1f;
 	if( CInput::IsHold( EKeyBind::Edit_Down ) ) m_Tranceform.Position.y -= 0.1f;
@@ -124,7 +124,7 @@ void CStageEditPlayer::MoveController()
 //-------------------------------------.
 // 回転操作.
 //-------------------------------------.
-void CStageEditPlayer::RotationController()
+void CEditPlayer::RotationController()
 {
 	if( m_IsRotController == false ) return;
 	if( CInput::IsHold( EKeyBind::Edit_RightRot ) )	m_PutTranceform.Rotation.y += ACTOR_ROT_SPEED;
@@ -139,7 +139,7 @@ void CStageEditPlayer::RotationController()
 //-------------------------------------.
 // 置く操作.
 //-------------------------------------.
-void CStageEditPlayer::PutController()
+void CEditPlayer::PutController()
 {
 	m_IsPut = CInput::IsMomentPress( EKeyBind::Edit_ActorPut );
 }
@@ -147,7 +147,7 @@ void CStageEditPlayer::PutController()
 //-------------------------------------.
 // 配置座標の更新.
 //-------------------------------------.
-void CStageEditPlayer::PutPositionUpdate()
+void CEditPlayer::PutPositionUpdate()
 {
 	const float leght = 2.0f;
 	m_PutTranceform.Position = m_Tranceform.Position;

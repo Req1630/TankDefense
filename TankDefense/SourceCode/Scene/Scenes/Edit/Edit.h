@@ -8,6 +8,7 @@ class CEditorBase;
 class CStageEditor;
 class CEnemySpawnRangeEditor;
 class CMovieEditor;
+class CEditPlayer;
 
 /**********************************
 *	エディタシーンクラス.
@@ -30,6 +31,7 @@ public:
 	virtual void SpriteRender() override;
 
 private:
+	std::unique_ptr<CEditPlayer>				m_pEditPlayer;
 	std::vector<std::unique_ptr<CEditorBase>>	m_Editors;
 	CEditorBase*								m_pActiveEditor;
 	ImGuiWindowFlags							m_WindowFlags;

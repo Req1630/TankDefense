@@ -3,7 +3,7 @@
 #include "..\..\Resource\MeshResource\MeshResource.h"
 #include "..\..\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h"
 #include "..\..\Utility\Input\Input.h"
-#include "StageEditPlayer/StageEditPlayer.h"
+#include "..\..\Edit\EditPlayer\EditPlayer.h"
 
 namespace
 {
@@ -16,13 +16,12 @@ namespace
 };
 
 CStageEditor::CStageEditor()
-	: m_EditPlayer			( std::make_unique<CStageEditPlayer>() )
+	: m_pEditPlayer			( nullptr )
 	, m_pUndoRedo			( std::make_unique<CUndoRedo<SActorParam>>( &m_ActorList ))
 	, m_ActorList			()
 	, m_ActorMeshList		()
 	, m_NowSelectActor		()
 	, m_DeleteActorNo		()
-	, m_IsArrangementActive	( false )
 {
 }
 
@@ -35,7 +34,6 @@ CStageEditor::~CStageEditor()
 //------------------------------------.
 bool CStageEditor::Init()
 {
-	if( m_EditPlayer->Init()	== false ) return false;
 	if( InitActorMeshList()		== false ) return false;
 	return true;
 }
@@ -45,12 +43,13 @@ bool CStageEditor::Init()
 //------------------------------------.
 void CStageEditor::Update()
 {
-	if( m_IsArrangementActive == false ) return;
-	m_EditPlayer->Update();
+	if( m_IsImGuiGamepad == true ) return;
+	if( m_pEditPlayer == nullptr ) return;
+	m_pEditPlayer->Update();
 
-	if( m_EditPlayer->IsPut() == true ){
+	if( m_pEditPlayer->IsPut() == true ){
 		const int listSize = static_cast<int>(m_ActorList.size());
-		const SActorParam actorParam = { m_NowSelectActor.ActorNo, m_EditPlayer->GetPutTranceform() };
+		const SActorParam actorParam = { m_NowSelectActor.ActorNo, m_pEditPlayer->GetPutTranceform() };
 		m_ActorList.insert( m_ActorList.begin()+listSize, actorParam );
 		m_pUndoRedo->PushUndo( listSize, false, actorParam );
 	}
@@ -86,7 +85,8 @@ bool CStageEditor::ImGuiRender()
 //------------------------------------.
 void CStageEditor::ModelRender()
 {
-	m_EditPlayer->Render();
+	if( m_pEditPlayer == nullptr ) return;
+	m_pEditPlayer->Render();
 
 	int i = 0;
 	for( auto& actor : m_ActorList ){
@@ -99,7 +99,7 @@ void CStageEditor::ModelRender()
 	}
 
 	if( m_NowSelectActor.MeshName.empty() == true ) return;
-	m_NowSelectActor.pStaticMesh->SetTranceform( m_EditPlayer->GetPutTranceform() );
+	m_NowSelectActor.pStaticMesh->SetTranceform( m_pEditPlayer->GetPutTranceform() );
 	m_NowSelectActor.pStaticMesh->SetRasterizerState( ERS_STATE::Wire );
 	m_NowSelectActor.pStaticMesh->Render();
 	m_NowSelectActor.pStaticMesh->SetRasterizerState( ERS_STATE::None );
@@ -118,16 +118,10 @@ void CStageEditor::EffectRneder()
 void CStageEditor::ChangeArrangement()
 {
 	if( ImGui::Button( u8"配置" ) ){
-		m_IsArrangementActive = true;
-		// ImGuiでコントローラー操作を無効化.
-		CImGuiManager::DisableGamepad();
-		ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.4f;
+		OffImGuiGamepad();
 	}
 	if( CInput::IsMomentPress(EKeyBind::Edit_BackMenu) ){
-		m_IsArrangementActive = false;
-		// ImGuiでコントローラー操作を有効化.
-		CImGuiManager::EnableGamepad();
-		ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.9f;
+		OnImGuiGamepad();
 	}
 }
 

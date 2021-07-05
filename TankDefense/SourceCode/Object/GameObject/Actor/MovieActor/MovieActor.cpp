@@ -53,9 +53,9 @@ void CMovieActor<T>::Render()
 template<typename T>
 void CMovieActor<T>::ModelRender( const bool& isWire )
 {
-//	T::m_pSkinMesh->SetRasterizerState( true );
+	T::m_pSkinMesh->SetRasterizerState( isWire ? ERS_STATE::Wire : ERS_STATE::Back );
 	T::m_pSkinMesh->Render();
-//	T::m_pSkinMesh->SetRasterizerState( false );
+	T::m_pSkinMesh->SetRasterizerState( ERS_STATE::None );
 }
 
 //-----------------------------.

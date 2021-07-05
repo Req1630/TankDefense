@@ -29,6 +29,9 @@ public:
 	// エフェクト描画.
 	virtual void EffectRneder() override;
 
+	// エディタ用プレイヤーの設定.
+	virtual void SetEditPlayer( CEditPlayer* pPlayer ) override;
+
 private:
 	// 再生の表示.
 	void PlayDraw();

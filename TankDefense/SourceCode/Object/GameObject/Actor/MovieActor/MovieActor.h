@@ -56,6 +56,9 @@ public:
 	// モデル表示.
 	void ModelRender( const bool& isWire = false );
 
+	// メッシュのポンタの取得.
+	inline CDX9SkinMesh* GetSkinMesh(){ return T::m_pSkinMesh; }
+
 private:
 	// 動作できるか確認する.
 	void ConfirmAcive();

@@ -5,7 +5,6 @@
 #include "..\UndoRedo\UndoRedo.h"
 #include "..\StageEditor\StageEditor.h"
 
-class CStageEditPlayer;	// ステージエディタ用のプレイヤー.
 class CAuraMesh;		// オーラメッシュクラス.
 class CStageRender;		// ステージ描画クラス.
 
@@ -42,6 +41,9 @@ public:
 	// エフェクト描画.
 	virtual void EffectRneder() override;
 
+	// エディタ用プレイヤーの設定.
+	virtual void SetEditPlayer( CEditPlayer* pPlayer ) override { m_pEditPlayer = pPlayer; }
+
 private:
 	// 配置処理の切り替え.
 	void ChangeArrangement();
@@ -62,14 +64,13 @@ private:
 	virtual void ParameterLoading( const char* filePath ) override;
 
 private:
-	std::unique_ptr<CStageEditPlayer>		m_EditPlayer;			// エディタ用プレイヤー.
-	std::unique_ptr<CAuraMesh>				m_pAuraMesh;
+	CEditPlayer*							m_pEditPlayer;			// エディタ用プレイヤー.
+	std::unique_ptr<CAuraMesh>				m_pAuraMesh;			// オーラメッシュ
 	std::unique_ptr<CUndoRedo<SBoxRange>>	m_pUndoRedo;			// 元に戻す操作クラス.
-	std::unique_ptr<CStageRender>			m_pStageRender;
-	std::vector<SBoxRange>					m_BoxRangeList;
+	std::unique_ptr<CStageRender>			m_pStageRender;			// ステージの描画.
+	std::vector<SBoxRange>					m_BoxRangeList;			// 範囲のリスト.
 	SBoxRange								m_NowSelectActor;		// 現在選択しているアクター.
 	int										m_DeleteActorNo;		// 削除するアクターの番号.
-	bool									m_IsArrangementActive;	// 配置動作か.
 };
 
 #endif	// #ifndef ENEMY_SPAEN_RANGE_EDITOR_H.

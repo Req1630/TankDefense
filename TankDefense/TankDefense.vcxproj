@@ -185,7 +185,7 @@
     <ClCompile Include="SourceCode\Edit\MovieEdtor\CameraEditor\CameraEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\MovieEdtor\MovieEdtor.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditor.cpp" />
-    <ClCompile Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.cpp" />
+    <ClCompile Include="SourceCode\Edit\EditPlayer\EditPlayer.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageRender\StageRender.cpp" />
     <ClCompile Include="SourceCode\Edit\UndoRedo\UndoRedo.cpp" />
     <ClCompile Include="SourceCode\Main\Main.cpp" />
@@ -315,7 +315,7 @@
     <ClInclude Include="SourceCode\Edit\MovieEdtor\CameraEditor\CameraEditor.h" />
     <ClInclude Include="SourceCode\Edit\MovieEdtor\MovieEdtor.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
-    <ClInclude Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.h" />
+    <ClInclude Include="SourceCode\Edit\EditPlayer\EditPlayer.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageRender\StageRender.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageStruct.h" />
     <ClInclude Include="SourceCode\Edit\UndoRedo\UndoRedo.h" />

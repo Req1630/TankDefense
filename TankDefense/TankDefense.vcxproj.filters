@@ -94,7 +94,6 @@
     <ClCompile Include="SourceCode\Edit\EditorBase.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditor.cpp" />
     <ClCompile Include="SourceCode\Scene\Scenes\Edit\Edit.cpp" />
-    <ClCompile Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.cpp" />
     <ClCompile Include="SourceCode\Edit\UndoRedo\UndoRedo.cpp" />
     <ClCompile Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.cpp" />
     <ClCompile Include="SourceCode\Common\Mesh\AuraMesh\AuraMesh.cpp" />
@@ -110,6 +109,7 @@
     <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemyBase.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActor.cpp" />
+    <ClCompile Include="SourceCode\Edit\EditPlayer\EditPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -208,7 +208,6 @@
     <ClInclude Include="SourceCode\Edit\EditorBase.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
     <ClInclude Include="SourceCode\Scene\Scenes\Edit\Edit.h" />
-    <ClInclude Include="SourceCode\Edit\StageEditor\StageEditPlayer\StageEditPlayer.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageStruct.h" />
     <ClInclude Include="SourceCode\Edit\UndoRedo\UndoRedo.h" />
     <ClInclude Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.h" />
@@ -226,6 +225,7 @@
     <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemyBase.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActor.h" />
+    <ClInclude Include="SourceCode\Edit\EditPlayer\EditPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

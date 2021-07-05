@@ -8,6 +8,7 @@
 #include <memory>
 
 class CEnemyBase;
+class CEditPlayer;	// ステージエディタ用のプレイヤー.
 
 /*********************************
 *	アクターエディタクラス.
@@ -54,11 +55,18 @@ public:
 	// モデル描画.
 	void ModelRender();
 
+	// エディタ用プレイヤーの設定.
+	inline void SetEditPlayer( CEditPlayer* pPlayer ){ m_pEditPlayer = pPlayer; }
+
 private:
-	// 単体モデルの描画.
-	void SingleModelRender( const EActorNo& no, const int& index, const bool& isWire );
+	// アクターノードの表示.
+	void ActorNodeDraw();
 	// 追加アクターノードの表示.
 	void PushActorNodeDraw();
+	// アクターパラメータの表示.
+	void ActorParameterDraw();
+	// 座標の表示.
+	void PositionDraw( const char* c, const D3DXVECTOR3& pos );
 
 	// リストの追加.
 	void PushList( const EActorNo& no );
@@ -67,11 +75,16 @@ private:
 	// アクター番号を文字に変換.
 	std::string ActorNoToString( const EActorNo& no );
 
+	// 各メッシュの取得.
+	CDX9SkinMesh* GetSkinMesh( const EActorNo& no, const int& index );
+
 private:
-	std::vector<std::unique_ptr<CMovieActor<CEnemy>>> m_pEnemyList;
-	std::vector<SActorEditState>	m_ActorEditStateList;
-	int								m_NowSelectIndex;
-	bool							m_IsPushNodeOpen;
+	CEditPlayer*										m_pEditPlayer;
+	std::vector<std::unique_ptr<CMovieActor<CEnemy>>>	m_pEnemyList;
+	std::vector<SActorEditState>						m_ActorEditStateList;
+	int													m_NowSelectIndex;
+	bool												m_IsPushNodeOpen;
+	bool												m_IsImGuiGamepad;
 };
 
 #endif	// #ifndef ACTOR_EDITOR_H.

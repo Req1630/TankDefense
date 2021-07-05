@@ -4,6 +4,8 @@
 #include "..\Global.h"
 #include "..\Utility\ImGuiManager\ImGuiManager.h"
 
+class CEditPlayer;
+
 /**********************************
 *	エディタ基底クラス.
 **/
@@ -13,6 +15,7 @@ public:
 	CEditorBase( )
 		: m_MessageText			( "" )
 		, m_MessageRenderCount	( 0.0f )
+		, m_IsImGuiGamepad		( true )
 	{}
 	virtual ~CEditorBase()
 	{}
@@ -27,6 +30,14 @@ public:
 	virtual void ModelRender() = 0;
 	// エフェクト描画.
 	virtual void EffectRneder() = 0;
+
+	// エディタ用プレイヤーの設定.
+	virtual void SetEditPlayer( CEditPlayer* pPlayer ){}
+
+	// ImGuiでゲームパッド操作を有効にする.
+	void OnImGuiGamepad();
+	// ImGuiでゲームパッド操作を無効にする.
+	void OffImGuiGamepad();
 
 protected:
 	// ImGuiタブの開始.
@@ -54,7 +65,7 @@ protected:
 protected:
 	std::string		m_MessageText;			// メッセージテキスト.
 	float			m_MessageRenderCount;	// メッセージ描画カウント.
-	bool			m_IsActive;
+	bool			m_IsImGuiGamepad;		// コントローラーが
 
 };
 

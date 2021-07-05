@@ -3,7 +3,7 @@
 #include "..\..\Resource\MeshResource\MeshResource.h"
 #include "..\..\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h"
 #include "..\..\Utility\Input\Input.h"
-#include "..\StageEditor\StageEditPlayer\StageEditPlayer.h"
+#include "..\EditPlayer\EditPlayer.h"
 #include "..\..\Common\Mesh\AuraMesh\AuraMesh.h"
 #include "..\StageEditor\StageRender\StageRender.h"
 
@@ -19,14 +19,13 @@ namespace
 };
 
 CEnemySpawnRangeEditor::CEnemySpawnRangeEditor()
-	: m_EditPlayer			( std::make_unique<CStageEditPlayer>() )
+	: m_pEditPlayer			( nullptr )
 	, m_pAuraMesh			( std::make_unique<CAuraMesh>() )
 	, m_pUndoRedo			( std::make_unique<CUndoRedo<SBoxRange>>( &m_BoxRangeList ))
 	, m_pStageRender		( std::make_unique<CStageRender>() )
 	, m_BoxRangeList		()
 	, m_NowSelectActor		()
 	, m_DeleteActorNo		( 0 )
-	, m_IsArrangementActive	( false )
 {
 }
 
@@ -39,7 +38,6 @@ CEnemySpawnRangeEditor::~CEnemySpawnRangeEditor()
 //------------------------------------.
 bool CEnemySpawnRangeEditor::Init()
 {
-	if( m_EditPlayer->Init()	== false )	return false;
 	if( m_pStageRender->Init()	== false )	return false;
 	if( FAILED( m_pAuraMesh->Init() ))		return false;
 	return true;
@@ -50,12 +48,13 @@ bool CEnemySpawnRangeEditor::Init()
 //------------------------------------.
 void CEnemySpawnRangeEditor::Update()
 {
-	if( m_IsArrangementActive == false ) return;
-	m_EditPlayer->Update();
+	if( m_IsImGuiGamepad == true ) return;
+	if( m_pEditPlayer == nullptr ) return; 
+	m_pEditPlayer->Update();
 
-	if( m_EditPlayer->IsPut() == true ){
+	if( m_pEditPlayer->IsPut() == true ){
 		const int listSize = static_cast<int>(m_BoxRangeList.size());
-		const SBoxRange actorParam = { m_NowSelectActor.Range, m_EditPlayer->GetPutTranceform() };
+		const SBoxRange actorParam = { m_NowSelectActor.Range, m_pEditPlayer->GetPutTranceform() };
 		m_BoxRangeList.insert( m_BoxRangeList.begin()+listSize, actorParam );
 		m_pUndoRedo->PushUndo( listSize, false, actorParam );
 	}
@@ -93,7 +92,8 @@ bool CEnemySpawnRangeEditor::ImGuiRender()
 //------------------------------------.
 void CEnemySpawnRangeEditor::ModelRender()
 {
-	m_EditPlayer->Render();
+	if( m_pEditPlayer == nullptr ) return;
+	m_pEditPlayer->Render();
 
 
 	m_pStageRender->Render();
@@ -107,7 +107,7 @@ void CEnemySpawnRangeEditor::ModelRender()
 	}
 
 	const D3DXVECTOR3 scale = { m_NowSelectActor.Range.x, 1.0f, m_NowSelectActor.Range.y };
-	m_pAuraMesh->SetTranceform( m_EditPlayer->GetPutTranceform() );
+	m_pAuraMesh->SetTranceform( m_pEditPlayer->GetPutTranceform() );
 	m_pAuraMesh->SetScale( scale );
 	m_pAuraMesh->Render();
 
@@ -127,16 +127,10 @@ void CEnemySpawnRangeEditor::EffectRneder()
 void CEnemySpawnRangeEditor::ChangeArrangement()
 {
 	if( ImGui::Button( u8"配置" ) ){
-		m_IsArrangementActive = true;
-		// ImGuiでコントローラー操作を無効化.
-		CImGuiManager::DisableGamepad();
-		ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.4f;
+		OffImGuiGamepad();
 	}
 	if( CInput::IsMomentPress(EKeyBind::Edit_BackMenu) ){
-		m_IsArrangementActive = false;
-		// ImGuiでコントローラー操作を有効化.
-		CImGuiManager::EnableGamepad();
-		ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.9f;
+		OnImGuiGamepad();
 	}
 }
 

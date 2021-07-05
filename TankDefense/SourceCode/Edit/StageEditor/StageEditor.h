@@ -5,8 +5,6 @@
 #include "StageStruct.h"
 #include "..\UndoRedo\UndoRedo.h"
 
-class CStageEditPlayer;	// ステージエディタ用のプレイヤー.
-
 struct stActorMesh
 {
 	EActorNo		ActorNo;
@@ -41,6 +39,9 @@ public:
 	// エフェクト描画.
 	virtual void EffectRneder() override;
 
+	// エディタ用プレイヤーの設定.
+	virtual void SetEditPlayer( CEditPlayer* pPlayer ) override { m_pEditPlayer = pPlayer; }
+
 private:
 	// 配置処理の切り替え.
 	void ChangeArrangement();
@@ -63,13 +64,12 @@ private:
 	virtual void ParameterLoading( const char* filePath ) override;
 
 private:
-	std::unique_ptr<CStageEditPlayer>		m_EditPlayer;			// エディタ用プレイヤー.
+	CEditPlayer*							m_pEditPlayer;			// エディタ用プレイヤー.
 	std::unique_ptr<CUndoRedo<SActorParam>>	m_pUndoRedo;			// 元に戻す操作クラス.
 	std::vector<SActorParam>				m_ActorList;			// 保存用のアクターリスト.
 	actor_mesh_list							m_ActorMeshList;		// アクターメッシュリスト.
 	SActorMesh								m_NowSelectActor;		// 現在選択しているアクター.
 	int										m_DeleteActorNo;		// 削除するアクターの番号.
-	bool									m_IsArrangementActive;	// 配置動作か.
 };
 
 #endif	// #ifndef STAGE_EDITOR_H.

@@ -9,6 +9,28 @@ namespace
 }
 
 //------------------------------------.
+// ImGuiでゲームパッド操作を有効にする.
+//------------------------------------.
+void CEditorBase::OnImGuiGamepad()
+{
+	// ImGuiでコントローラー操作を有効化.
+	CImGuiManager::EnableGamepad();
+	ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.9f;
+	m_IsImGuiGamepad = true;
+}
+
+//------------------------------------.
+// ImGuiでゲームパッド操作を無効にする.
+//------------------------------------.
+void CEditorBase::OffImGuiGamepad()
+{
+	// ImGuiでコントローラー操作を無効化.
+	CImGuiManager::DisableGamepad();
+	ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.4f;
+	m_IsImGuiGamepad = false;
+}
+
+//------------------------------------.
 // ImGuiタブの開始.
 //------------------------------------.
 bool CEditorBase::BeginTab( const char* tabName )

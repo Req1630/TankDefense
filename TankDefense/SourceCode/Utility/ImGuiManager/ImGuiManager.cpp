@@ -170,7 +170,8 @@ void CImGuiManager::HelpMarker( const char* desc )
 //-----------------------------.
 void CImGuiManager::EnableGamepad()
 {
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;	// ゲームパッド.
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;	// キーボード.
 }
 
 //-----------------------------.
@@ -178,5 +179,6 @@ void CImGuiManager::EnableGamepad()
 //-----------------------------.
 void CImGuiManager::DisableGamepad()
 {
-	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NavEnableGamepad;
+	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NavEnableGamepad;	// ゲームパッド.
+	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NavEnableKeyboard;	// キーボード.
 }

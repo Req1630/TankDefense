@@ -83,7 +83,6 @@ bool CMovieEditor::ImGuiRender()
 void CMovieEditor::ModelRender()
 {
 	m_pStageRender->Render();
-
 	m_pActorEdit->ModelRender();
 }
 
@@ -92,6 +91,14 @@ void CMovieEditor::ModelRender()
 //-----------------------------------.
 void CMovieEditor::EffectRneder()
 {
+}
+
+//-----------------------------------.
+// エディタ用プレイヤーの設定.
+//-----------------------------------.
+void CMovieEditor::SetEditPlayer( CEditPlayer* pPlayer )
+{
+	m_pActorEdit->SetEditPlayer( pPlayer );
 }
 
 //-----------------------------------.

@@ -4,9 +4,11 @@
 #include "..\..\..\Edit\StageEditor\StageEditor.h"
 #include "..\..\..\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.h"
 #include "..\..\..\Edit\MovieEdtor\MovieEdtor.h"
+#include "..\..\..\Edit\EditPlayer\EditPlayer.h"
 
 CEdit::CEdit( CSceneManager* pSceneManager )
 	: CSceneBase				( pSceneManager )
+	, m_pEditPlayer				( std::make_unique<CEditPlayer>() )
 	, m_Editors					()
 	, m_pActiveEditor			( nullptr )
 	, m_WindowFlags				( ImGuiWindowFlags_None )
@@ -29,8 +31,10 @@ CEdit::~CEdit()
 //============================.
 bool CEdit::Load()
 {
+	if( m_pEditPlayer->Init() == false ) return false;
 	for( auto& editor : m_Editors ){
 		if( editor->Init() == false ) return false;
+		editor->SetEditPlayer( m_pEditPlayer.get() );
 	}
 	//	フリーカメラを有効化する.
 //	CCameraManager::SetActiveFreeCamera();
@@ -83,12 +87,17 @@ void CEdit::SpriteRender()
 	// ImGuiウィンドウの描画開始.
 	ImGui::Begin( "Edit", nullptr, m_WindowFlags );
 
+	CEditorBase* oldEdit = m_pActiveEditor;
+
 	// 各エディタ画面をタブ形式で描画.
 	if( ImGui::BeginTabBar("TabBar") ){
 		for( auto& editor : m_Editors ){
 			if( editor->ImGuiRender() == true ){
 				m_pActiveEditor = editor.get();
 			}
+		}
+		if( oldEdit != m_pActiveEditor ){
+			m_pActiveEditor->OnImGuiGamepad();
 		}
 
 		ImGui::EndTabBar();

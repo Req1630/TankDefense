@@ -1,18 +1,18 @@
 #ifndef STAGE_EDIT_PLAYER_H
 #define STAGE_EDIT_PLAYER_H
 
-#include "..\..\..\Object\Object.h"
+#include "..\..\Object\Object.h"
 
 class CRotLookAtCenter;
 
 /*****************************************
-* ステージエディタ用のプレイヤー.
+* エディタ用のプレイヤー.
 **/
-class CStageEditPlayer : public CObject
+class CEditPlayer : public CObject
 {
 public:
-	CStageEditPlayer();
-	virtual ~CStageEditPlayer();
+	CEditPlayer();
+	virtual ~CEditPlayer();
 
 	// 初期化関数.
 	bool Init();
