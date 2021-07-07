@@ -49,6 +49,19 @@ CSprite* CSpriteResource::GetSprite( const std::string& spriteName )
 }
 
 //-------------------------------.
+// スプライト名リスト取得関数.
+//-------------------------------.
+std::vector<std::string> CSpriteResource::GetSpriteNameList()
+{
+	std::vector<std::string> nameList;
+	// 指定したスプライト名を取得する.
+	for( auto& s : GetInstance()->m_SpriteList ){
+		nameList.emplace_back( s.first );
+	}
+	return nameList;
+}
+
+//-------------------------------.
 // スプライト読み込み.
 //-------------------------------.
 HRESULT CSpriteResource::SpriteLoad( ID3D11DeviceContext* pContext11 )

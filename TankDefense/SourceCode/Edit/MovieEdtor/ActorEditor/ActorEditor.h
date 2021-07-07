@@ -1,6 +1,7 @@
 #ifndef ACTOR_EDITOR_H
 #define ACTOR_EDITOR_H
 
+#include "..\..\..\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.h"
 #include "..\..\..\Object\GameObject\Actor\MovieActor\MovieActor.h"
 #include "..\..\..\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.h"
 
@@ -15,6 +16,17 @@ class CEditPlayer;	// ステージエディタ用のプレイヤー.
 **/
 class CActorEditor
 {
+	// アクターの選択状態.
+	enum enSelectStateFlag : unsigned char
+	{
+		ESelectStateFlag_None		= 0,
+
+		ESelectStateFlag_StartPos	= 1 << 0,
+		ESelectStateFlag_EndPos		= 1 << 1,
+		ESelectStateFlag_Rot		= 1 << 2,
+
+	} typedef ESelectStateFlag;
+
 	// 使用アクター番号.
 	enum enActorNo : unsigned char
 	{
@@ -34,12 +46,14 @@ class CActorEditor
 	// エディタ用アクター情報.
 	struct stActorEditState
 	{
-		SMovieActor	MovieState;
-		EActorNo	ActorNo;
-		int			ListIndex;
+		SAnimationController	AC;
+		SMovieActor				MovieState;
+		EActorNo				ActorNo;
+		int						ListIndex;
 
 		stActorEditState()
-			: MovieState	()
+			: AC			()
+			, MovieState	()
 			, ActorNo		( EActorNo_Enemy )
 			, ListIndex		( 1 )
 		{}
@@ -59,6 +73,10 @@ public:
 	inline void SetEditPlayer( CEditPlayer* pPlayer ){ m_pEditPlayer = pPlayer; }
 
 private:
+	// 全部のアクターの描画.
+	void AllActorRender();
+	// 現在選択されているアクターの描画.
+	void NowSelectActorRender();
 	// アクターノードの表示.
 	void ActorNodeDraw();
 	// 追加アクターノードの表示.
@@ -78,11 +96,19 @@ private:
 	// 各メッシュの取得.
 	CDX9SkinMesh* GetSkinMesh( const EActorNo& no, const int& index );
 
+	// ImGuiでゲームパッド操作を有効にする.
+	void OnImGuiGamepad();
+	// ImGuiでゲームパッド操作を無効にする.
+	void OffImGuiGamepad();
+
 private:
 	CEditPlayer*										m_pEditPlayer;
 	std::vector<std::unique_ptr<CMovieActor<CEnemy>>>	m_pEnemyList;
 	std::vector<SActorEditState>						m_ActorEditStateList;
+	float												m_DeltaTime;
+	float												m_SelectActorRedColor;
 	int													m_NowSelectIndex;
+	char												m_NowSelectActorState;
 	bool												m_IsPushNodeOpen;
 	bool												m_IsImGuiGamepad;
 };

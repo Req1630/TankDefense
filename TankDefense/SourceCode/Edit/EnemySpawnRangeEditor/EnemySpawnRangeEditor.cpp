@@ -122,6 +122,13 @@ void CEnemySpawnRangeEditor::EffectRneder()
 }
 
 //------------------------------------.
+// ウィジェット描画.
+//------------------------------------.
+void CEnemySpawnRangeEditor::WidgetRender()
+{
+}
+
+//------------------------------------.
 // 配置処理の切り替え.
 //------------------------------------.
 void CEnemySpawnRangeEditor::ChangeArrangement()

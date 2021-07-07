@@ -1,14 +1,24 @@
 #include "ActorEditor.h"
 #include "..\..\..\Utility\ImGuiManager\ImGuiManager.h"
 #include "..\..\..\Utility\Input\Input.h"
+#include "..\..\..\Utility\BitFlagManager\BitFlagManager.h"
 #include "..\..\EditPlayer\EditPlayer.h"
-#include "..\..\..\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.h"
+
+
+namespace
+{
+	constexpr float SELECT_ACTOR_RED_COLOR			= 4.0f;
+	constexpr float SELECT_ACTOR_COLOR_DOWN_SPEED	= 0.02f;
+};
 
 CActorEditor::CActorEditor()
 	: m_pEditPlayer			( nullptr )
 	, m_pEnemyList			()
 	, m_ActorEditStateList	()
+	, m_DeltaTime			( 0.0f )
+	, m_SelectActorRedColor	( SELECT_ACTOR_RED_COLOR )
 	, m_NowSelectIndex		( -1 )
+	, m_NowSelectActorState	( ESelectStateFlag_None )
 	, m_IsPushNodeOpen		( false )
 	, m_IsImGuiGamepad		( true )
 {
@@ -23,11 +33,37 @@ CActorEditor::~CActorEditor()
 //---------------------------.
 void CActorEditor::Update()
 {
-	const float deltaTime = GetDeltaTime();
+	m_DeltaTime = GetDeltaTime();
+
 
 	if( m_IsImGuiGamepad == true ) return;
 	if( m_pEditPlayer == nullptr ) return;
 	m_pEditPlayer->Update();
+
+	SActorEditState& state = m_ActorEditStateList[m_NowSelectIndex];
+
+	if( m_pEditPlayer->IsPut() == true ){
+		SActorEditState& state = m_ActorEditStateList[m_NowSelectIndex];
+		const STranceform t = m_pEditPlayer->GetPutTranceform();
+		switch( m_NowSelectActorState )
+		{
+		case ESelectStateFlag_StartPos:
+			state.MovieState.StartPosition = t.Position;
+			break;
+		case ESelectStateFlag_EndPos:
+			state.MovieState.EndPosition = t.Position;
+			break;
+		case ESelectStateFlag_Rot:
+			break;
+		default:
+			break;
+		}
+		m_NowSelectActorState = ESelectStateFlag_None;
+		OnImGuiGamepad();
+	}
+
+	if( !CInput::IsMomentPress(EKeyBind::Edit_BackMenu) ) return;
+	OnImGuiGamepad();
 }
 
 //---------------------------.
@@ -51,13 +87,64 @@ void CActorEditor::ModelRender()
 	if( m_pEditPlayer == nullptr ) return;
 	if( m_NowSelectIndex < 0 ) return;
 
+	AllActorRender();
+	NowSelectActorRender();
+}
+
+//---------------------------.
+// 全部のアクターの描画.
+//---------------------------.
+void CActorEditor::AllActorRender()
+{
+	CDX9SkinMesh* pSkinMesh = nullptr;
+	int i = 0;
+	for( auto& s : m_ActorEditStateList ){
+		if( i++ == m_NowSelectIndex ) continue;
+
+		pSkinMesh = GetSkinMesh( s.ActorNo, s.ListIndex );
+		if( pSkinMesh == nullptr ) continue;
+
+		pSkinMesh->SetPosition( s.MovieState.StartPosition );
+		pSkinMesh->SetRotation( s.MovieState.StartRotation );
+		pSkinMesh->SetColor( { 1.0f, 1.0f, 1.0f, 1.0f } );
+		pSkinMesh->SetAnimSpeed( m_DeltaTime );
+		pSkinMesh->Render( &s.AC );
+	}
+}
+
+//---------------------------.
+// 現在選択されているアクターの描画.
+//---------------------------.
+void CActorEditor::NowSelectActorRender()
+{
+	// 現在選択されているアクターの描画.
 	SActorEditState& state = m_ActorEditStateList[m_NowSelectIndex];
 	CDX9SkinMesh* pSkinMesh = GetSkinMesh( state.ActorNo, state.ListIndex );
 
 	if( pSkinMesh == nullptr ) return;
+	for( int i = 0; i < 2; i++ ){
+		bool isWire = false;
+		STranceform t = m_pEditPlayer->GetPutTranceform();
+		t.Rotation = state.MovieState.StartRotation;
+		if( i == 0 ){
+			// 選択されていればワイヤー表示する.
+			isWire = bit::IsBitFlag( m_NowSelectActorState, ESelectStateFlag_StartPos );
+			if( isWire == false ) t.Position = state.MovieState.StartPosition;
+		} else {
+			// 選択されていればワイヤー表示する.
+			isWire = bit::IsBitFlag( m_NowSelectActorState, ESelectStateFlag_EndPos );
+			if( isWire == false ) t.Position = state.MovieState.EndPosition;
+		}
 
-	pSkinMesh->SetTranceform( m_pEditPlayer->GetPutTranceform() );
-	pSkinMesh->Render();
+		pSkinMesh->SetTranceform( t );
+		pSkinMesh->SetRasterizerState( isWire ? ERS_STATE::Wire : ERS_STATE::None );
+		pSkinMesh->SetColor( { m_SelectActorRedColor, 0.7f, 0.7f, 1.0f } );
+		pSkinMesh->SetAnimSpeed( m_DeltaTime*0.5f );	// 二体分描画するので速度を半分にする.
+		pSkinMesh->Render( &state.AC );
+		pSkinMesh->SetRasterizerState( ERS_STATE::None );
+	}
+	m_SelectActorRedColor -= SELECT_ACTOR_COLOR_DOWN_SPEED;
+	if( m_SelectActorRedColor < 1.0f ) m_SelectActorRedColor = SELECT_ACTOR_RED_COLOR;
 }
 
 //---------------------------.
@@ -108,14 +195,19 @@ void CActorEditor::PushActorNodeDraw()
 			// アクタークラスの追加.
 			PushList( no );
 
+
 			// 各値を設定して追加.
 			SActorEditState state;
 			state.ActorNo	= no;
 			state.ListIndex	= GetListSize(no)-1;
+
+			CDX9SkinMesh* pSkinMesh = GetSkinMesh( state.ActorNo, state.ListIndex );
+			state.AC.SetAnimController( pSkinMesh->GetAnimationController() );
+
 			m_ActorEditStateList.emplace_back( state );
 
 			m_IsPushNodeOpen = false;	// ツリーノードを閉じる.
-			if( m_NowSelectIndex < 0 ) m_NowSelectIndex++;
+			m_NowSelectIndex = m_ActorEditStateList.size()-1;
 		}
 
 		ImGui::TreePop();
@@ -135,26 +227,33 @@ void CActorEditor::ActorParameterDraw()
 	ImGui::DragFloat( u8"開始時間", &state.AciveStartTime, 0.1f, 0.0f, 180.0f );
 	ImGui::BeginGroup();
 	if( ImGui::Button( u8"開始位置を設定" )){
-
+		OffImGuiGamepad();
+		bit::OnBitFlag( &m_NowSelectActorState, ESelectStateFlag_StartPos );
+		m_pEditPlayer->SetPosition( state.StartPosition );
 	}
 	PositionDraw( u8"  Positon", state.StartPosition );
-	ImGui::EndGroup(); ImGui::SameLine();
+	ImGui::EndGroup(); 
+	ImGui::SameLine();
+	ImGui::SeparatorEx( ImGuiSeparatorFlags_Vertical );
+	ImGui::SameLine();
 
 	ImGui::BeginGroup();
 	if( ImGui::Button( u8"終了位置を設定" )){
-
+		OffImGuiGamepad();
+		bit::OnBitFlag( &m_NowSelectActorState, ESelectStateFlag_EndPos );
+		m_pEditPlayer->SetPosition( state.EndPosition );
 	}
 	PositionDraw( u8"  Positon", state.EndPosition );
-	ImGui::EndGroup(); ImGui::SameLine();
-
-	ImGui::BeginGroup();
-	ImGui::PushStyleColor( ImGuiCol_Button,			ImVec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
-	ImGui::PushStyleColor( ImGuiCol_ButtonHovered,	ImVec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
-	ImGui::PushStyleColor( ImGuiCol_ButtonActive,	ImVec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
-	ImGui::Button( u8"" );
-	ImGui::PopStyleColor( 3 );
-	PositionDraw( u8"  Rotation", state.StartRotation );
 	ImGui::EndGroup();
+
+	//ImGui::BeginGroup();
+	//ImGui::PushStyleColor( ImGuiCol_Button,			ImVec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
+	//ImGui::PushStyleColor( ImGuiCol_ButtonHovered,	ImVec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
+	//ImGui::PushStyleColor( ImGuiCol_ButtonActive,	ImVec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
+	//ImGui::Button( u8"" );
+	//ImGui::PopStyleColor( 3 );
+	PositionDraw( u8"  Rotation", state.StartRotation );
+	//ImGui::EndGroup();
 }
 
 //---------------------------.
@@ -248,4 +347,26 @@ CDX9SkinMesh* CActorEditor::GetSkinMesh( const EActorNo& no, const int& index )
 		break;
 	}
 	return nullptr;
+}
+
+//------------------------------------.
+// ImGuiでゲームパッド操作を有効にする.
+//------------------------------------.
+void CActorEditor::OnImGuiGamepad()
+{
+	// ImGuiでコントローラー操作を有効化.
+	CImGuiManager::EnableGamepad();
+	ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.9f;
+	m_IsImGuiGamepad = true;
+}
+
+//------------------------------------.
+// ImGuiでゲームパッド操作を無効にする.
+//------------------------------------.
+void CActorEditor::OffImGuiGamepad()
+{
+	// ImGuiでコントローラー操作を無効化.
+	CImGuiManager::DisableGamepad();
+	ImGui::GetStyle().Colors[ImGuiCol_WindowBg].w = 0.4f;
+	m_IsImGuiGamepad = false;
 }

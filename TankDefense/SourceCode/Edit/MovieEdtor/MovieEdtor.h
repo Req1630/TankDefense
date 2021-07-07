@@ -7,6 +7,7 @@
 class CMovie;			// ムービー(演出)クラス.
 class CCameraEditor;	// カメラエディタ.
 class CActorEditor;		// アクターエディタ.
+class CWidgetEditor;	// ウィジェットエディタ.
 class CStageRender;		// ステージ描画クラス.
 
 /******************************************
@@ -28,6 +29,8 @@ public:
 	virtual void ModelRender() override;
 	// エフェクト描画.
 	virtual void EffectRneder() override;
+	// ウィジェット描画.
+	virtual void WidgetRender() override;
 
 	// エディタ用プレイヤーの設定.
 	virtual void SetEditPlayer( CEditPlayer* pPlayer ) override;
@@ -44,6 +47,7 @@ private:
 	std::unique_ptr<CMovie>			m_pMovie;			// ムービー.
 	std::unique_ptr<CCameraEditor>	m_pCameraEdit;		// カメラエディタ.
 	std::unique_ptr<CActorEditor>	m_pActorEdit;		// アクターエディタ.
+	std::unique_ptr<CWidgetEditor>	m_pWidgetEditor;	// ウィジェットエディタ.
 	std::unique_ptr<CStageRender>	m_pStageRender;		// ステージの描画.
 	float							m_MovieEndSecTime;	// 動画終了時間.
 

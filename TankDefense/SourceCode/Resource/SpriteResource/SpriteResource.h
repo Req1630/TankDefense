@@ -35,6 +35,9 @@ public:
 	// スプライト取得関数.
 	static CSprite* GetSprite( const std::string& spriteName );
 
+	// スプライト名リスト取得関数.
+	static std::vector<std::string> GetSpriteNameList();
+
 private:
 	// スプライト読み込み.
 	HRESULT SpriteLoad( ID3D11DeviceContext* pContext11 );

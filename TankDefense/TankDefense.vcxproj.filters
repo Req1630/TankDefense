@@ -110,6 +110,8 @@
     <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActor.cpp" />
     <ClCompile Include="SourceCode\Edit\EditPlayer\EditPlayer.cpp" />
+    <ClCompile Include="SourceCode\Edit\MovieEdtor\WidgetEditor\WidgetEditor.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Widget\MovieWidget\MovieWidget.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -226,6 +228,8 @@
     <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActor.h" />
     <ClInclude Include="SourceCode\Edit\EditPlayer\EditPlayer.h" />
+    <ClInclude Include="SourceCode\Edit\MovieEdtor\WidgetEditor\WidgetEditor.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Widget\MovieWidget\MovieWidget.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

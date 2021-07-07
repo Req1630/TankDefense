@@ -2,12 +2,14 @@
 #include "..\..\Object\Movie\Movie.h"
 #include "CameraEditor/CameraEditor.h"
 #include "ActorEditor/ActorEditor.h"
+#include "WidgetEditor/WidgetEditor.h"
 #include "..\StageEditor\StageRender\StageRender.h"
 
 CMovieEditor::CMovieEditor()
 	: m_pMovie				( std::make_unique<CMovie>() )
 	, m_pCameraEdit			( std::make_unique<CCameraEditor>() )
 	, m_pActorEdit			( std::make_unique<CActorEditor>() )
+	, m_pWidgetEditor		( std::make_unique<CWidgetEditor>() )
 	, m_pStageRender		( std::make_unique<CStageRender>() )
 	, m_MovieEndSecTime		( 1.0f )
 	, m_IsMoviePlaying		( false )
@@ -24,6 +26,8 @@ CMovieEditor::~CMovieEditor()
 bool CMovieEditor::Init()
 {
 	if( m_pStageRender->Init() == false ) return false;
+	if( m_pWidgetEditor->Init() == false ) return false;
+
 	return true;
 }
 
@@ -44,6 +48,7 @@ void CMovieEditor::Update()
 	} else {
 		m_pCameraEdit->Update();
 		m_pActorEdit->Update();
+		m_pWidgetEditor->Update();
 	}
 }
 
@@ -73,6 +78,12 @@ bool CMovieEditor::ImGuiRender()
 		ImGui::TreePop();
 	}
 
+	if( ImGui::TreeNode( u8"ウィジェットの編集" ) ){
+		m_pWidgetEditor->ImGuiRender();
+
+		ImGui::TreePop();
+	}
+
 	EndTab();
 	return true;
 }
@@ -91,6 +102,14 @@ void CMovieEditor::ModelRender()
 //-----------------------------------.
 void CMovieEditor::EffectRneder()
 {
+}
+
+//-----------------------------------.
+// ウィジェット描画.
+//-----------------------------------.
+void CMovieEditor::WidgetRender()
+{
+	m_pWidgetEditor->SpriteRender();
 }
 
 //-----------------------------------.

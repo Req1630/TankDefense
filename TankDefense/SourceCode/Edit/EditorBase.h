@@ -30,6 +30,8 @@ public:
 	virtual void ModelRender() = 0;
 	// エフェクト描画.
 	virtual void EffectRneder() = 0;
+	// ウィジェット描画.
+	virtual void WidgetRender() = 0;
 
 	// エディタ用プレイヤーの設定.
 	virtual void SetEditPlayer( CEditPlayer* pPlayer ){}

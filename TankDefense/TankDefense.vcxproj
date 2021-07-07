@@ -184,6 +184,7 @@
     <ClCompile Include="SourceCode\Edit\MovieEdtor\ActorEditor\ActorEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\MovieEdtor\CameraEditor\CameraEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\MovieEdtor\MovieEdtor.cpp" />
+    <ClCompile Include="SourceCode\Edit\MovieEdtor\WidgetEditor\WidgetEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\EditPlayer\EditPlayer.cpp" />
     <ClCompile Include="SourceCode\Edit\StageEditor\StageRender\StageRender.cpp" />
@@ -214,6 +215,7 @@
     <ClCompile Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActor.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Player\CPlayer.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\GameObject.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Widget\MovieWidget\MovieWidget.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Widget\Widget.cpp" />
     <ClCompile Include="SourceCode\Object\LightBase\LightBase.cpp" />
     <ClCompile Include="SourceCode\Object\LightBase\LightManager\LightManager.cpp" />
@@ -314,6 +316,7 @@
     <ClInclude Include="SourceCode\Edit\MovieEdtor\ActorEditor\ActorEditor.h" />
     <ClInclude Include="SourceCode\Edit\MovieEdtor\CameraEditor\CameraEditor.h" />
     <ClInclude Include="SourceCode\Edit\MovieEdtor\MovieEdtor.h" />
+    <ClInclude Include="SourceCode\Edit\MovieEdtor\WidgetEditor\WidgetEditor.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
     <ClInclude Include="SourceCode\Edit\EditPlayer\EditPlayer.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageRender\StageRender.h" />
@@ -347,6 +350,7 @@
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Player\CPlayer.h" />
     <ClInclude Include="SourceCode\Object\GameObject\GameObject.h" />
     <ClInclude Include="SourceCode\Object\GameObject\GameObjectList.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Widget\MovieWidget\MovieWidget.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Widget\Widget.h" />
     <ClInclude Include="SourceCode\Object\LightBase\LightBase.h" />
     <ClInclude Include="SourceCode\Object\LightBase\LightManager\LightManager.h" />

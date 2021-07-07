@@ -115,7 +115,7 @@ struct stSpriteAnimState
 		, ScrollSpeed		( 0.001f, 0.001f )
 		, AnimNumber		( 1 )
 		, MaxAnimNumber		( 1 )
-		, FrameCount		( 0 )
+		, FrameCount		( 1 )
 		, FrameCountSpeed	( 1 )
 		, FrameTime			( 5 )
 		, IsAnimation		( false )

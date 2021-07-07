@@ -38,6 +38,8 @@ public:
 	virtual void ModelRender() override;
 	// エフェクト描画.
 	virtual void EffectRneder() override;
+	// ウィジェット描画.
+	virtual void WidgetRender() override;
 
 	// エディタ用プレイヤーの設定.
 	virtual void SetEditPlayer( CEditPlayer* pPlayer ) override { m_pEditPlayer = pPlayer; }

@@ -66,6 +66,8 @@ void CEdit::ModelRender()
 //============================.
 void CEdit::SpriteRender()
 {
+	m_pActiveEditor->WidgetRender();
+
 	// ウィンドウのサイズを取得.
 	const ImVec2 wnd_size = 
 	{
