@@ -29,6 +29,8 @@ public:
 	inline void SetCameraQueue( const std::queue<SMovieCamera>& queue ){ m_CameraStateQueue = queue; }
 	// ƒJƒƒ‰î•ñ‚Ìİ’è.
 	void SetCameraQueue( const std::vector<SMovieCamera>& movieList );
+	// ƒJƒƒ‰î•ñ‚Ìİ’è.
+	inline void SetCameraList( const std::vector<SMovieCamera>& movieList ){ m_CameraStateList = movieList; }
 
 	// Ä¶ŠÔ‚Ìİ’è.
 	inline void SetPlayTime( const float& time )	{ m_PlayTime = time; }
@@ -39,6 +41,7 @@ private:
 private:
 	std::unique_ptr<CMovieCamera>	m_pCamera;
 	std::queue<SMovieCamera>		m_CameraStateQueue;
+	std::vector<SMovieCamera>		m_CameraStateList;
 	float							m_PlayTime;
 };
 

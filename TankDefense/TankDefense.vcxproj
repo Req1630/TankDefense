@@ -225,6 +225,7 @@
     <ClCompile Include="SourceCode\Object\Movie\LoadWidgetData\LoadWidgetData.cpp" />
     <ClCompile Include="SourceCode\Object\Movie\Movie.cpp" />
     <ClCompile Include="SourceCode\Object\Movie\MovieDataLoader\MovieDataLoader.cpp" />
+    <ClCompile Include="SourceCode\Object\Movie\MovieManager\MovieManager.cpp" />
     <ClCompile Include="SourceCode\Object\Object.cpp" />
     <ClCompile Include="SourceCode\Resource\EffectResource\EffectResource.cpp" />
     <ClCompile Include="SourceCode\Resource\FontResource\FontResource.cpp" />
@@ -361,6 +362,7 @@
     <ClInclude Include="SourceCode\Object\Movie\LoadWidgetData\LoadWidgetData.h" />
     <ClInclude Include="SourceCode\Object\Movie\Movie.h" />
     <ClInclude Include="SourceCode\Object\Movie\MovieDataLoader\MovieDataLoader.h" />
+    <ClInclude Include="SourceCode\Object\Movie\MovieManager\MovieManager.h" />
     <ClInclude Include="SourceCode\Object\Object.h" />
     <ClInclude Include="SourceCode\resource.h" />
     <ClInclude Include="SourceCode\Resource\EffectResource\EffectResource.h" />

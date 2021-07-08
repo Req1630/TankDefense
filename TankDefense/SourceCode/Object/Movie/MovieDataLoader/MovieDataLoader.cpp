@@ -6,21 +6,35 @@
 
 namespace
 {
-	constexpr char FILE_NAME[] = "Data\\TestData.txt";
+	constexpr char MOVIE_LIST_PATH[]	= "Data\\Parameter\\Movie\\MovieList.txt";	// ムービーリストのパス.
+	constexpr char FILE_NAME[]			= "Data\\TestData.txt";
 
+	// カメラ情報の開始文字、終了文字.
 	constexpr char CAERA_STATE_START[]	= "CameraState Start {";
 	constexpr char CAERA_STATE_END[]	= "} CameraState End";
 
+	// ウィジェット情報の開始文字、終了文字.
 	constexpr char WIDGET_STATE_START[]	= "WidgetState Start {";
 	constexpr char WIDGET_STATE_END[]	= "} WidgetState End";
 };
 
 CMovieDataLoader::CMovieDataLoader()
+	: m_DataPathList	()
 {
 }
 
 CMovieDataLoader::~CMovieDataLoader()
 {
+}
+
+//------------------------------.
+// 初期化.
+//------------------------------.
+bool CMovieDataLoader::Init()
+{
+	if( InitDataPathList() == false ) return false;
+
+	return true;
 }
 
 //------------------------------.
@@ -101,6 +115,23 @@ bool CMovieDataLoader::DataWriting(
 
 	// ファイルを閉じる.
 	fileStream.close();
+
+	return true;
+}
+
+//------------------------------.
+// ムービーデータパスリストの作成.
+//------------------------------.
+bool CMovieDataLoader::InitDataPathList()
+{
+	std::vector<std::string> list = fileManager::TextLoading(MOVIE_LIST_PATH);
+
+	if( list.empty() == true ) return true;
+
+	int listSize = list.size();
+	for( int i = 0; i < listSize; i+=2 ){
+		m_DataPathList[list[i]] = list[i+1];
+	}
 
 	return true;
 }
