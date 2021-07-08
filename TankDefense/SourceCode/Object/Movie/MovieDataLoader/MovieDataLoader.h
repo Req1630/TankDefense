@@ -2,6 +2,7 @@
 #define MOVIE_DATA_LOADER_H
 
 #include "..\LoadCameraData\LoadCameraData.h"
+#include "..\LoadWidgetData\LoadWidgetData.h"
 
 /************************************
 *	ムービーデータ読み込みクラス.
@@ -16,7 +17,9 @@ public:
 	static bool DataLoading();
 
 	// データの書き込み.
-	static bool DataWriting( const std::vector<SMovieCamera>& stateList );
+	static bool DataWriting( 
+		const std::vector<SMovieCamera>& stateList,
+		const std::vector<SMovieWidget>& widgetList );
 };
 
 #endif	// #ifndef MOVIE_DATA_LOADER_H.

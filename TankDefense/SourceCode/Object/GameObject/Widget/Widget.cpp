@@ -1,11 +1,19 @@
 #include "Widget.h"
 #include "..\..\..\Resource\SpriteResource\SpriteResource.h"
 
+namespace
+{
+	constexpr float ALPHA_MAX = 1.0f;	// アルファ最大値.
+	constexpr float ALPHA_MIN = 0.0f;	// アルファ最小値.
+};
+
 CWidget::CWidget()
 	: m_pSprite			( nullptr )
 	, m_RenderStates	()
 	, m_Alpha			( ALPHA_MAX )
-	, m_FafeSpeed		( FOR_INIT_ZERO_FLOAT )
+	, m_AlphaMax		( ALPHA_MAX )
+	, m_AlphaMin		( ALPHA_MIN )
+	, m_FadeSpeed		( FOR_INIT_ZERO_FLOAT )
 	, m_NowFadeState	( EFadeState::Finish )
 	, m_OldFadeState	( EFadeState::Finish )
 {
@@ -22,7 +30,7 @@ CWidget::~CWidget()
 void CWidget::SetFadeIn( const float& speed )
 {
 	m_NowFadeState = EFadeState::In;
-	m_FafeSpeed = speed;
+	m_FadeSpeed = speed;
 }
 
 //--------------------------------------.
@@ -31,7 +39,7 @@ void CWidget::SetFadeIn( const float& speed )
 void CWidget::SetFadeOut( const float& speed )
 {
 	m_NowFadeState = EFadeState::Out;
-	m_FafeSpeed = speed;
+	m_FadeSpeed = speed;
 }
 
 //--------------------------------------.
@@ -73,9 +81,8 @@ void CWidget::FadeUpdate( float& alpha )
 void CWidget::FadeIn( float& alpha )
 {
 	AlphaCalc( alpha );
-	if( m_Alpha <= ALPHA_MIN ){
-		m_Alpha = ALPHA_MIN;
-		m_FafeSpeed = FOR_INIT_ZERO_FLOAT;
+	if( m_Alpha <= m_AlphaMin ){
+		m_Alpha = m_AlphaMin;
 		m_OldFadeState = m_NowFadeState;
 		m_NowFadeState = EFadeState::Finish;
 	}
@@ -87,9 +94,8 @@ void CWidget::FadeIn( float& alpha )
 void CWidget::FadeOut( float& alpha )
 {
 	AlphaCalc( alpha );
-	if( m_Alpha >= ALPHA_MAX ){
-		m_Alpha = ALPHA_MAX;
-		m_FafeSpeed = FOR_INIT_ZERO_FLOAT;
+	if( m_Alpha >= m_AlphaMax ){
+		m_Alpha = m_AlphaMax;
 		m_OldFadeState = m_NowFadeState;
 		m_NowFadeState = EFadeState::Finish;
 	}
@@ -100,5 +106,5 @@ void CWidget::FadeOut( float& alpha )
 //--------------------------------------.
 void CWidget::AlphaCalc( float& alpha )
 {
-	alpha += m_DeltaTime / m_FafeSpeed;
+	alpha += m_DeltaTime / m_FadeSpeed;
 }

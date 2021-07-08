@@ -23,6 +23,7 @@ struct stMovieAnimState
 
 } typedef SMovieAnimState;
 
+// ムービー(演出用)フェード情報.
 struct stMovieFadeState
 {
 	// フェードフラグ.
@@ -39,14 +40,24 @@ struct stMovieFadeState
 
 	int		FadeFlag;		// フェードフラグ.
 	float	FadeSpeed;		// フェード速度.
+	float	AlphaMax;		// アルファ最大値.
+	float	AlphaMin;		// アルファ最小値.
 
 	stMovieFadeState()
-		: FadeFlag	( EFadeFlag::In )
+		: FadeFlag	( EFadeFlag::None )
 		, FadeSpeed	( 0.0f )
+		, AlphaMax	( 1.0f )
+		, AlphaMin	( 0.0f )
 	{}
-	stMovieFadeState( const int& flag, const float& speed )
+	stMovieFadeState( 
+		const int& flag, 
+		const float& speed,
+		const float& alphaMax, 
+		const float& alphaMin )
 		: FadeFlag	( flag )
 		, FadeSpeed	( speed )
+		, AlphaMax	( alphaMax )
+		, AlphaMin	( alphaMin )
 	{}
 
 } typedef SMovieFadeState;
@@ -101,12 +112,27 @@ public:
 	inline SMovieWidget GetMovieWidgetState() const { return m_MovieWidgetState; }
 
 	// 描画情報を設定する.
-	void SettingRenderState();
+	void SettingRenderState( const bool& isEdit = false );
+
+	// 再生.
+	void Play();
+	// リセット.
+	void Reset();
 
 private:
-	SSpriteRenderState*	m_pRenderState;
-	SMovieWidget		m_MovieWidgetState;
-	float				m_NowTime;
+	// フェードの開始.
+	void StartFade();
+	// フェード繰り返しの設定.
+	void SetFadeWrap( const float& speed );
+	// フェード繰り返しの更新.
+	void FadeWrapUpdate();
+
+private:
+	SSpriteRenderState*	m_pRenderState;		// 描画情報.
+	SMovieWidget		m_MovieWidgetState;	// ムービー用情報.
+	float				m_NowTime;			// 現在の経過時間.
+	bool				m_IsOncePlay;		// フェードを開始したか.
+	bool				m_IsPlay;			// 再生してるか.
 };
 
 #endif	// #ifndef MOVIE_WIDGET_H.

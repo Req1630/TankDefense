@@ -51,9 +51,12 @@ void CMovie::Update()
 //--------------------------.
 void CMovie::SetCameraQueue( const std::vector<SMovieCamera>& movieList )
 {
-	for( auto& m : movieList ){
-		m_CameraStateQueue.push( m );
-	}
+	// 一回キューの中身を取り出す.
+	int size = m_CameraStateQueue.size();
+	for( int i = 0; i < size; i++ ) m_CameraStateQueue.pop();
+
+	// キューに追加していく.
+	for( auto& m : movieList ) m_CameraStateQueue.push( m );
 }
 
 //--------------------------.

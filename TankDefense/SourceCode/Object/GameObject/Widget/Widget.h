@@ -23,10 +23,6 @@ protected:
 		Finish,		// フェード終了.
 	} typedef EFadeState;
 
-protected:
-	static constexpr float ALPHA_MAX = 1.0f;	// アルファ最大値.
-	static constexpr float ALPHA_MIN = 0.0f;	// アルファ最小値.
-
 public:
 	CWidget();
 	virtual ~CWidget();
@@ -55,7 +51,9 @@ protected:
 	CSprite*						m_pSprite;		// 画像クラス.
 	std::vector<SSpriteRenderState>	m_RenderStates;	// 画像描画ステートリスト.
 	float							m_Alpha;		// アルファ値.
-	float							m_FafeSpeed;	// フェード速度.
+	float							m_AlphaMax;		// アルファ最大値.
+	float							m_AlphaMin;		// アルファ最小値.
+	float							m_FadeSpeed;	// フェード速度.
 	EFadeState						m_NowFadeState;	// 現在のフェード状態.
 	EFadeState						m_OldFadeState;	// 過去のフェード状態.
 };

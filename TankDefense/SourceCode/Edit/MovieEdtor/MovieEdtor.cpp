@@ -4,6 +4,7 @@
 #include "ActorEditor/ActorEditor.h"
 #include "WidgetEditor/WidgetEditor.h"
 #include "..\StageEditor\StageRender\StageRender.h"
+#include "..\..\Object\Movie\MovieDataLoader\MovieDataLoader.h"
 
 CMovieEditor::CMovieEditor()
 	: m_pMovie				( std::make_unique<CMovie>() )
@@ -65,6 +66,21 @@ bool CMovieEditor::ImGuiRender()
 
 	ImGui::Separator();
 	ImGui::DragFloat( u8"ââèoçƒê∂éûä‘(ïb)", &m_MovieEndSecTime, 0.5f, 1.0f, 180.0f );
+
+#if 1
+	static std::vector<std::string> m;
+	if( ImGui::Button("TEST") ){
+		CMovieDataLoader::DataWriting( 
+			m_pCameraEdit->GetMovieCameraState(),
+			m_pWidgetEditor->GetWidgetStateList() );
+		CMovieDataLoader::DataLoading();
+	}
+	if( m.empty() == false ){
+		for( auto& a : m )
+			ImGui::TextWrapped(a.c_str());
+	}
+#endif
+
 
 	if( ImGui::TreeNode( u8"ÉJÉÅÉâÇÃï“èW" ) ){
 		m_pCameraEdit->ImGuiRender();

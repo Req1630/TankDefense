@@ -93,17 +93,6 @@ std::vector<std::string> CCameraDataConverter::ToString( const std::vector<SMovi
 		stringData.emplace_back( ss.str() );
 		count++;
 	}
-#if 0
-	// ファイルを開く.
-	std::fstream fileStream( "Data\\TestData.txt", std::ios::out, std::ios::trunc );
-
-	for( auto& s : stringData ){
-		fileStream << s << std::endl;
-	}
-
-	fileStream.close();
-	
-#endif
 
 	return stringData;
 }

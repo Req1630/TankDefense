@@ -112,6 +112,7 @@
     <ClCompile Include="SourceCode\Edit\EditPlayer\EditPlayer.cpp" />
     <ClCompile Include="SourceCode\Edit\MovieEdtor\WidgetEditor\WidgetEditor.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Widget\MovieWidget\MovieWidget.cpp" />
+    <ClCompile Include="SourceCode\Object\Movie\LoadWidgetData\LoadWidgetData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -230,6 +231,7 @@
     <ClInclude Include="SourceCode\Edit\EditPlayer\EditPlayer.h" />
     <ClInclude Include="SourceCode\Edit\MovieEdtor\WidgetEditor\WidgetEditor.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Widget\MovieWidget\MovieWidget.h" />
+    <ClInclude Include="SourceCode\Object\Movie\LoadWidgetData\LoadWidgetData.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

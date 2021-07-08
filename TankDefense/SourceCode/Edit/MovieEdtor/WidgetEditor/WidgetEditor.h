@@ -21,13 +21,27 @@ public:
 	// 画像の描画.
 	void SpriteRender();
 
+	// ウィジェット情報の取得.
+	std::vector<SMovieWidget> GetWidgetStateList();
+
 private:
+	// 操作関数.
+	void WidgetControll();
 	// ウィジェットの追加の表示.
 	void PushWidgetDraw();
 	// 編集するウィジェットの表示.
 	void SelectEidtParameterDraw();
 	// ウィジェットパラメータの表示.
 	void WidgetParameterDraw();
+	// アニメーションパラメータの表示.
+	void AnimationParameterDraw();
+	// フェードパラメータの表示.
+	void FadeParameterDraw();
+
+	// ImGuiでゲームパッド操作を有効にする.
+	void OnImGuiGamepad();
+	// ImGuiでゲームパッド操作を無効にする.
+	void OffImGuiGamepad();
 
 private:
 	std::vector<std::unique_ptr<CMovieWidget>>	m_pWidgetList;
@@ -35,6 +49,9 @@ private:
 	std::string									m_NowPushSelectName;
 	SMovieWidget								m_NowSelectState;
 	int											m_NowSelectIndex;
+	bool										m_IsAllWidgetRender;
+	bool										m_IsPlay;
+	bool										m_IsImGuiGamepad;
 };
 
 #endif	// #ifndef WIDGET_EDITOR_H.

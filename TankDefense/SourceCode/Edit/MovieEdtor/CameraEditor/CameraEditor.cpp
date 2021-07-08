@@ -52,19 +52,6 @@ void CCameraEditor::Update()
 //-----------------------------.
 bool CCameraEditor::ImGuiRender()
 {
-#if 0
-	static std::vector<std::string> m;
-	if( ImGui::Button("TEST") ){
-//		m = CCameraDataConverter::ToString( m_MovieCameraList );
-		CMovieDataLoader::DataWriting( m_MovieCameraList );
-		CMovieDataLoader::DataLoading();
-	}
-	if( m.empty() == false ){
-		for( auto& a : m )
-			ImGui::TextWrapped(a.c_str());
-	}
-#endif
-
 	ComboDraw();
 
 	PlayDraw();
