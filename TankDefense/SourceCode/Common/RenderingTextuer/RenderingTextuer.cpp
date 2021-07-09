@@ -135,6 +135,14 @@ void CRenderTexture::Release()
 	m_pDevice11 = nullptr;
 }
 
+// サイズの変更.
+HRESULT CRenderTexture::Resize()
+{
+	Release();
+	if( FAILED( Init( CDirectX11::GetContext() ) )) return E_FAIL;
+	return S_OK;
+}
+
 // バッファの設定.
 void CRenderTexture::SetBuffer( const int& numViews )
 {

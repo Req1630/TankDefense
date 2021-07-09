@@ -36,6 +36,9 @@ public:
 	// 描画関数.
 	void Render( std::function<void()>& func );
 
+	// サイズ変更.
+	HRESULT ResizeTexture();
+
 private:
 	// 最終描画.
 	void LastRender( ID3D11ShaderResourceView* pSRV );

@@ -113,6 +113,26 @@ void CRenderingTexterManager::Render( std::function<void()>& func )
 		});
 }
 
+// サイズ変更.
+HRESULT CRenderingTexterManager::ResizeTexture()
+{
+	if( m_WndWidth	== CDirectX11::GetWndWidth() && 
+		m_WndHeight	== CDirectX11::GetWndHeight() ) return S_OK;
+
+	CRenderTexture* pTex[] =
+		{
+			this,
+			m_pGBuffer.get(),
+			m_pLighting.get(),
+			m_pOutLine.get(),
+			m_pBloom.get(),
+		};
+	for( auto& t : pTex ){
+		if( FAILED( t->Resize() ) ) return E_FAIL;
+	}
+	return S_OK;
+}
+
 // 最終描画.
 void CRenderingTexterManager::LastRender( ID3D11ShaderResourceView* pSRV )
 {

@@ -43,6 +43,9 @@ public:
 	// シェーダーリソースビューの数を取得.
 	virtual int GetSRVCount() = 0;
 
+	// サイズの変更.
+	HRESULT Resize();
+
 protected:
 	// 初期化.
 	HRESULT InitBase( ID3D11DeviceContext* pContext11 );

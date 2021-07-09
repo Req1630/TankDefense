@@ -75,6 +75,7 @@ void CSceneManager::Update( const float& deltaTime, const bool& isResourceLoadEn
 		// ロードの描画.
 		LoadRender( deltaTime, false );
 	} else {
+		m_pRenderingTexManager->ResizeTexture();
 
 		// シーンの更新.
 		SceneUpdate( deltaTime );

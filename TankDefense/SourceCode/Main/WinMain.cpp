@@ -1,6 +1,7 @@
 #include "Main.h"
 #include <Windows.h>
 
+#include "..\Common\D3DX\D3DX11.h"
 #include "..\Utility\ImGuiManager\ImGuiManager.h"
 #include "..\Utility\Log\Log.h"
 #include "..\Utility\Input\Input.h"
@@ -84,6 +85,7 @@ LRESULT CALLBACK WndProc(
 		PostQuitMessage(0);
 		break;
 	case WM_SIZE:
+		CDirectX11::Resize();
 		break;
 	}
 	return DefWindowProc( hWnd, uMsg, wParam, lParam );
