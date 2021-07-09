@@ -114,6 +114,7 @@
     <ClCompile Include="SourceCode\Object\GameObject\Widget\MovieWidget\MovieWidget.cpp" />
     <ClCompile Include="SourceCode\Object\Movie\LoadWidgetData\LoadWidgetData.cpp" />
     <ClCompile Include="SourceCode\Object\Movie\MovieManager\MovieManager.cpp" />
+    <ClCompile Include="SourceCode\Utility\DebugConsole\DebugConsole.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -234,6 +235,7 @@
     <ClInclude Include="SourceCode\Object\GameObject\Widget\MovieWidget\MovieWidget.h" />
     <ClInclude Include="SourceCode\Object\Movie\LoadWidgetData\LoadWidgetData.h" />
     <ClInclude Include="SourceCode\Object\Movie\MovieManager\MovieManager.h" />
+    <ClInclude Include="SourceCode\Utility\DebugConsole\DebugConsole.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

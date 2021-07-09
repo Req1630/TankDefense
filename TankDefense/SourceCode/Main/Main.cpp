@@ -10,6 +10,7 @@
 #include "..\Utility\FileManager\FileManager.h"		// ファイルマネージャー.
 #include "..\Utility\ImGuiManager\ImGuiManager.h"	// ImGuiマネージャー.
 #include "..\Utility\Input\Input.h"					// Input.
+#include "..\Utility\DebugConsole\DebugConsole.h"	// デバッグコンソール.
 #include "..\Common\D3DX\D3DX9.h"					// DirectX11.
 #include "..\Common\D3DX\D3DX11.h"					// DirectX9.
 #include "..\Common\DebugText\DebugText.h"			// デバッグテキスト.
@@ -59,6 +60,8 @@ CMain::~CMain()
 //====================================.
 HRESULT CMain::Init()
 {
+	CDebugConsole::Init();
+
 	// DirectX9の構築.
 	if( FAILED( CDirectX9::Create( m_hWnd ) )) return E_FAIL;
 	// DirectX11の構築.
@@ -88,6 +91,8 @@ void CMain::Release()
 	CImGuiManager::Release();
 	CDirectX11::Release();
 	CDirectX9::Release();
+
+	CDebugConsole::Release();
 }
 
 //====================================.
@@ -139,7 +144,11 @@ void CMain::Update()
 	CDebugText::Render();		// デバッグテキストの描画.
 	FPSRender();				// FPSの描画.
 
+	CDebugConsole::PushText( "    FPS    : " + std::to_string( (int)m_pFrameRate->GetFPS() ) );
+	CDebugConsole::PushText( " DeltaTime : " + std::to_string( m_pFrameRate->GetDeltaTime() ) );
+
 	CImGuiManager::Render();
+	CDebugConsole::Render();
 	CDirectX11::SwapChainPresent();
 }
 

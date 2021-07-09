@@ -1,5 +1,6 @@
 #include "EffectResource.h"
 #include "..\..\Common\Effect\Effect.h"
+#include "..\..\Utility\DebugConsole\DebugConsole.h"
 
 CEffectResource::CEffectResource()
 	: m_EffectList			()
@@ -77,6 +78,7 @@ void CEffectResource::EffectLoad(
 	};
 
 	CLog::Print( "------ エフェクト読み込み開始 -------" );
+	CDebugConsole::PushLog( "Effecet Load Begin " );
 
 	try {
 		fs::recursive_directory_iterator dir_itr(FILE_PATH), end_itr;
@@ -87,6 +89,7 @@ void CEffectResource::EffectLoad(
 		ERROR_MESSAGE( e.path1().string().c_str() );
 	}
 
+	CDebugConsole::PushLog( "Effecet Load End " );
 	CLog::Print( "------ エフェクト読み込み終了 -------" );
 
 	// 読込が終わったので true にする.

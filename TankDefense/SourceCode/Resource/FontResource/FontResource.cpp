@@ -1,6 +1,7 @@
 #include "FontResource.h"
 #include "..\..\Common\Font\FontCreate.h"
 #include "..\..\Utility\FileManager\FileManager.h"
+#include "..\..\Utility\DebugConsole\DebugConsole.h"
 
 CFontResource::CFontResource()
 	: m_HasFinishedLoading	( false )
@@ -54,6 +55,8 @@ ID3D11ShaderResourceView* CFontResource::GetTexture2D( const std::string key )
 //-------------------------------------.
 void CFontResource::FontLoad( ID3D11Device* pDevice11, ID3D11DeviceContext* pContext11 )
 {
+	CDebugConsole::PushLog( "Font Load Begin" );
+
 	std::unique_ptr<CFontCreate> pFontCreate = std::make_unique<CFontCreate>( pDevice11, pContext11 );
 	std::vector<std::string> textList = fileManager::TextLoading(TEXT_LIST_PATH, false);
 
@@ -73,6 +76,8 @@ void CFontResource::FontLoad( ID3D11Device* pDevice11, ID3D11DeviceContext* pCon
 			pFontCreate->CreateFontTexture2D( f.c_str(), &m_FontTexturList[f] );
 		}
 	}
+
+	CDebugConsole::PushLog( "Font Load End" );
 
 	// ì«çûÇ™èIÇÌÇ¡ÇΩÇÃÇ≈ true Ç…Ç∑ÇÈ.
 	m_HasFinishedLoading = true;

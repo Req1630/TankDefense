@@ -1,5 +1,6 @@
 #include "SpriteResource.h"
 #include "..\..\Utility\FileManager\FileManager.h"
+#include "..\..\Utility\DebugConsole\DebugConsole.h"
 
 CSpriteResource::CSpriteResource()
 	: m_SpriteList			()
@@ -87,6 +88,8 @@ HRESULT CSpriteResource::SpriteLoad( ID3D11DeviceContext* pContext11 )
 	};
 
 	CLog::Print( "------ 画像読み込み開始 -------" );
+	CDebugConsole::PushLog( "Sprite Load Begin" );
+
 	try {
 		fs::recursive_directory_iterator dir_itr(FILE_PATH), end_itr;
 		std::for_each( dir_itr, end_itr, eachLoad );
@@ -100,6 +103,7 @@ HRESULT CSpriteResource::SpriteLoad( ID3D11DeviceContext* pContext11 )
 		return E_FAIL;
 	}
 
+	CDebugConsole::PushLog( "Sprite Load End" );
 	CLog::Print( "------ 画像読み込み終了 -------" );
 
 	// 読込が終わったので true にする.

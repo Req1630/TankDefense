@@ -239,6 +239,7 @@
     <ClCompile Include="SourceCode\Scene\Scenes\Game\Game.cpp" />
     <ClCompile Include="SourceCode\Scene\Scenes\Title\Title.cpp" />
     <ClCompile Include="SourceCode\Utility\Command\Command.cpp" />
+    <ClCompile Include="SourceCode\Utility\DebugConsole\DebugConsole.cpp" />
     <ClCompile Include="SourceCode\Utility\FileManager\FileManager.cpp" />
     <ClCompile Include="SourceCode\Utility\FrameRate\FrameRate.cpp" />
     <ClCompile Include="SourceCode\Utility\ImGuiManager\ImGuiManager.cpp" />
@@ -379,6 +380,7 @@
     <ClInclude Include="SourceCode\Scene\Scenes\Title\Title.h" />
     <ClInclude Include="SourceCode\Utility\BitFlagManager\BitFlagManager.h" />
     <ClInclude Include="SourceCode\Utility\Command\Command.h" />
+    <ClInclude Include="SourceCode\Utility\DebugConsole\DebugConsole.h" />
     <ClInclude Include="SourceCode\Utility\FileManager\FileManager.h" />
     <ClInclude Include="SourceCode\Utility\FrameRate\FrameRate.h" />
     <ClInclude Include="SourceCode\Utility\ImGuiManager\ImGuiManager.h" />

@@ -2,6 +2,7 @@
 #include "..\..\Global.h"
 #include "..\..\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.h"
 #include "..\..\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h"
+#include "..\..\Utility\DebugConsole\DebugConsole.h"
 
 CMeshResorce::CMeshResorce()
 	: m_StaticMeshList		()
@@ -98,6 +99,7 @@ HRESULT CMeshResorce::ModelLoad( HWND hWnd, ID3D11Device* pDevice11, ID3D11Devic
 	};
 
 	CLog::Print( "------ メッシュ読み込み開始 -------" );
+	CDebugConsole::PushLog( "Mesh Load Begin" );
 
 	try {
 		fs::recursive_directory_iterator dir_itr( FILE_PATH ), end_itr;
@@ -112,6 +114,7 @@ HRESULT CMeshResorce::ModelLoad( HWND hWnd, ID3D11Device* pDevice11, ID3D11Devic
 		return E_FAIL;
 	}
 
+	CDebugConsole::PushLog( "Mesh Load End" );
 	CLog::Print( "------ メッシュ読み込み終了 -------" );
 
 	// 読込が終わったので true にする.
