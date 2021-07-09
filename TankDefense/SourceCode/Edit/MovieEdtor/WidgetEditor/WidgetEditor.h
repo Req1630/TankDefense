@@ -23,6 +23,8 @@ public:
 
 	// ウィジェット情報の取得.
 	std::vector<SMovieWidget> GetWidgetStateList();
+	// ウィジェット情報の取得.
+	void SetWidgetStateList( const std::vector<SMovieWidget>& stateList );
 
 private:
 	// 操作関数.

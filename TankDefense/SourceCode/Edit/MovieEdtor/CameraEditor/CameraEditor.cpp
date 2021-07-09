@@ -99,6 +99,21 @@ void CCameraEditor::ModelRender()
 {
 }
 
+// ‰‰oƒJƒƒ‰î•ñ‚Ìİ’è.
+void CCameraEditor::SetMovieCameraState( const std::vector<SMovieCamera>& list)
+{ 
+	m_MovieCameraList = list; 
+	if( m_MovieCameraList.empty() == false ){
+		m_NowSelectIndex = 0;
+		m_pMovieMoveCamera	= &m_MovieCameraList[0].MoveState;
+		m_pMovieShakeCamera	= &m_MovieCameraList[0].ShakeState;
+	} else {
+		m_NowSelectIndex = -1;
+		m_pMovieMoveCamera	= nullptr;
+		m_pMovieShakeCamera	= nullptr;
+	}
+}
+
 //-----------------------------.
 // ƒJƒƒ‰‘€ì.
 //-----------------------------.

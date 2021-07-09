@@ -1,11 +1,11 @@
 // Movie名, FilePath
 
 #敵の出現.
-EnemySpawn,	"Data\\Parameter\\List\\MovieEnemySpawn.txt"
+EnemySpawn,Data\Parameter\Movie\List\MovieEnemySpawn.txt
 
 #ボスの出現.
-BossSpawn,	"Data\\Parameter\\List\\MovieBossSpawn.txt"
+BossSpawn,Data\Parameter\Movie\List\MovieBossSpawn.txt
 
 #ボスの撃破.
-BossDefeat,	"Data\\Parameter\\List\\MovieBossDefeat.txt"
+BossDefeat,Data\Parameter\Movie\List\MovieBossDefeat.txt
 

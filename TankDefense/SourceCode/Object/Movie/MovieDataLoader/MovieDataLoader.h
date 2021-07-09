@@ -6,11 +6,43 @@
 
 #include <unordered_map>
 
+// ムービーリスト.
+enum class enMovieList
+{
+	None,
+
+	EnemySpawn = 0,	// 敵の出現.
+	BossSpawn,		// ボスの出現.
+	BossDefeat,		// ボスの撃破.
+
+	Max,
+
+} typedef EMovieNo;
+
+// ムービーデータ.
+struct stMovieData
+{
+	std::vector<SMovieCamera> CameraList;
+	std::vector<SMovieWidget> WidgetList;
+} typedef SMovieData;
+
 /************************************
 *	ムービーデータ読み込みクラス.
 **/
 class CMovieDataLoader
 {
+	// 各読み込み終了フラグ.
+	enum enLoadedFlags : unsigned int
+	{
+		ELoadedFlag_None	= 0,
+
+		ELoadedFlag_Camera	= 1 << 0,	// カメラ.
+		ELoadedFlag_Widget	= 1 << 1,	// ウィジェット.
+
+	} typedef ELoadedFlag;
+
+	// データペア(ファイルパス、データ情報).
+	using data_pair = std::pair<std::string, SMovieData>;
 public:
 	CMovieDataLoader();
 	~CMovieDataLoader();
@@ -19,19 +51,44 @@ public:
 	bool Init();
 
 	// データの読み込み.
-	static bool DataLoading();
+	bool DataLoading( const char* filePath, SMovieData* pMovieData );
 
 	// データの書き込み.
-	static bool DataWriting(
-		const std::vector<SMovieCamera>& stateList,
-		const std::vector<SMovieWidget>& widgetList );
+	bool DataWriting( const EMovieNo& movieNo, const SMovieData& movieData );
+
+	// ムービーデータの取得.
+	SMovieData GetMovieData( const EMovieNo& movieNo );
+
+	// ムービー名リストの取得.
+	inline std::unordered_map<EMovieNo, std::string> GetMovieNameList(){ return m_MovieNameList; }
 
 private:
 	// ムービーデータパスリストの作成.
 	bool InitDataPathList();
+	// データリストの作成.
+	bool InitDataList();
+
+	// 各データを読み込む.
+	template<typename LoadCalas, typename State>
+	void LoadingEachData(
+		const std::string& s,
+		std::vector<std::string>& dataList,
+		State& stateList,
+		const ELoadedFlag& flag,
+		const char* startTag, 
+		const char* endTag );
+
+	// 各データを書き込む.
+	void WritingEachData( 
+		std::fstream& fs,
+		const std::vector<std::string>& dataList,
+		const char* startTag, 
+		const char* endTag );
 
 private:
-	std::unordered_map<std::string, std::string>	m_DataPathList;
+	std::unordered_map<EMovieNo, std::string>	m_MovieNameList;
+	std::unordered_map<std::string, data_pair>	m_DataPathList;
+	unsigned int								m_EachLoadEndFlag;
 };
 
 #endif	// #ifndef MOVIE_DATA_LOADER_H.

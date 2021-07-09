@@ -50,7 +50,7 @@ void CMovieManager::WidgetRender()
 //------------------------------.
 // ムービー(演出)の切り替え.
 //------------------------------.
-void CMovieManager::ChangeMovie( const EMovieList& key )
+void CMovieManager::ChangeMovie( const EMovieNo& key )
 {
 	m_pActiveMovie = m_pMovieList.at(key).get();
 }

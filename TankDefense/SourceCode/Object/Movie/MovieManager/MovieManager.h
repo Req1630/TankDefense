@@ -6,26 +6,15 @@
 
 class CMovie;			// ムービークラス.
 class CMovieDataLoader;	// ムービーデータ読み込みクラス.
+enum class enMovieList typedef EMovieNo;
 
-// ムービーリスト.
-enum class enMovieList
-{
-	None,
-
-	EnemySpawn,	// 敵の出現.
-	BossSpawn,	// ボスの出現.
-	BossDefeat,	// ボスの撃破.
-
-	Max,
-
-} typedef EMovieList;
 
 /********************************
 *	ムービー(演出)マネージャー.
 **/
 class CMovieManager
 {
-	using movie_map = std::unordered_map<EMovieList, std::unique_ptr<CMovie>>;
+	using movie_map = std::unordered_map<EMovieNo, std::unique_ptr<CMovie>>;
 public:
 	CMovieManager();
 	~CMovieManager();
@@ -40,7 +29,7 @@ public:
 	void WidgetRender();
 
 	// ムービー(演出)の切り替え.
-	void ChangeMovie( const EMovieList& key );
+	void ChangeMovie( const EMovieNo& key );
 
 	// ムービー(演出)の再生.
 	void Play();

@@ -103,6 +103,42 @@ std::vector<SMovieWidget> CWidgetEditor::GetWidgetStateList()
 }
 
 //----------------------------------.
+// ウィジェット情報の取得.
+//----------------------------------.
+void CWidgetEditor::SetWidgetStateList( const std::vector<SMovieWidget>& stateList )
+{
+	const int stateSize		= stateList.size();
+	const int widgetSize	= m_pWidgetList.size();
+	const int diff			= stateSize - widgetSize;
+	if( diff == 0 ){
+
+	// stateSize の方が多い.
+	} else if( diff >= 1 ){
+		for( int i = 0; i < diff; i++ ){
+			m_pWidgetList.emplace_back( std::make_unique<CMovieWidget>() );
+		}
+	
+	// widgetSize の方が多い.
+	} else if( diff <= -1 ){
+		for( int i = 0; i < abs(diff); i++ ){
+			m_pWidgetList.pop_back();
+		}
+	}
+	m_pWidgetList.shrink_to_fit();
+
+	for( int i = 0; i < stateSize; i++ ){
+		m_pWidgetList[i]->SetMovieWidgetState( stateList[i] );
+		m_pWidgetList[i]->Init();
+	}
+	if( m_pWidgetList.empty() == false ){
+		m_NowSelectState = stateList[0];
+		m_NowSelectIndex = 0;
+	} else {
+		m_NowSelectIndex = -1;
+	}
+}
+
+//----------------------------------.
 // 操作関数.
 //----------------------------------.
 void CWidgetEditor::WidgetControll()

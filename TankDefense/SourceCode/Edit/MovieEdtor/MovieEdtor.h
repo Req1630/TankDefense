@@ -9,6 +9,8 @@ class CCameraEditor;	// カメラエディタ.
 class CActorEditor;		// アクターエディタ.
 class CWidgetEditor;	// ウィジェットエディタ.
 class CStageRender;		// ステージ描画クラス.
+class CMovieDataLoader;	// ムービデータ読み込みクラス.
+enum class enMovieList typedef EMovieNo;
 
 /******************************************
 *	演出エディタクラス.
@@ -38,20 +40,27 @@ public:
 private:
 	// 再生の表示.
 	void PlayDraw();
+	// ムービーの選択表示.
+	void SelectMovieDraw();
+	// 保存、読込ボタンの選択.
+	void SaveLoadDraw();
 	// パラメータの書き込み.
 	virtual void ParameterWriting( const char* filePath ) override;
 	// パラメータの読み込み.
 	virtual void ParameterLoading( const char* filePath ) override;
 
 private:
-	std::unique_ptr<CMovie>			m_pMovie;			// ムービー.
-	std::unique_ptr<CCameraEditor>	m_pCameraEdit;		// カメラエディタ.
-	std::unique_ptr<CActorEditor>	m_pActorEdit;		// アクターエディタ.
-	std::unique_ptr<CWidgetEditor>	m_pWidgetEditor;	// ウィジェットエディタ.
-	std::unique_ptr<CStageRender>	m_pStageRender;		// ステージの描画.
-	float							m_MovieEndSecTime;	// 動画終了時間.
+	std::unordered_map<EMovieNo, std::string>	m_MovieNameList;	// ムービー名リスト.
+	std::unique_ptr<CMovieDataLoader>			m_pMovieDataLoader;	// ムービー読み込みクラス.
+	std::unique_ptr<CMovie>						m_pMovie;			// ムービー.
+	std::unique_ptr<CCameraEditor>				m_pCameraEdit;		// カメラエディタ.
+	std::unique_ptr<CActorEditor>				m_pActorEdit;		// アクターエディタ.
+	std::unique_ptr<CWidgetEditor>				m_pWidgetEditor;	// ウィジェットエディタ.
+	std::unique_ptr<CStageRender>				m_pStageRender;		// ステージの描画.
 
-	bool							m_IsMoviePlaying;	// 再生中かどうか.
+	EMovieNo	m_NowSelectMovie;	// 現在選択しているムービー.
+	float		m_MovieEndSecTime;	// 動画終了時間.
+	bool		m_IsMoviePlaying;	// 再生中かどうか.
 
 };
 

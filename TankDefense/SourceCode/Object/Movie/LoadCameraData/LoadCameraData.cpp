@@ -28,36 +28,36 @@ std::vector<std::string> CCameraDataConverter::ToString( const std::vector<SMovi
 		ss << "\t// CameraState No."	<< count << std::endl;
 
 		// 動作時間.
-		ss << "\t#ActiveTime, " << moveState.ActiveTime << std::endl;
+		ss << "\t#ActiveTime," << moveState.ActiveTime << std::endl;
 
 		// 開始カメラ情報.
 		ss << "\t// StartState" << std::endl;
-		ss << "\t#Position, ";
+		ss << "\t#Position,";
 		ss << moveState.StartState.Position.x << ", ";
 		ss << moveState.StartState.Position.y << ", ";
 		ss << moveState.StartState.Position.z << std::endl;
 
-		ss << "\t#Look Position, ";
+		ss << "\t#Look Position,";
 		ss << moveState.StartState.LookPosition.x << ", ";
 		ss << moveState.StartState.LookPosition.y << ", ";
 		ss << moveState.StartState.LookPosition.z << std::endl;
 
 		// 終了カメラ情報.
 		ss << "\t// EndState" << std::endl;
-		ss << "\t#Position, ";
+		ss << "\t#Position,";
 		ss << moveState.EndState.Position.x << ", ";
 		ss << moveState.EndState.Position.y << ", ";
 		ss << moveState.EndState.Position.z << std::endl;
 
-		ss << "\t#Look Position, ";
+		ss << "\t#Look Position,";
 		ss << moveState.EndState.LookPosition.x << ", ";
 		ss << moveState.EndState.LookPosition.y << ", ";
 		ss << moveState.EndState.LookPosition.z << std::endl;
 		
 		// 座標移動時間.
-		ss << "\t#PosMoveTime, "		<< moveState.PosMoveTime		<< std::endl;
+		ss << "\t#PosMoveTime,"		<< moveState.PosMoveTime		<< std::endl;
 		// 視点座標移動時間.
-		ss << "\t#LookPosMoveTime, "	<< moveState.LookPosMoveTime	<< std::endl;
+		ss << "\t#LookPosMoveTime,"	<< moveState.LookPosMoveTime	<< std::endl;
 
 		const SMovieShakeCamera	shakeStatae = state.ShakeState;
 
@@ -66,24 +66,24 @@ std::vector<std::string> CCameraDataConverter::ToString( const std::vector<SMovi
 		for( const auto& shake : shakeStatae.ShakeState ){
 			ss << "\t// shakeState No."	<< shakeCount << std::endl;
 			// 振れ幅.
-			ss << "\t#Amplitube, " << shake.Amplitube << ", ";
+			ss << "\t#Amplitube," << shake.Amplitube << ",";
 			// 周波数
-			ss << "\t#Frequency, " << shake.Frequency << ", ";
+			ss << "\t#Frequency," << shake.Frequency << ",";
 			// 動作時間.
-			ss << "\t#Time, " << shake.Time << ", ";
+			ss << "\t#Time," << shake.Time << ",";
 			// 基底座標.
-			ss << "\t#Base Position, ";
+			ss << "\t#Base Position,";
 			ss << shake.BasePosition.x << ", ";
 			ss << shake.BasePosition.y << ", ";
 			ss << shake.BasePosition.z << ", ";
 
 			// 減衰するか.
 			boolMag = shake.IsAttenuation ? "true" : "false";
-			ss << "\t#IsAttenuation, " << boolMag << ", ";
+			ss << "\t#IsAttenuation," << boolMag << ", ";
 
 			// 動作するか.
 			boolMag = shake.IsPlaying ? "true" : "false";
-			ss << "\t#IsPlaying, " << boolMag << std::endl;
+			ss << "\t#IsPlaying," << boolMag << std::endl;
 
 			shakeCount++;
 		}

@@ -35,6 +35,8 @@ public:
 
 	// 演出カメラ情報の取得.
 	inline std::vector<SMovieCamera>& GetMovieCameraState(){ return m_MovieCameraList; }
+	// 演出カメラ情報の設定.
+	void SetMovieCameraState( const std::vector<SMovieCamera>& list);
 
 private:
 	// カメラ操作.

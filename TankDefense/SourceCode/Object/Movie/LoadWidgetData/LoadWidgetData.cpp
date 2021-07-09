@@ -27,14 +27,14 @@ std::vector<std::string> CWidgetDataConverter::ToString( const std::vector<SMovi
 		ss << "\t//---------------------"<< std::endl;
 		ss << "\t// WidgetState No."	<< count << std::endl;
 
-		ss << "\t#SpriteName, " << state.SpriteName << std::endl;
+		ss << "\t#SpriteName," << state.SpriteName << std::endl;
 
 		// 動作開始時間.
-		ss << "\t#AciveStartTime, " << state.AciveStartTime << std::endl;
+		ss << "\t#AciveStartTime," << state.AciveStartTime << std::endl;
 		
 		// 座標.
-		ss << "\t#Position, ";
-		ss << state.Position.x << ", ";
+		ss << "\t#Position,";
+		ss << state.Position.x << ",";
 		ss << state.Position.y << std::endl;
 
 		// アニメーション情報の取得.
@@ -43,22 +43,22 @@ std::vector<std::string> CWidgetDataConverter::ToString( const std::vector<SMovi
 
 		// X 方向にUVスクロールするか.
 		boolMag = animState.IsUVScrollX ? "true" : "false";
-		ss << "\t#IsUVScrollX, " << boolMag << std::endl;
+		ss << "\t#IsUVScrollX," << boolMag << std::endl;
 
 		// Y 方向にUVスクロールするか.
 		boolMag = animState.IsUVScrollY ? "true" : "false";
-		ss << "\t#IsUVScrollY, " << boolMag << std::endl;
+		ss << "\t#IsUVScrollY," << boolMag << std::endl;
 
 		// UVスクロール速度.
-		ss << "\t#UVScrollSpeedX, " << animState.UVScrollSpeed.x << std::endl;
-		ss << "\t#UVScrollSpeedY, " << animState.UVScrollSpeed.y << std::endl;
+		ss << "\t#UVScrollSpeedX," << animState.UVScrollSpeed.x << std::endl;
+		ss << "\t#UVScrollSpeedY," << animState.UVScrollSpeed.y << std::endl;
 
 		// アニメーションするか.
 		boolMag = animState.IsAnimation ? "true" : "false";
-		ss << "\t#IsAnimation, " << boolMag << std::endl;
+		ss << "\t#IsAnimation," << boolMag << std::endl;
 
 		// アニメーション速度.
-		ss << "\t#FrameCountSpeed, " << animState.FrameCountSpeed << std::endl;
+		ss << "\t#FrameCountSpeed," << animState.FrameCountSpeed << std::endl;
 
 
 		// フェード情報の取得.
@@ -66,13 +66,13 @@ std::vector<std::string> CWidgetDataConverter::ToString( const std::vector<SMovi
 		ss << "\t//FadeState" << std::endl;
 
 		// フェードフラグ.
-		ss << "\t#FadeFlag, " << fadeState.FadeFlag	<< std::endl;
+		ss << "\t#FadeFlag," << fadeState.FadeFlag	<< std::endl;
 		// フェード速度.
-		ss << "\t#FadeSpeed, " << fadeState.FadeSpeed	<< std::endl;
+		ss << "\t#FadeSpeed," << fadeState.FadeSpeed	<< std::endl;
 		// 最大アルファ値.
-		ss << "\t#AlphaMax, " << fadeState.AlphaMax	<< std::endl;
+		ss << "\t#AlphaMax," << fadeState.AlphaMax	<< std::endl;
 		// 最小アルファ値.
-		ss << "\t#AlphaMin, " << fadeState.AlphaMin	<< std::endl;
+		ss << "\t#AlphaMin," << fadeState.AlphaMin	<< std::endl;
 
 		ss << "\t//---------------------"<< std::endl;
 		stringData.emplace_back( ss.str() );
