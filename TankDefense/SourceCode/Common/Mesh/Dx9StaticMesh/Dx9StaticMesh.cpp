@@ -316,9 +316,13 @@ HRESULT CDX9StaticMesh::InitShader()
 
 	// HLSLから頂点シェーダーのブロブを作成.
 	if( FAILED(
-		D3DX11CompileFromFile(
-			SHADER_VS_NAME, nullptr, nullptr, "VS_Main", "vs_5_0",
-			uCompileFlag, 0, nullptr, &pCompiledShader, &pErrors, nullptr ))){
+		shader::InitShader(
+			SHADER_VS_NAME, 
+			"VS_Main",
+			"vs_5_0",
+			uCompileFlag, 
+			&pCompiledShader, 
+			&pErrors ))){
 		_ASSERT_EXPR(false, L"hlsl読み込み失敗");
 		return E_FAIL;
 	}
@@ -326,11 +330,7 @@ HRESULT CDX9StaticMesh::InitShader()
 
 	// 上記で作成したブロブから「頂点シェーダー」を作成.
 	if( FAILED(
-		m_pDevice11->CreateVertexShader(
-			pCompiledShader->GetBufferPointer(),
-			pCompiledShader->GetBufferSize(),
-			nullptr,
-			&m_pVertexShader ))){
+		shader::CreateVertexShader( m_pDevice11, pCompiledShader, &m_pVertexShader ))){
 		_ASSERT_EXPR(false, L"ﾊﾞｰﾃｯｸｽｼｪｰﾀﾞ作成失敗");
 		return E_FAIL;
 	}
@@ -349,11 +349,12 @@ HRESULT CDX9StaticMesh::InitShader()
 	numElements = sizeof(layout) / sizeof(layout[0]);	// 要素数算出.
 
 	// 頂点インプットレイアウトを作成.
-	if( FAILED( m_pDevice11->CreateInputLayout(
-			layout,
-			numElements,
-			pCompiledShader->GetBufferPointer(),
-			pCompiledShader->GetBufferSize(),
+	if( FAILED(
+		shader::CreateInputLayout( 
+			m_pDevice11, 
+			layout, 
+			numElements, 
+			pCompiledShader, 
 			&m_pVertexLayout ))){
 		_ASSERT_EXPR(false, L"頂点ｲﾝﾌﾟｯﾄﾚｲｱｳﾄ作成失敗");
 		return E_FAIL;
@@ -362,9 +363,13 @@ HRESULT CDX9StaticMesh::InitShader()
 
 	// HLSLからピクセルシェーダーのブロブを作成.
 	if( FAILED(
-		D3DX11CompileFromFile(
-			SHADER_PS_NAME, nullptr, nullptr, "PS_Main", "ps_5_0",
-			uCompileFlag, 0, nullptr, &pCompiledShader, &pErrors, nullptr ))){
+		shader::InitShader(
+			SHADER_PS_NAME,
+			"PS_Main",
+			"ps_5_0",
+			uCompileFlag,
+			&pCompiledShader,
+			&pErrors ))){
 		_ASSERT_EXPR(false, L"hlsl読み込み失敗");
 		return E_FAIL;
 	}
@@ -372,11 +377,7 @@ HRESULT CDX9StaticMesh::InitShader()
 
 	// 上記で作成したブロブから「ピクセルシェーダー」を作成.
 	if( FAILED(
-		m_pDevice11->CreatePixelShader(
-			pCompiledShader->GetBufferPointer(),
-			pCompiledShader->GetBufferSize(),
-			nullptr,
-			&m_pPixelShader ))){
+		shader::CreatePixelShader( m_pDevice11, pCompiledShader, &m_pPixelShader ))){
 		_ASSERT_EXPR(false, L"ﾋﾟｸｾﾙｼｪｰﾀﾞ作成失敗");
 		return E_FAIL;
 	}

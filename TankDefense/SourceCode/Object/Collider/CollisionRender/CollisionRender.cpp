@@ -51,19 +51,21 @@ CCollisionRender* CCollisionRender::GetInstance()
 //--------------------------------------.
 void CCollisionRender::Render()
 {
-	if( CKeyInput::IsHold(VK_LCONTROL) == true &&  CKeyInput::IsMomentPress(VK_F1) == true )
-		GetInstance()->m_IsSphreRender = !GetInstance()->m_IsSphreRender;
-	if( CKeyInput::IsHold(VK_LCONTROL) == true &&  CKeyInput::IsMomentPress(VK_F2) == true )
-		GetInstance()->m_IsCapsuleRender = !GetInstance()->m_IsCapsuleRender;
-	if( CKeyInput::IsHold(VK_LCONTROL) == true &&  CKeyInput::IsMomentPress(VK_F3) == true )
-		GetInstance()->m_IsBoxRender = !GetInstance()->m_IsBoxRender;
-	if( CKeyInput::IsHold(VK_LCONTROL) == true &&  CKeyInput::IsMomentPress(VK_F4) == true )
-		GetInstance()->m_IsRayRender = !GetInstance()->m_IsRayRender;
+	CCollisionRender* pInstance = GetInstance();
 
-	GetInstance()->SphereRender();	// 球体の描画.
-	GetInstance()->CapsuleRender();	// カプセルの描画.
-	GetInstance()->BoxRender();		// ボックスの描画.
-	GetInstance()->RayRender();		// レイの描画.
+	if( CKeyInput::IsHold(VK_LCONTROL) == true &&  CKeyInput::IsMomentPress(VK_F1) == true )
+		pInstance->m_IsSphreRender = !pInstance->m_IsSphreRender;
+	if( CKeyInput::IsHold(VK_LCONTROL) == true &&  CKeyInput::IsMomentPress(VK_F2) == true )
+		pInstance->m_IsCapsuleRender = !pInstance->m_IsCapsuleRender;
+	if( CKeyInput::IsHold(VK_LCONTROL) == true &&  CKeyInput::IsMomentPress(VK_F3) == true )
+		pInstance->m_IsBoxRender = !pInstance->m_IsBoxRender;
+	if( CKeyInput::IsHold(VK_LCONTROL) == true &&  CKeyInput::IsMomentPress(VK_F4) == true )
+		pInstance->m_IsRayRender = !pInstance->m_IsRayRender;
+
+	pInstance->SphereRender();	// 球体の描画.
+	pInstance->CapsuleRender();	// カプセルの描画.
+	pInstance->BoxRender();		// ボックスの描画.
+	pInstance->RayRender();		// レイの描画.
 }
 
 //--------------------------------------.

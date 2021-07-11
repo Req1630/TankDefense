@@ -65,15 +65,17 @@ CDebugText* CDebugText::GetInstance()
 //----------------------------.
 HRESULT CDebugText::Init( ID3D11DeviceContext* pContext11 )
 {
-	if( FAILED( GetInstance()->SetDevice( pContext11 ) ))		return E_FAIL;
-	if( FAILED( GetInstance()->m_pFont->Init( pContext11 ) ))	return E_FAIL;
-	if( FAILED( GetInstance()->m_pSpriteRender->Init( pContext11 ) ))	return E_FAIL;
+	CDebugText* pInstance = GetInstance();
 
-	GetInstance()->m_pFont->SetScale( RENDER_SIZE );
-	GetInstance()->m_pFont->SetColor( RENDER_COLOR );
+	if( FAILED( pInstance->SetDevice( pContext11 ) ))		return E_FAIL;
+	if( FAILED( pInstance->m_pFont->Init( pContext11 ) ))	return E_FAIL;
+	if( FAILED( pInstance->m_pSpriteRender->Init( pContext11 ) ))	return E_FAIL;
 
-	const std::string msg = GetInstance()->GetTime() + "Init Debug Text";
-	GetInstance()->m_TextList[LOG_NAME].emplace_back( msg );
+	pInstance->m_pFont->SetScale( RENDER_SIZE );
+	pInstance->m_pFont->SetColor( RENDER_COLOR );
+
+	const std::string msg = pInstance->GetTime() + "Init Debug Text";
+	pInstance->m_TextList[LOG_NAME].emplace_back( msg );
 
 	return S_OK;
 }
@@ -83,18 +85,21 @@ HRESULT CDebugText::Init( ID3D11DeviceContext* pContext11 )
 //----------------------------.
 void CDebugText::Render()
 {
+	CDebugText* pInstance = GetInstance();
+
 	// デバッグテキストの描画切り替え.
-	if( CKeyInput::IsPress(VK_LCONTROL) && CKeyInput::IsMomentPress(VK_F7) ) GetInstance()->m_IsRender = !GetInstance()->m_IsRender;
+	if( CKeyInput::IsPress(VK_LCONTROL) && CKeyInput::IsMomentPress(VK_F7) )
+		pInstance->m_IsRender = !pInstance->m_IsRender;
 
-	GetInstance()->TextureLoad();
+	pInstance->TextureLoad();
 
-	if( GetInstance()->m_pSpriteRender		== nullptr )	return;
-	if( GetInstance()->m_pBackSprite		== nullptr )	return;
-	if( GetInstance()->m_IsRender			== false )		return;
+	if( pInstance->m_pSpriteRender		== nullptr )	return;
+	if( pInstance->m_pBackSprite		== nullptr )	return;
+	if( pInstance->m_IsRender			== false )		return;
 
-	GetInstance()->Update();			// 更新.
-	GetInstance()->BackSpriteRender();	// 背景描画.
-	GetInstance()->FontRender();		// フォントの描画.
+	pInstance->Update();			// 更新.
+	pInstance->BackSpriteRender();	// 背景描画.
+	pInstance->FontRender();		// フォントの描画.
 }
 
 //----------------------------.
@@ -106,7 +111,8 @@ void CDebugText::Update()
 	ChangePage();	// ページの切り替え.
 
 	// マウスが無効なら終了.
-	if( CInput::IsScreenMiddleMouse() == false ) return;
+	if( CInput::IsScreenMiddleMouse()	== false ) return;
+	if( CDirectX11::IsWindowActive()	== false ) return;
 
 	// マウス座標が画面外なら終了.
 	POINT mousePos = CInput::GetMousePosition();
@@ -167,6 +173,10 @@ void CDebugText::TextureLoad()
 //----------------------------.
 void CDebugText::ChangePage()
 {
+	if( CKeyInput::IsHold( VK_LCONTROL ) && CKeyInput::IsMomentPress( 'R' ) ){
+		m_Tranceform.Position	= m_pBackSprite->GetRenderPos();
+	}
+
 	m_TagList.clear();
 	for( auto& t : m_TextList ) m_TagList.emplace_back( t.first );
 
@@ -206,6 +216,8 @@ void CDebugText::ChangeColor()
 			 m_FontColor.x, m_FontColor.y, m_FontColor.z, m_FontColor.w );
 	PushTextF( "Index", "Back Color : R[%.2f], G[%.2f], B[%.2f], A[%.2f]",
 			 m_BackColor.x, m_BackColor.y, m_BackColor.z, m_BackColor.w );
+	PushText( "Index", SEPARATOR );
+	PushText( "Index", "'Left Ctrl' + 'R' : Reset Debug Window Position " );
 	PushText( "Index", SEPARATOR );
 
 	if( !CKeyInput::IsHold( VK_LCONTROL ) ) return;
@@ -263,7 +275,7 @@ void CDebugText::FontRender()
 			i++;
 			continue;
 		}
-		if( i >= INDEX_SUB_MAX ) break;
+		if( i >= INDEX_SUB_MAX+m_TextIndex ) break;
 
 		// テキストが背景外なら終了.
 		if( pos.y < m_Tranceform.Position.y+m_BackTextureSize.y ){
@@ -288,17 +300,24 @@ void CDebugText::PageRender( D3DXVECTOR3& pos )
 {
 	if( m_TagList.empty() == true ) return;
 	m_NowTagName = m_TagList[m_NowTagIndex];
-	const std::string backTag = m_NowTagName;
-	const std::string nextTag = m_NowTagName;
+
+	const int indexSize = m_TagList.size()-1;
+
+	const int backIndex = (m_NowTagIndex-1) < 0			? indexSize	: m_NowTagIndex-1;
+	const int nextIndex = (m_NowTagIndex+1) > indexSize	? 0			: m_NowTagIndex+1;
+
 	char pageString[256];
 	sprintf( pageString, " [%s] << Back [%s %d/%d] Next >> [%s]",
-			 backTag.c_str(), m_NowTagName.c_str(), m_NowTagIndex+1, m_TagList.size(), nextTag.c_str() );
+			 m_TagList[backIndex].c_str(), 
+			 m_NowTagName.c_str(), 
+			 m_NowTagIndex+1, m_TagList.size(), 
+			 m_TagList[nextIndex].c_str() );
 
 	const std::vector<std::string> textList =
 	{
 		"-------------------------  Page  -------------------------",
 		pageString,
-		"    'Left Ctrl' + '<-' or '->'",
+		" 'Left Ctrl' + '<-' or '->'",
 		SEPARATOR,
 	};
 

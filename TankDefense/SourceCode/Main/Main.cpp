@@ -111,6 +111,8 @@ HRESULT CMain::Load()
 //====================================.
 void CMain::Update()
 {
+	CDirectX11::CheckActiveWindow();	// アクティブウィンドウか確認.
+
 	// デルタタイムの取得.
 	const float	deltaTime = static_cast<float>(m_pFrameRate->GetDeltaTime());
 	const bool	isLoadEnd = m_pLoadManager->ThreadRelease();

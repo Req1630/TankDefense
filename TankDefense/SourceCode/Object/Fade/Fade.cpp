@@ -48,29 +48,31 @@ bool CFade::Init()
 // 更新.
 void CFade::Update( const float& deltaTime )
 {
-	switch( GetInstance()->m_NowState )
+	CFade* pInstance = GetInstance();
+
+	switch( pInstance->m_NowState )
 	{
 	case EFadeState::In:
-		if( GetInstance()->m_MainSpriteState.FadeValue < FADE_VALUE_MAX ){
-			GetInstance()->m_MainSpriteState.FadeValue += deltaTime / FADE_IN_SECONDS;
+		if( pInstance->m_MainSpriteState.FadeValue < FADE_VALUE_MAX ){
+			pInstance->m_MainSpriteState.FadeValue += deltaTime / FADE_IN_SECONDS;
 		} else {
-			GetInstance()->m_MainSpriteState.FadeValue = FADE_VALUE_MAX;
-			GetInstance()->m_NowState = EFadeState::End;
-			if( GetInstance()->m_IsNextFade == true ){
-				GetInstance()->m_NowState = EFadeState::Out;
-				GetInstance()->m_IsNextFade = false;
+			pInstance->m_MainSpriteState.FadeValue = FADE_VALUE_MAX;
+			pInstance->m_NowState = EFadeState::End;
+			if( pInstance->m_IsNextFade == true ){
+				pInstance->m_NowState = EFadeState::Out;
+				pInstance->m_IsNextFade = false;
 			}
 		}
 		break;
 	case EFadeState::Out:
-		if( GetInstance()->m_MainSpriteState.FadeValue > FADE_VALUE_MIN ){
-			GetInstance()->m_MainSpriteState.FadeValue -= deltaTime / FADE_OUT_SECONDS;
+		if( pInstance->m_MainSpriteState.FadeValue > FADE_VALUE_MIN ){
+			pInstance->m_MainSpriteState.FadeValue -= deltaTime / FADE_OUT_SECONDS;
 		} else {
-			GetInstance()->m_MainSpriteState.FadeValue = FADE_VALUE_MIN;
-			GetInstance()->m_NowState = EFadeState::End;
-			if( GetInstance()->m_IsNextFade == true ){
-				GetInstance()->m_NowState = EFadeState::In;
-				GetInstance()->m_IsNextFade = false;
+			pInstance->m_MainSpriteState.FadeValue = FADE_VALUE_MIN;
+			pInstance->m_NowState = EFadeState::End;
+			if( pInstance->m_IsNextFade == true ){
+				pInstance->m_NowState = EFadeState::In;
+				pInstance->m_IsNextFade = false;
 			}
 		}
 		break;
@@ -82,31 +84,37 @@ void CFade::Update( const float& deltaTime )
 // 描画.
 void CFade::Render()
 {
-	if( GetInstance()->m_IsKeepRender == false ){
-		if( GetInstance()->m_NowState == EFadeState::End ) return;
+	CFade* pInstance = GetInstance();
+
+	if( pInstance->m_IsKeepRender == false ){
+		if( pInstance->m_NowState == EFadeState::End ) return;
 	}
-	GetInstance()->m_MainSprite->SetMaskTexture( GetInstance()->m_MaskSprite->GetTexture() );
-	GetInstance()->m_MainSprite->Render( &GetInstance()->m_MainSpriteState );
+	pInstance->m_MainSprite->SetMaskTexture( pInstance->m_MaskSprite->GetTexture() );
+	pInstance->m_MainSprite->Render( &pInstance->m_MainSpriteState );
 }
 
 // フェードイン設定関数.
 void CFade::SetFadeIn( const bool& isNextFade )
 {
-	if( GetInstance()->m_NowState == EFadeState::In ) return;
+	CFade* pInstance = GetInstance();
 
-	GetInstance()->m_MainSpriteState.FadeValue = FADE_VALUE_MIN;
-	GetInstance()->m_NowState = EFadeState::In;
-	GetInstance()->m_IsNextFade = isNextFade;
+	if( pInstance->m_NowState == EFadeState::In ) return;
+
+	pInstance->m_MainSpriteState.FadeValue = FADE_VALUE_MIN;
+	pInstance->m_NowState = EFadeState::In;
+	pInstance->m_IsNextFade = isNextFade;
 }
 
 // フェードアウト設定関数.
 void CFade::SetFadeOut( const bool& isNextFade )
 {
-	if( GetInstance()->m_NowState == EFadeState::Out ) return;
+	CFade* pInstance = GetInstance();
 
-	GetInstance()->m_MainSpriteState.FadeValue = FADE_VALUE_MAX;
-	GetInstance()->m_NowState = EFadeState::Out;
-	GetInstance()->m_IsNextFade = isNextFade;
+	if( pInstance->m_NowState == EFadeState::Out ) return;
+
+	pInstance->m_MainSpriteState.FadeValue = FADE_VALUE_MAX;
+	pInstance->m_NowState = EFadeState::Out;
+	pInstance->m_IsNextFade = isNextFade;
 }
 
 // 続けて描画する.

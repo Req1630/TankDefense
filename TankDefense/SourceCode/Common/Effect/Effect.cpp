@@ -40,8 +40,6 @@ CEffect::~CEffect()
 //-----------------------------------------------------------.
 HRESULT CEffect::Init( ID3D11Device* pDevice11, ID3D11DeviceContext* pContext11, const std::string& fileName )
 {
-	std::unique_lock<std::mutex> lock( m_Mutex );
-
 	if( FAILED( Create( pDevice11, pContext11 )) ){
 		ERROR_MESSAGE("Effekseer構築失敗");
 		return E_FAIL;
@@ -62,6 +60,7 @@ HRESULT CEffect::Init( ID3D11Device* pDevice11, ID3D11DeviceContext* pContext11,
 HRESULT CEffect::Create( ID3D11Device* pDevice11, ID3D11DeviceContext* pContext11 )
 {
 	if( m_pManager != nullptr ) return S_OK;
+	std::unique_lock<std::mutex> lock( m_Mutex );
 #ifdef ENABLE_XAUDIO2
 	// XAudio2の初期化を行う.
 	if (FAILED(
@@ -156,6 +155,7 @@ void CEffect::Destroy()
 //-----------------------------------------------------------.
 HRESULT CEffect::LoadData( const std::string& fileName )
 {
+	std::unique_lock<std::mutex> lock( m_Mutex );
 	// 文字変換.
 	const size_t charSize = fileName.length() + 1;	// 入力文字のサイズ+1を取得.
 	wchar_t* FileName = nullptr;

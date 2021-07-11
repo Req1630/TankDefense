@@ -111,18 +111,20 @@ private:
 template<class... T1>
 void CDebugText::PushText( const char* tag, const T1&... t1 )
 {
-	std::unique_lock<std::mutex> lock( GetInstance()->m_Mutex );
+	CDebugText* pInstance = GetInstance();
+	std::unique_lock<std::mutex> lock( pInstance->m_Mutex );
 
-	if( GetInstance()->m_pSpriteRender		== nullptr )	return;
-	if( GetInstance()->m_pBackSprite		== nullptr )	return;
-	if( GetInstance()->m_IsRender			== false )		return;
+	if( pInstance->m_pSpriteRender		== nullptr )	return;
+	if( pInstance->m_pBackSprite		== nullptr )	return;
+	if( pInstance->m_IsRender			== false )		return;
 
-	text_list&	textList	= GetInstance()->m_TextList[tag];
-	int&		count		= GetInstance()->m_TextCountList[tag];
+	text_list&	textList	= pInstance->m_TextList[tag];
+	int&		count		= pInstance->m_TextCountList[tag];
 
-	if( GetInstance()->m_NowTagName			== LOG_NAME )	return;
+	if( pInstance->m_NowTagName			== LOG_NAME )	return;
+	if( pInstance->m_NowTagName			!= tag )		return;
 
-	const std::string text	= GetInstance()->initstring(t1...);
+	const std::string text	= pInstance->initstring(t1...);
 	if( text.length() >= MAX_TEXT_LENGH ) return;
 	if( static_cast<int>(textList.size()) <= count ){
 		textList.emplace_back( text );
@@ -136,21 +138,22 @@ void CDebugText::PushText( const char* tag, const T1&... t1 )
 template<class... T1>
 void CDebugText::PushTextF( const char* tag, const char* fmt, T1... t1 )
 {
-	std::unique_lock<std::mutex> lock( GetInstance()->m_Mutex );
+	CDebugText* pInstance = GetInstance();
+	std::unique_lock<std::mutex> lock( pInstance->m_Mutex );
 
-	if( GetInstance()->m_pSpriteRender		== nullptr )	return;
-	if( GetInstance()->m_pBackSprite		== nullptr )	return;
-	if( GetInstance()->m_IsRender			== false )		return;
+	if( pInstance->m_pSpriteRender		== nullptr )	return;
+	if( pInstance->m_pBackSprite		== nullptr )	return;
+	if( pInstance->m_IsRender			== false )		return;
 
-	text_list&	textList	= GetInstance()->m_TextList[tag];
-	int&		count		= GetInstance()->m_TextCountList[tag];
+	text_list&	textList	= pInstance->m_TextList[tag];
+	int&		count		= pInstance->m_TextCountList[tag];
 
-	if( GetInstance()->m_NowTagName			== LOG_NAME )	return;
+	if( pInstance->m_NowTagName			== LOG_NAME )	return;
+	if( pInstance->m_NowTagName			!= tag )		return;
 
 	char color[256];
-	const int size = sprintf( color, fmt, t1... );
+	const int size = sprintf_s( color, fmt, t1... );
 
-	const std::string text	= GetInstance()->initstring(t1...);
 	if( size >= MAX_TEXT_LENGH ) return;
 	if( static_cast<int>(textList.size()) <= count ){
 		textList.emplace_back( color );
@@ -164,14 +167,16 @@ void CDebugText::PushTextF( const char* tag, const char* fmt, T1... t1 )
 template<class... T1>
 void CDebugText::PushLog( const T1&... t1 )
 {
-	std::unique_lock<std::mutex> lock( GetInstance()->m_Mutex );
+	CDebugText* pInstance = GetInstance();
+	std::unique_lock<std::mutex> lock( pInstance->m_Mutex );
 
-	const std::string text	= GetInstance()->GetTime() + GetInstance()->initstring(t1...);
-	text_list&	textList	= GetInstance()->m_TextList[LOG_NAME];
-	int&		count		= GetInstance()->m_TextCountList[LOG_NAME];
+	const std::string text	= pInstance->GetTime() + pInstance->initstring(t1...);
+	text_list&	textList	= pInstance->m_TextList[LOG_NAME];
+	int&		count		= pInstance->m_TextCountList[LOG_NAME];
 
 	textList.emplace_back( text );
 	count++;
+	if( count >= 21 ) pInstance->m_TextIndex++;
 }
 
 template <class T>

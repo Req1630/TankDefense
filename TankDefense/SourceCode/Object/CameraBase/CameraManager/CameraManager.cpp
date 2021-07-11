@@ -44,35 +44,35 @@ CCameraManager* CCameraManager::GetInstance()
 //--------------------------------------.
 void CCameraManager::Update( const float& deltaTime )
 {
-	if( GetInstance()->m_pCamera == nullptr ) return;
+	CCameraManager* pInstance = GetInstance();
+	if( pInstance->m_pCamera == nullptr ) return;
 
 	if( CKeyInput::IsHold('C') == true && CKeyInput::IsMomentPress('M') == true ){
 		SetActiveFreeCamera();
 		SetPassiveFreeCamera();
 	}
 
-	if( GetInstance()->m_IsMoveCamera == true ){
-		GetInstance()->ChangeMoveUpdate( deltaTime );
+	if( pInstance->m_IsMoveCamera == true ){
+		pInstance->ChangeMoveUpdate( deltaTime );
 	} else {
-		GetInstance()->m_pCamera->Update( deltaTime );
+		pInstance->m_pCamera->Update( deltaTime );
 	}
 
-	GetInstance()->m_pCamera->UpdateViewProj();
+	pInstance->m_pCamera->UpdateViewProj();
 
-	const D3DXVECTOR3 pos = GetInstance()->m_pCamera->GetPosition();
-	const D3DXVECTOR3 lookPos = GetInstance()->m_pCamera->GetLookPosition();
+	const D3DXVECTOR3 pos = pInstance->m_pCamera->GetPosition();
+	const D3DXVECTOR3 lookPos = pInstance->m_pCamera->GetLookPosition();
 
-	//CDebugText::PushText( "-----------------");
-	//CDebugText::PushText( "---- Camera -----");
-	//CDebugText::PushText( "-----------------");
-	//CDebugText::PushText( "'C + M' Is Light Activce Change" );
-	//CDebugText::PushText( "'L_Ctrl + " );
-	//CDebugText::PushText( "'D or A' x, 'E or Q' y, 'W or S' z : Position Move" );
-	//CDebugText::PushText( "Mouse Left Click : LookPosition Move" );
-	//CDebugText::PushText( "-----------------" );
-	//CDebugText::PushText( "IsFreeCamera : ", GetInstance()->m_IsActiveFreeCamera == true ? "true" : "false" );
-	//CDebugText::PushText( "Pos      : ", pos.x, ", ", pos.y, ", ", pos.z );
-	//CDebugText::PushText( "LookPos  : ", lookPos.x, ", ", lookPos.y, ", ", lookPos.z );
+	CDebugText::PushText("Camera", CDebugText::SEPARATOR );
+	CDebugText::PushText("Camera", "'C + M' Is Light Activce Change" );
+	CDebugText::PushText("Camera", "'L_Ctrl + " );
+	CDebugText::PushText("Camera", "'D or A' x, 'E or Q' y, 'W or S' z : Position Move" );
+	CDebugText::PushText("Camera", "Mouse Left Click : LookPosition Move" );
+	CDebugText::PushText("Camera", CDebugText::SEPARATOR );
+	CDebugText::PushText("Camera", "IsFreeCamera : ", pInstance->m_IsActiveFreeCamera == true ? "true" : "false" );
+	CDebugText::PushTextF("Camera", "Position     : x[%08.3f], y[%08.3f], z[%08.3f]", pos.x,		pos.y,		pos.z );
+	CDebugText::PushTextF("Camera", "LookPosition : x[%08.3f], y[%08.3f], z[%08.3f]", lookPos.x,	lookPos.y,	lookPos.z );
+	CDebugText::PushText("Camera", CDebugText::SEPARATOR );
 }
 
 //--------------------------------------.
@@ -80,23 +80,24 @@ void CCameraManager::Update( const float& deltaTime )
 //--------------------------------------.
 void CCameraManager::ChangeCamera( CCameraBase* pCamera, const bool& isMove, const float& sec )
 {
+	CCameraManager* pInstance = GetInstance();
 	if( pCamera == nullptr ) return;
-	if( GetInstance()->m_pCamera == nullptr ){
-		GetInstance()->m_pCamera = pCamera;
+	if( pInstance->m_pCamera == nullptr ){
+		pInstance->m_pCamera = pCamera;
 		return;
 	}
 	if( isMove == true ){
 		// 前回の座標と新しい座標を設定.
-		GetInstance()->m_NewState.LookPosition	= pCamera->GetLookPosition();
-		GetInstance()->m_NewState.Position		= pCamera->GetPosition();
-		GetInstance()->m_OldState.LookPosition	= GetInstance()->m_pCamera->GetLookPosition();
-		GetInstance()->m_OldState.Position		= GetInstance()->m_pCamera->GetPosition();
+		pInstance->m_NewState.LookPosition	= pCamera->GetLookPosition();
+		pInstance->m_NewState.Position		= pCamera->GetPosition();
+		pInstance->m_OldState.LookPosition	= pInstance->m_pCamera->GetLookPosition();
+		pInstance->m_OldState.Position		= pInstance->m_pCamera->GetPosition();
 
-		GetInstance()->m_MoveSeconds		= MOVE_SECONDS_MAX;
-		GetInstance()->m_MoveSecondsSpeed	= sec;
-		GetInstance()->m_IsMoveCamera		= true;
+		pInstance->m_MoveSeconds		= MOVE_SECONDS_MAX;
+		pInstance->m_MoveSecondsSpeed	= sec;
+		pInstance->m_IsMoveCamera		= true;
 	}
-	GetInstance()->m_pCamera = pCamera;
+	pInstance->m_pCamera = pCamera;
 }
 
 //--------------------------------------.
@@ -104,25 +105,27 @@ void CCameraManager::ChangeCamera( CCameraBase* pCamera, const bool& isMove, con
 //--------------------------------------.
 void CCameraManager::SetActiveFreeCamera()
 {
-	if( GetInstance()->m_IsMoveCamera		== true ) return;
-	if( GetInstance()->m_IsActiveFreeCamera == true ) return;
-	if( GetInstance()->m_pCamera			== nullptr ) return;
-	if( GetInstance()->m_MoveSeconds > 0.0f ) return;
+	CCameraManager* pInstance = GetInstance();
+
+	if( pInstance->m_IsMoveCamera		== true ) return;
+	if( pInstance->m_IsActiveFreeCamera == true ) return;
+	if( pInstance->m_pCamera			== nullptr ) return;
+	if( pInstance->m_MoveSeconds > 0.0f ) return;
 
 
-	GetInstance()->m_pTmpCamera = GetInstance()->m_pCamera;
-	GetInstance()->m_pCamera = GetInstance()->m_pFreeCamera.get();
+	pInstance->m_pTmpCamera = pInstance->m_pCamera;
+	pInstance->m_pCamera = pInstance->m_pFreeCamera.get();
 
 	// 前回の座標と新しい座標を設定.
-	GetInstance()->m_NewState.LookPosition	= GetInstance()->m_pCamera->GetLookPosition();
-	GetInstance()->m_NewState.Position		= GetInstance()->m_pCamera->GetPosition();
-	GetInstance()->m_OldState.LookPosition	= GetInstance()->m_pTmpCamera->GetLookPosition();
-	GetInstance()->m_OldState.Position		= GetInstance()->m_pTmpCamera->GetPosition();
+	pInstance->m_NewState.LookPosition	= pInstance->m_pCamera->GetLookPosition();
+	pInstance->m_NewState.Position		= pInstance->m_pCamera->GetPosition();
+	pInstance->m_OldState.LookPosition	= pInstance->m_pTmpCamera->GetLookPosition();
+	pInstance->m_OldState.Position		= pInstance->m_pTmpCamera->GetPosition();
 
-	GetInstance()->m_MoveSeconds = MOVE_SECONDS_MAX;
-	GetInstance()->m_MoveSecondsSpeed = MOVE_SECONDS_SPEED;
-	GetInstance()->m_IsActiveFreeCamera = true;
-	GetInstance()->m_IsMoveCamera = true;
+	pInstance->m_MoveSeconds = MOVE_SECONDS_MAX;
+	pInstance->m_MoveSecondsSpeed = MOVE_SECONDS_SPEED;
+	pInstance->m_IsActiveFreeCamera = true;
+	pInstance->m_IsMoveCamera = true;
 }
 
 //--------------------------------------.
@@ -130,23 +133,25 @@ void CCameraManager::SetActiveFreeCamera()
 //--------------------------------------.
 void CCameraManager::SetPassiveFreeCamera()
 {
-	if( GetInstance()->m_IsMoveCamera		== true ) return;
-	if( GetInstance()->m_IsActiveFreeCamera	== false ) return;
-	if( GetInstance()->m_pTmpCamera			== nullptr ) return;
-	if( GetInstance()->m_MoveSeconds > 0.0f ) return;
+	CCameraManager* pInstance = GetInstance();
+
+	if( pInstance->m_IsMoveCamera		== true ) return;
+	if( pInstance->m_IsActiveFreeCamera	== false ) return;
+	if( pInstance->m_pTmpCamera			== nullptr ) return;
+	if( pInstance->m_MoveSeconds > 0.0f ) return;
 
 	// 前回の座標と新しい座標を設定.
-	GetInstance()->m_NewState.LookPosition	= GetInstance()->m_pTmpCamera->GetLookPosition();
-	GetInstance()->m_NewState.Position		= GetInstance()->m_pTmpCamera->GetPosition();
-	GetInstance()->m_OldState.LookPosition	= GetInstance()->m_pCamera->GetLookPosition();
-	GetInstance()->m_OldState.Position		= GetInstance()->m_pCamera->GetPosition();
+	pInstance->m_NewState.LookPosition	= pInstance->m_pTmpCamera->GetLookPosition();
+	pInstance->m_NewState.Position		= pInstance->m_pTmpCamera->GetPosition();
+	pInstance->m_OldState.LookPosition	= pInstance->m_pCamera->GetLookPosition();
+	pInstance->m_OldState.Position		= pInstance->m_pCamera->GetPosition();
 
-	GetInstance()->m_pCamera = GetInstance()->m_pTmpCamera;
-	GetInstance()->m_MoveSeconds = MOVE_SECONDS_MAX;
-	GetInstance()->m_MoveSecondsSpeed = MOVE_SECONDS_SPEED;
+	pInstance->m_pCamera = pInstance->m_pTmpCamera;
+	pInstance->m_MoveSeconds = MOVE_SECONDS_MAX;
+	pInstance->m_MoveSecondsSpeed = MOVE_SECONDS_SPEED;
 
-	GetInstance()->m_IsActiveFreeCamera = false;
-	GetInstance()->m_IsMoveCamera = true;
+	pInstance->m_IsActiveFreeCamera = false;
+	pInstance->m_IsMoveCamera = true;
 }
 
 // カメラをnull初期化する.
@@ -160,12 +165,14 @@ void CCameraManager::SetNullCamera()
 //--------------------------------------.
 void CCameraManager::ChangeMoveUpdate( const float& deltaTime )
 {
-	if( GetInstance()->m_MoveSeconds <= 0.0f ){
-			GetInstance()->m_IsMoveCamera = false;
+	CCameraManager* pInstance = GetInstance();
+
+	if( pInstance->m_MoveSeconds <= 0.0f ){
+		pInstance->m_IsMoveCamera = false;
 	}
-	GetInstance()->m_pCamera->AnySecondsMove(
-		GetInstance()->m_NewState,
-		GetInstance()->m_OldState,
-		GetInstance()->m_MoveSeconds );
-	GetInstance()->m_MoveSeconds -= deltaTime/GetInstance()->m_MoveSecondsSpeed;
+	pInstance->m_pCamera->AnySecondsMove(
+		pInstance->m_NewState,
+		pInstance->m_OldState,
+		pInstance->m_MoveSeconds );
+	pInstance->m_MoveSeconds -= deltaTime/pInstance->m_MoveSecondsSpeed;
 }

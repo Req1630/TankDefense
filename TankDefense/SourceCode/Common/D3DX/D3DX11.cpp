@@ -25,6 +25,7 @@ CDirectX11::CDirectX11()
 	, m_pRsWireFrame			( nullptr )
 	, m_WndWidth				( 0 )
 	, m_WndHeight				( 0 )
+	, m_IsWindowActive			( true )
 {
 }
 
@@ -47,20 +48,22 @@ CDirectX11* CDirectX11::GetInstance()
 //-----------------------------------.
 HRESULT CDirectX11::Create( HWND hWnd )
 {
-	GetInstance()->m_hWnd = hWnd;
+	CDirectX11* pInstance = GetInstance();
 
-	GetInstance()->m_WndWidth = static_cast<UINT>(WND_W);
-	GetInstance()->m_WndHeight = static_cast<UINT>(WND_H);
+	pInstance->m_hWnd = hWnd;
+
+	pInstance->m_WndWidth = static_cast<UINT>(WND_W);
+	pInstance->m_WndHeight = static_cast<UINT>(WND_H);
 
 	CDebugText::PushLog( "DirectX11 Device Create Start" );
 
-	if( FAILED(GetInstance()->InitDevice11()) )			return E_FAIL;
-	if( FAILED(GetInstance()->InitTexRTV()) )			return E_FAIL;
-	if( FAILED(GetInstance()->InitDSTex()) )			return E_FAIL;
-	if( FAILED(GetInstance()->InitViewports()) )		return E_FAIL;
-	if( FAILED(GetInstance()->InitBlend()) )			return E_FAIL;
-	if( FAILED(GetInstance()->InitDeprh()) )			return E_FAIL;
-	if( FAILED(GetInstance()->InitRasterizerState()) )	return E_FAIL;
+	if( FAILED(pInstance->InitDevice11()) )			return E_FAIL;
+	if( FAILED(pInstance->InitTexRTV()) )			return E_FAIL;
+	if( FAILED(pInstance->InitDSTex()) )			return E_FAIL;
+	if( FAILED(pInstance->InitViewports()) )		return E_FAIL;
+	if( FAILED(pInstance->InitBlend()) )			return E_FAIL;
+	if( FAILED(pInstance->InitDeprh()) )			return E_FAIL;
+	if( FAILED(pInstance->InitRasterizerState()) )	return E_FAIL;
 
 	CDebugText::PushLog( "DirectX11 Device Create End [Succeeded]" );
 	CLog::Print( "DirectX11デバイス作成 : 成功" );
@@ -73,23 +76,24 @@ HRESULT CDirectX11::Create( HWND hWnd )
 //-----------------------------------.
 HRESULT CDirectX11::Release()
 {
+	CDirectX11* pInstance = GetInstance();
 
-	SAFE_RELEASE( GetInstance()->m_pDepthStencilState );
-	SAFE_RELEASE( GetInstance()->m_pDepthStencilStateOff );
-	SAFE_RELEASE( GetInstance()->m_pAlphaBlend );
-	SAFE_RELEASE( GetInstance()->m_pNoAlphaBlend );
-	SAFE_RELEASE( GetInstance()->m_pAlphaToCoverage );
-	SAFE_RELEASE( GetInstance()->m_pRsSoldAndNone );
-	SAFE_RELEASE( GetInstance()->m_pRsSoldAndBack );
-	SAFE_RELEASE( GetInstance()->m_pRsSoldAndFront );
-	SAFE_RELEASE( GetInstance()->m_pRsWireFrame );
+	SAFE_RELEASE( pInstance->m_pDepthStencilState );
+	SAFE_RELEASE( pInstance->m_pDepthStencilStateOff );
+	SAFE_RELEASE( pInstance->m_pAlphaBlend );
+	SAFE_RELEASE( pInstance->m_pNoAlphaBlend );
+	SAFE_RELEASE( pInstance->m_pAlphaToCoverage );
+	SAFE_RELEASE( pInstance->m_pRsSoldAndNone );
+	SAFE_RELEASE( pInstance->m_pRsSoldAndBack );
+	SAFE_RELEASE( pInstance->m_pRsSoldAndFront );
+	SAFE_RELEASE( pInstance->m_pRsWireFrame );
 
-	SAFE_RELEASE( GetInstance()->m_pBackBuffer_DSTexDSV );
-	SAFE_RELEASE( GetInstance()->m_pBackBuffer_DSTex );
-	SAFE_RELEASE( GetInstance()->m_pBackBuffer_TexRTV );
-	SAFE_RELEASE( GetInstance()->m_pSwapChain );
-	SAFE_RELEASE( GetInstance()->m_pContext11 );
-	SAFE_RELEASE( GetInstance()->m_pDevice11 );
+	SAFE_RELEASE( pInstance->m_pBackBuffer_DSTexDSV );
+	SAFE_RELEASE( pInstance->m_pBackBuffer_DSTex );
+	SAFE_RELEASE( pInstance->m_pBackBuffer_TexRTV );
+	SAFE_RELEASE( pInstance->m_pSwapChain );
+	SAFE_RELEASE( pInstance->m_pContext11 );
+	SAFE_RELEASE( pInstance->m_pDevice11 );
 
 	return S_OK;
 }
@@ -99,9 +103,10 @@ HRESULT CDirectX11::Release()
 //-----------------------------------.
 void CDirectX11::ClearBackBuffer()
 {
+	CDirectX11* pInstance = GetInstance();
 	// カラーバックバッファ.
-	GetInstance()->m_pContext11->ClearRenderTargetView( 
-		GetInstance()->m_pBackBuffer_TexRTV, CLEAR_BACK_COLOR );
+	pInstance->m_pContext11->ClearRenderTargetView( 
+		pInstance->m_pBackBuffer_TexRTV, CLEAR_BACK_COLOR );
 }
 
 //-----------------------------------.
@@ -117,14 +122,16 @@ void CDirectX11::SwapChainPresent()
 //-----------------------------------.
 void CDirectX11::SetBackBuffer()
 {
+	CDirectX11* pInstance = GetInstance();
+
 	// レンダーターゲットの設定.
-	GetInstance()->m_pContext11->OMSetRenderTargets( 
+	pInstance->m_pContext11->OMSetRenderTargets( 
 		1, 
-		&GetInstance()->m_pBackBuffer_TexRTV,
-		GetInstance()->m_pBackBuffer_DSTexDSV );
+		&pInstance->m_pBackBuffer_TexRTV,
+		pInstance->m_pBackBuffer_DSTexDSV );
 	// デプスステンシルバッファ.
-	GetInstance()->m_pContext11->ClearDepthStencilView(
-		GetInstance()->m_pBackBuffer_DSTexDSV,
+	pInstance->m_pContext11->ClearDepthStencilView(
+		pInstance->m_pBackBuffer_DSTexDSV,
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 		1.0f, 0 );
 }
@@ -134,11 +141,13 @@ void CDirectX11::SetBackBuffer()
 //--------------------------------------------.
 void CDirectX11::SetBlend( bool EnableAlpha )
 {
+	CDirectX11* pInstance = GetInstance();
+
 	// ブレンドステートの設定.
 	UINT mask = 0xffffffff;	// マスク値.
 	ID3D11BlendState* blend = 
-		EnableAlpha == true ? GetInstance()->m_pAlphaBlend : GetInstance()->m_pNoAlphaBlend;
-	GetInstance()->m_pContext11->OMSetBlendState( blend, nullptr, mask );
+		EnableAlpha == true ? pInstance->m_pAlphaBlend : pInstance->m_pNoAlphaBlend;
+	pInstance->m_pContext11->OMSetBlendState( blend, nullptr, mask );
 }
 
 //--------------------------------------------.
@@ -146,11 +155,13 @@ void CDirectX11::SetBlend( bool EnableAlpha )
 //--------------------------------------------.
 void CDirectX11::SetCoverage( bool EnableCoverage )
 {
+	CDirectX11* pInstance = GetInstance();
+
 	// ブレンドステートの設定.
 	UINT mask = 0xffffffff;	// マスク値.
 	ID3D11BlendState* blend = 
-		EnableCoverage == true ? GetInstance()->m_pAlphaToCoverage : GetInstance()->m_pNoAlphaBlend;
-	GetInstance()->m_pContext11->OMSetBlendState( blend, nullptr, mask );
+		EnableCoverage == true ? pInstance->m_pAlphaToCoverage : pInstance->m_pNoAlphaBlend;
+	pInstance->m_pContext11->OMSetBlendState( blend, nullptr, mask );
 }
 
 //--------------------------------------------.
@@ -158,10 +169,12 @@ void CDirectX11::SetCoverage( bool EnableCoverage )
 //--------------------------------------------.
 void CDirectX11::SetDeprh( bool flag )
 {
+	CDirectX11* pInstance = GetInstance();
+
 	ID3D11DepthStencilState* pTmp
-		= ( flag == true ) ? GetInstance()->m_pDepthStencilState : GetInstance()->m_pDepthStencilStateOff;
+		= ( flag == true ) ? pInstance->m_pDepthStencilState : pInstance->m_pDepthStencilStateOff;
 	// 深度設定をセット.
-	GetInstance()->m_pContext11->OMSetDepthStencilState( pTmp, 1 );
+	pInstance->m_pContext11->OMSetDepthStencilState( pTmp, 1 );
 }
 
 //--------------------------------------------.
@@ -169,19 +182,21 @@ void CDirectX11::SetDeprh( bool flag )
 //--------------------------------------------.
 void CDirectX11::SetRasterizerState( const ERS_STATE& rsState )
 {
+	CDirectX11* pInstance = GetInstance();
+
 	switch( rsState )
 	{
 	case enRS_STATE::None:	// 正背面描画.
-		GetInstance()->m_pContext11->RSSetState( GetInstance()->m_pRsSoldAndNone );
+		pInstance->m_pContext11->RSSetState( pInstance->m_pRsSoldAndNone );
 		break;
 	case enRS_STATE::Back:	// 背面を描画しない.
-		GetInstance()->m_pContext11->RSSetState( GetInstance()->m_pRsSoldAndBack );
+		pInstance->m_pContext11->RSSetState( pInstance->m_pRsSoldAndBack );
 		break;
 	case enRS_STATE::Front:	// 正面を描画しない.
-		GetInstance()->m_pContext11->RSSetState( GetInstance()->m_pRsSoldAndFront );
+		pInstance->m_pContext11->RSSetState( pInstance->m_pRsSoldAndFront );
 		break;
 	case enRS_STATE::Wire:	// ワイヤーフレーム描画.
-		GetInstance()->m_pContext11->RSSetState( GetInstance()->m_pRsWireFrame );
+		pInstance->m_pContext11->RSSetState( pInstance->m_pRsWireFrame );
 		break;
 	default:
 		break;
@@ -193,14 +208,16 @@ void CDirectX11::SetRasterizerState( const ERS_STATE& rsState )
 //-----------------------------------.
 bool CDirectX11::SetFullScreen( const bool& isOn )
 {
+	CDirectX11* pInstance = GetInstance();
+
 	// 現在のスクリーン情報を取得.
 	BOOL isState = FALSE;
-	GetInstance()->m_pSwapChain->GetFullscreenState( &isState, nullptr );
+	pInstance->m_pSwapChain->GetFullscreenState( &isState, nullptr );
 	if( isOn == true ){
 		// 現在の状態がウィンドウ状態なら.
 		if( isState == FALSE ){
 			// フルスクリーンに変更.
-			GetInstance()->m_pSwapChain->SetFullscreenState( TRUE, nullptr );
+			pInstance->m_pSwapChain->SetFullscreenState( TRUE, nullptr );
 			ShowCursor( FALSE );	// マウスを非表示にする.
 		}
 		return true;
@@ -208,7 +225,7 @@ bool CDirectX11::SetFullScreen( const bool& isOn )
 		// 現在の状態がフルスクリーンなら.
 		if( isState == TRUE ){
 			// ウィンドウに変更.
-			GetInstance()->m_pSwapChain->SetFullscreenState( FALSE, nullptr );
+			pInstance->m_pSwapChain->SetFullscreenState( FALSE, nullptr );
 			ShowCursor( TRUE );		// マウスを表示する.
 		}
 		return false;
@@ -233,26 +250,28 @@ bool CDirectX11::IsFullScreen()
 //-----------------------------------.
 void CDirectX11::Resize()
 {
-	if( GetInstance()->m_pContext11 == nullptr ) return;
+	CDirectX11* pInstance = GetInstance();
+
+	if( pInstance->m_pContext11 == nullptr ) return;
 
 	// セットしてあるレンダーターゲットを外す.
-	GetInstance()->m_pContext11->OMSetRenderTargets( 0, nullptr, nullptr );
+	pInstance->m_pContext11->OMSetRenderTargets( 0, nullptr, nullptr );
 
 	// 使用していたバックバッファを解放する.
-	SAFE_RELEASE( GetInstance()->m_pBackBuffer_TexRTV );
-	SAFE_RELEASE( GetInstance()->m_pBackBuffer_DSTex );
-	SAFE_RELEASE( GetInstance()->m_pBackBuffer_DSTexDSV );
+	SAFE_RELEASE( pInstance->m_pBackBuffer_TexRTV );
+	SAFE_RELEASE( pInstance->m_pBackBuffer_DSTex );
+	SAFE_RELEASE( pInstance->m_pBackBuffer_DSTexDSV );
 
 	// スワップチェーンをリサイズする.
 	// width, height を指定しない場合、hWndを参照し、自動で計算してくれる.
-	if( FAILED( GetInstance()->m_pSwapChain->ResizeBuffers( 0, 0, 0, DXGI_FORMAT_UNKNOWN, 0 ) )){
+	if( FAILED( pInstance->m_pSwapChain->ResizeBuffers( 0, 0, 0, DXGI_FORMAT_UNKNOWN, 0 ) )){
 		ERROR_MESSAGE( "デプスステンシルビュー作成失敗" );
 		return;
 	}
 
 	// スワップチェーンのバッファの取得.
 	ID3D11Texture2D* pBuufer = nullptr;
-	if( FAILED( GetInstance()->m_pSwapChain->GetBuffer( 0, __uuidof(ID3D11Texture2D), (void**)&pBuufer ) )){
+	if( FAILED( pInstance->m_pSwapChain->GetBuffer( 0, __uuidof(ID3D11Texture2D), (void**)&pBuufer ) )){
 		ERROR_MESSAGE( "デプスステンシルビュー作成失敗" );
 		return;
 	}
@@ -260,40 +279,61 @@ void CDirectX11::Resize()
 	// テクスチャ情報の取得.
 	D3D11_TEXTURE2D_DESC texDesc = {0};
 	pBuufer->GetDesc( &texDesc );
-	GetInstance()->m_WndWidth	= texDesc.Width;
-	GetInstance()->m_WndHeight	= texDesc.Height;
+	pInstance->m_WndWidth	= texDesc.Width;
+	pInstance->m_WndHeight	= texDesc.Height;
 	SAFE_RELEASE( pBuufer );
 
-	if( FAILED( GetInstance()->InitTexRTV() )){
+	if( FAILED( pInstance->InitTexRTV() )){
 		ERROR_MESSAGE( "デプスステンシルビュー作成失敗" );
 		return;
 	}
-	if( FAILED( GetInstance()->InitDSTex() )){
+	if( FAILED( pInstance->InitDSTex() )){
 		ERROR_MESSAGE( "デプスステンシルビュー作成失敗" );
 		return;
 	}
 
 	// レンダーターゲットの設定.
-	GetInstance()->m_pContext11->OMSetRenderTargets( 
+	pInstance->m_pContext11->OMSetRenderTargets( 
 		1, 
-		&GetInstance()->m_pBackBuffer_TexRTV,
-		GetInstance()->m_pBackBuffer_DSTexDSV );
+		&pInstance->m_pBackBuffer_TexRTV,
+		pInstance->m_pBackBuffer_DSTexDSV );
 	// デプスステンシルバッファ.
-	GetInstance()->m_pContext11->ClearDepthStencilView(
-		GetInstance()->m_pBackBuffer_DSTexDSV,
+	pInstance->m_pContext11->ClearDepthStencilView(
+		pInstance->m_pBackBuffer_DSTexDSV,
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 		1.0f, 0 );
 
 	// ビューポートの設定.
 	D3D11_VIEWPORT vp;
-	vp.Width	= (FLOAT)GetInstance()->m_WndWidth;
-	vp.Height	= (FLOAT)GetInstance()->m_WndHeight;
+	vp.Width	= (FLOAT)pInstance->m_WndWidth;
+	vp.Height	= (FLOAT)pInstance->m_WndHeight;
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0.0f;
 	vp.TopLeftY = 0.0f;
 
-	GetInstance()->m_pContext11->RSSetViewports( 1, &vp );
+	pInstance->m_pContext11->RSSetViewports( 1, &vp );
+}
+
+//-----------------------------------.
+// アクティブウィンドウか確認.
+//-----------------------------------.
+void CDirectX11::CheckActiveWindow()
+{
+	CDirectX11* pInstance = GetInstance();
+
+	// 自分のウィンドウハンドルとPCの最前面のウィンドウハンドルを比較.
+	pInstance->m_IsWindowActive = pInstance->m_hWnd == GetForegroundWindow();
+
+	CDebugText::PushText("Index", "Is Window Active : ", pInstance->m_IsWindowActive ? "true" : "false" );
+}
+
+//-----------------------------------.
+// ウィンドウがアクティブか取得.
+//-----------------------------------.
+bool CDirectX11::IsWindowActive()
+{
+	return GetInstance()->m_IsWindowActive;
 }
 
 //-----------------------------------.
@@ -376,8 +416,8 @@ HRESULT CDirectX11::InitDevice11()
 	// スワップチェーン構造体.
 	DXGI_SWAP_CHAIN_DESC sd = {0};
 	sd.BufferCount			= 1;								// バックバッファの数.
-	sd.BufferDesc.Width		= GetInstance()->m_WndWidth ;		// バックバッファの幅.
-	sd.BufferDesc.Height	= GetInstance()->m_WndHeight;		// バックバッファの高さ.
+	sd.BufferDesc.Width		= m_WndWidth ;						// バックバッファの幅.
+	sd.BufferDesc.Height	= m_WndHeight;						// バックバッファの高さ.
 	sd.BufferDesc.Format	= DXGI_FORMAT_R8G8B8A8_UNORM;		// フォーマット(32ﾋﾞｯﾄｶﾗｰ).
 	sd.BufferDesc.RefreshRate.Numerator		= 60;				// リフレッシュレート(分母) ※FPS:60.
 	sd.BufferDesc.RefreshRate.Denominator	= 1;				// リフレッシュレート(分子).
@@ -467,8 +507,8 @@ HRESULT CDirectX11::InitTexRTV()
 HRESULT CDirectX11::InitDSTex()
 {
 	D3D11_TEXTURE2D_DESC descDepth;
-	descDepth.Width					= GetInstance()->m_WndWidth ;	// 幅.
-	descDepth.Height				= GetInstance()->m_WndHeight;	// 高さ.
+	descDepth.Width					= m_WndWidth ;				// 幅.
+	descDepth.Height				= m_WndHeight;				// 高さ.
 	descDepth.MipLevels				= 1;						// ミップマップレベル:1.
 	descDepth.ArraySize				= 1;						// 配列数:1.
 	descDepth.Format				= DXGI_FORMAT_D32_FLOAT;	// 32ビットフォーマット.
@@ -509,8 +549,8 @@ HRESULT CDirectX11::InitViewports( const D3D11_VIEWPORT& vp )
 HRESULT CDirectX11::InitViewports()
 {
 	D3D11_VIEWPORT vp;
-	vp.Width	= (FLOAT)GetInstance()->m_WndWidth ;	// 幅.
-	vp.Height	= (FLOAT)GetInstance()->m_WndHeight;	// 高さ.
+	vp.Width	= (FLOAT)m_WndWidth ;	// 幅.
+	vp.Height	= (FLOAT)m_WndHeight;	// 高さ.
 	vp.MinDepth = 0.0f;			// 最小深度(手前).
 	vp.MaxDepth = 1.0f;			// 最大深度(奥).
 	vp.TopLeftX = 0.0f;			// 左上位置x.

@@ -71,6 +71,11 @@ public: //----- 関数 ------.
 	// ウィンドウサイズが変更された時に呼ぶ.
 	static void Resize();
 
+	// アクティブウィンドウか確認.
+	static void CheckActiveWindow();
+	// ウィンドウがアクティブか取得.
+	static bool IsWindowActive();
+
 	// ビューポートの作成.
 	HRESULT InitViewports( const D3D11_VIEWPORT& vp );
 
@@ -118,8 +123,10 @@ private: //----- 変数 ------.
 	ID3D11RasterizerState*		m_pRsSoldAndFront;	// ソリッドand正面を描画しない.
 	ID3D11RasterizerState*		m_pRsWireFrame;		// ワイヤーフレーム描画.
 
-	UINT	m_WndWidth;		// ウィンドウ幅.
-	UINT	m_WndHeight;	// ウィンドウ高さ.
+	UINT	m_WndWidth;			// ウィンドウ幅.
+	UINT	m_WndHeight;		// ウィンドウ高さ.
+
+	bool	m_IsWindowActive;	// アクティブウィンドウか確認.
 
 private:
 	// コピー・ムーブコンストラクタ, 代入演算子の削除.

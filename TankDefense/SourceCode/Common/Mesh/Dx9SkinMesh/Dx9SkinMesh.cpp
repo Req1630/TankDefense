@@ -4,6 +4,7 @@
 *		パーサークラスとスキンメッシュクラスを別ファイルに分割.
 **/
 #include "Dx9SkinMesh.h"
+#include "..\..\Shader\Shader.h"
 #include "..\..\..\Object\CameraBase\CameraManager\CameraManager.h"
 #include "..\..\..\Object\LightBase\LightManager\LightManager.h"
 
@@ -116,11 +117,13 @@ HRESULT	CDX9SkinMesh::InitShader()
 
 	//ブロブからバーテックスシェーダー作成.
 	if( FAILED(
-		D3DX11CompileFromFile(
-			SHADER_VS_NAME, nullptr, nullptr,
-			"VS_Main", "vs_5_0",
-			uCompileFlag, 0, nullptr,
-			&pCompiledShader, &pErrors, nullptr ) ) )
+		shader::InitShader(
+			SHADER_VS_NAME,
+			"VS_Main",
+			"vs_5_0",
+			uCompileFlag,
+			&pCompiledShader,
+			&pErrors ) ) )
 	{
 		int size = pErrors->GetBufferSize();
 		char* ch = (char*)pErrors->GetBufferPointer();
@@ -129,8 +132,7 @@ HRESULT	CDX9SkinMesh::InitShader()
 	}
 	SAFE_RELEASE( pErrors );
 
-	if( FAILED(
-		m_pDevice11->CreateVertexShader( pCompiledShader->GetBufferPointer(), pCompiledShader->GetBufferSize(), NULL, &m_pVertexShader ) ) )
+	if( FAILED( shader::CreateVertexShader( m_pDevice11, pCompiledShader, &m_pVertexShader ) ) )
 	{
 		SAFE_RELEASE(pCompiledShader);
 		MessageBox( 0, "バーテックスシェーダー作成失敗", NULL, MB_OK );
@@ -151,32 +153,31 @@ HRESULT	CDX9SkinMesh::InitShader()
 
 	//頂点インプットレイアウトを作成
 	if( FAILED(
-		m_pDevice11->CreateInputLayout(
-			layout, numElements, pCompiledShader->GetBufferPointer(),
-			pCompiledShader->GetBufferSize(), &m_pVertexLayout ) ) )
+		shader::CreateInputLayout(
+		m_pDevice11,
+		layout, 
+		numElements, 
+		pCompiledShader,
+		&m_pVertexLayout ) ) )
 	{
 		return FALSE;
 	}
-	//頂点インプットレイアウトをセット
-	m_pContext11->IASetInputLayout( m_pVertexLayout );
 
 	//ブロブからピクセルシェーダー作成
 	if(FAILED(
-		D3DX11CompileFromFile(
-			SHADER_PS_NAME, nullptr, nullptr,
-			"PS_Main", "ps_5_0",
-			uCompileFlag, 0, nullptr,
-			&pCompiledShader, &pErrors, nullptr ) ) )
+		shader::InitShader(
+			SHADER_PS_NAME,
+			"PS_Main", 
+			"ps_5_0",
+			uCompileFlag,
+			&pCompiledShader, 
+			&pErrors ) ) )
 	{
 		MessageBox( 0, "hlsl読み込み失敗", NULL, MB_OK );
 		return E_FAIL;
 	}
 	SAFE_RELEASE( pErrors );
-	if( FAILED(
-		m_pDevice11->CreatePixelShader(
-			pCompiledShader->GetBufferPointer(),
-			pCompiledShader->GetBufferSize(),
-			NULL, &m_pPixelShader ) ) )
+	if( FAILED( shader::CreatePixelShader( m_pDevice11, pCompiledShader, &m_pPixelShader ) ) )
 	{
 		SAFE_RELEASE( pCompiledShader );
 		MessageBox( 0, "ピクセルシェーダー作成失敗", NULL, MB_OK );

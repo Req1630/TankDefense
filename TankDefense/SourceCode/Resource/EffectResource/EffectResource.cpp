@@ -65,6 +65,7 @@ void CEffectResource::EffectLoad(
 	ID3D11DeviceContext* pContext11 )
 {
 	std::unique_lock<std::mutex> lock( m_Mutex );
+
 	auto eachLoad = [&]( const fs::directory_entry& entry )
 	{
 		const std::string exe		= entry.path().extension().string();	// Šg’£Žq.

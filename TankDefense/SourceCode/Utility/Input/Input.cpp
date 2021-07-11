@@ -1,4 +1,5 @@
 #include "Input.h"
+#include "..\..\Common\D3DX\D3DX11.h"
 
 CInput::CInput()
 	: m_hWnd			( nullptr )
@@ -107,9 +108,10 @@ void CInput::InitAxisBind( std::function<void(std::unordered_map<EAxisBind, SAxi
 //--------------------------------------------------.
 void CInput::Update( const float& time )
 {
+	GetInstance()->UpdateMouse();
+	if( CDirectX11::IsWindowActive() == false ) return;
 	CXInput::Update( time );
 	CKeyInput::Update();
-	GetInstance()->UpdateMouse();
 }
 
 //--------------------------------------------------.
