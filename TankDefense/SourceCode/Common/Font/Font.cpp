@@ -84,6 +84,7 @@ void CFont::RenderFontUI( const char* c )
 	SSpriteRenderState renderState;
 	renderState.Tranceform	= m_Tranceform;
 	renderState.Color		= m_Color;
+	renderState.Tranceform.Scale.y *= 1.2f;
 	m_pSpriteRender->Render( renderState, pResourceView, m_pVertexBufferUI );
 }
 

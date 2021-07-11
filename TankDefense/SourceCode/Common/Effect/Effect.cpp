@@ -1,7 +1,5 @@
 #include "Effect.h"
 #include "..\..\Object\CameraBase\CameraManager\CameraManager.h"
-#include <thread>
-#include <mutex>
 
 // 定数宣言.
 // 描画用インスタンス(スプライト)最大数.
@@ -42,6 +40,8 @@ CEffect::~CEffect()
 //-----------------------------------------------------------.
 HRESULT CEffect::Init( ID3D11Device* pDevice11, ID3D11DeviceContext* pContext11, const std::string& fileName )
 {
+	std::unique_lock<std::mutex> lock( m_Mutex );
+
 	if( FAILED( Create( pDevice11, pContext11 )) ){
 		ERROR_MESSAGE("Effekseer構築失敗");
 		return E_FAIL;
@@ -62,8 +62,6 @@ HRESULT CEffect::Init( ID3D11Device* pDevice11, ID3D11DeviceContext* pContext11,
 HRESULT CEffect::Create( ID3D11Device* pDevice11, ID3D11DeviceContext* pContext11 )
 {
 	if( m_pManager != nullptr ) return S_OK;
-	std::mutex	mutex;
-	mutex.lock();
 #ifdef ENABLE_XAUDIO2
 	// XAudio2の初期化を行う.
 	if (FAILED(
@@ -111,7 +109,6 @@ HRESULT CEffect::Create( ID3D11Device* pDevice11, ID3D11DeviceContext* pContext1
 	// 独自拡張可能、現在はファイルから読み込んでいる.
 	m_pManager->SetSoundLoader(m_pSound->CreateSoundLoader());
 #endif//#ifdef ENABLE_XAUDIO2
-	mutex.unlock();
 	return S_OK;
 }
 
@@ -159,8 +156,6 @@ void CEffect::Destroy()
 //-----------------------------------------------------------.
 HRESULT CEffect::LoadData( const std::string& fileName )
 {
-	std::mutex	mutex;
-	mutex.lock();
 	// 文字変換.
 	const size_t charSize = fileName.length() + 1;	// 入力文字のサイズ+1を取得.
 	wchar_t* FileName = nullptr;
@@ -177,7 +172,6 @@ HRESULT CEffect::LoadData( const std::string& fileName )
 
 	delete[] FileName;
 
-	mutex.unlock();
 	return S_OK;
 }
 

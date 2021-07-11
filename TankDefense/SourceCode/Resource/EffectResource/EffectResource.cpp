@@ -1,6 +1,6 @@
 #include "EffectResource.h"
 #include "..\..\Common\Effect\Effect.h"
-#include "..\..\Utility\DebugConsole\DebugConsole.h"
+#include "..\..\Common\DebugText\DebugText.h"
 
 CEffectResource::CEffectResource()
 	: m_EffectList			()
@@ -64,6 +64,7 @@ void CEffectResource::EffectLoad(
 	ID3D11Device* pDevice11,
 	ID3D11DeviceContext* pContext11 )
 {
+	std::unique_lock<std::mutex> lock( m_Mutex );
 	auto eachLoad = [&]( const fs::directory_entry& entry )
 	{
 		const std::string exe		= entry.path().extension().string();	// 拡張子.
@@ -78,7 +79,7 @@ void CEffectResource::EffectLoad(
 	};
 
 	CLog::Print( "------ エフェクト読み込み開始 -------" );
-	CDebugConsole::PushLog( "Effecet Load Begin " );
+	CDebugText::PushLog( "Effect Load Begin " );
 
 	try {
 		fs::recursive_directory_iterator dir_itr(FILE_PATH), end_itr;
@@ -89,7 +90,7 @@ void CEffectResource::EffectLoad(
 		ERROR_MESSAGE( e.path1().string().c_str() );
 	}
 
-	CDebugConsole::PushLog( "Effecet Load End " );
+	CDebugText::PushLog( "Effect Load End " );
 	CLog::Print( "------ エフェクト読み込み終了 -------" );
 
 	// 読込が終わったので true にする.

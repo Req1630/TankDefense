@@ -1,4 +1,5 @@
 #include "D3DX9.h"
+#include "..\..\Common\DebugText\DebugText.h"
 
 CDirectX9::CDirectX9()
 	: m_hWnd		( nullptr )
@@ -27,8 +28,12 @@ HRESULT CDirectX9::Create( HWND hWnd )
 {
 	GetInstance()->m_hWnd = hWnd;
 
+	CDebugText::PushLog( "DirectX9 Device Create Start" );
+
 	if( FAILED( GetInstance()->CreateDevice9() )) return E_FAIL;
 	CLog::Print( "DIrectX9デバイス作成 : 成功" );
+
+	CDebugText::PushLog( "DirectX9 Device Create End [Succeeded]" );
 
 	return S_OK;
 }

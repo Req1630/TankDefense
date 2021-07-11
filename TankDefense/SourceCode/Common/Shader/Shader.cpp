@@ -1,5 +1,14 @@
 #include "Shader.h"
 
+#include <mutex>
+
+namespace
+{
+	std::mutex	g_D3DX11CompMutex;
+	std::mutex	g_D3DX11VSCreateMutex;
+	std::mutex	g_D3DX11PSCreateMutex;
+};
+
 namespace shader
 {
 
@@ -14,6 +23,8 @@ HRESULT InitShader(
 	ID3DBlob** ppCompiledShader,
 	ID3DBlob** ppErrors )
 {
+	std::unique_lock<std::mutex> lock(g_D3DX11CompMutex);
+
 	return D3DX11CompileFromFile(
 		filePath,			// シェーダーファイルパス.
 		nullptr,			// マクロ定義のポインター : オプション.
@@ -36,6 +47,8 @@ HRESULT CreateVertexShader(
 	ID3DBlob*				pCompiledShader,
 	ID3D11VertexShader**	pVertexShader )
 {
+	std::unique_lock<std::mutex> lock(g_D3DX11VSCreateMutex);
+	
 	return pDevice11->CreateVertexShader(
 		pCompiledShader->GetBufferPointer(),
 		pCompiledShader->GetBufferSize(),
@@ -51,6 +64,8 @@ HRESULT CreatePixelShader(
 	ID3DBlob*			pCompiledShader,
 	ID3D11PixelShader**	pPixelShader )
 {
+	std::unique_lock<std::mutex> lock(g_D3DX11PSCreateMutex);
+
 	return pDevice11->CreatePixelShader(
 		pCompiledShader->GetBufferPointer(),
 		pCompiledShader->GetBufferSize(),

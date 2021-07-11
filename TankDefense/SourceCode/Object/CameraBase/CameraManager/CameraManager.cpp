@@ -62,17 +62,17 @@ void CCameraManager::Update( const float& deltaTime )
 	const D3DXVECTOR3 pos = GetInstance()->m_pCamera->GetPosition();
 	const D3DXVECTOR3 lookPos = GetInstance()->m_pCamera->GetLookPosition();
 
-	CDebugText::PushText( "-----------------");
-	CDebugText::PushText( "---- Camera -----");
-	CDebugText::PushText( "-----------------");
-	CDebugText::PushText( "'C + M' Is Light Activce Change" );
-	CDebugText::PushText( "'L_Ctrl + " );
-	CDebugText::PushText( "'D or A' x, 'E or Q' y, 'W or S' z : Position Move" );
-	CDebugText::PushText( "Mouse Left Click : LookPosition Move" );
-	CDebugText::PushText( "-----------------" );
-	CDebugText::PushText( "IsFreeCamera : ", GetInstance()->m_IsActiveFreeCamera == true ? "true" : "false" );
-	CDebugText::PushText( "Pos      : ", pos.x, ", ", pos.y, ", ", pos.z );
-	CDebugText::PushText( "LookPos  : ", lookPos.x, ", ", lookPos.y, ", ", lookPos.z );
+	//CDebugText::PushText( "-----------------");
+	//CDebugText::PushText( "---- Camera -----");
+	//CDebugText::PushText( "-----------------");
+	//CDebugText::PushText( "'C + M' Is Light Activce Change" );
+	//CDebugText::PushText( "'L_Ctrl + " );
+	//CDebugText::PushText( "'D or A' x, 'E or Q' y, 'W or S' z : Position Move" );
+	//CDebugText::PushText( "Mouse Left Click : LookPosition Move" );
+	//CDebugText::PushText( "-----------------" );
+	//CDebugText::PushText( "IsFreeCamera : ", GetInstance()->m_IsActiveFreeCamera == true ? "true" : "false" );
+	//CDebugText::PushText( "Pos      : ", pos.x, ", ", pos.y, ", ", pos.z );
+	//CDebugText::PushText( "LookPos  : ", lookPos.x, ", ", lookPos.y, ", ", lookPos.z );
 }
 
 //--------------------------------------.

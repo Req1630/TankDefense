@@ -5,6 +5,7 @@
 #include "..\EffectResource\EffectResource.h"
 #include "..\GameParamResource\GameParamResource.h"
 #include "..\..\Utility\XAudio2\SoundManager.h"
+#include "..\..\Common\DebugText\DebugText.h"
 
 CLoadManager::CLoadManager()
 	: m_Thread				()
@@ -30,37 +31,38 @@ void CLoadManager::LoadResource(
 	LPDIRECT3DDEVICE9 pDevice9 )
 {
 	CFontResource::Load( pDevice11, pContext11 );
-	CEffectResource::Load( pDevice11, pContext11 );
+	CDebugText::PushLog( "SoundData Load Begin" );
 	CSoundManager::CreateSoundData();
-	Sleep(100);
+	CDebugText::PushLog( "SoundData Load End" );
+	CEffectResource::Load( pDevice11, pContext11 );
+
 	auto load = [&]( 
 		HWND hWnd, 
 		ID3D11Device* pDevice11, 
 		ID3D11DeviceContext* pContext11, 
 		LPDIRECT3DDEVICE9 pDevice9 )
 	{
-		m_Mutex.lock();
+		std::unique_lock<std::mutex> lock( m_Mutex );
 		CLog::Print("------- スレッドロード開始 ------");
 		Sleep(200);
 		if( FAILED( CSpriteResource::Load( pContext11 ) )){
-			m_Mutex.unlock();
 			m_isLoadFailed = true;
 			return;
 		}
 		Sleep(200);
 		if( FAILED( CMeshResorce::Load( hWnd, pDevice11, pContext11, pDevice9 ) )){
-			m_Mutex.unlock();
 			m_isLoadFailed = true;
 			return;
 		}
 		Sleep(200);
 		CGameParamResource::ReadAllParam();
 		Sleep(200);
+
 		m_isLoadEnd = true;
 		CLog::Print("------- スレッドロード終了 ------");
-		m_Mutex.unlock();
 	};
 	m_Thread = std::thread( load, hWnd, pDevice11, pContext11, pDevice9 );
+	CDebugText::PushLog( "LoadManager Thread Start : ID[ ", m_Thread.get_id(), " ]" );
 }
 
 //------------------------.
@@ -81,6 +83,7 @@ bool CLoadManager::ThreadRelease()
 		{
 			if( m_Thread.joinable() != true ){
 				m_isThreadJoined = true;
+				CDebugText::PushLog( "LoadManager Thread Joined" );
 				break;
 			}
 		}

@@ -2,7 +2,7 @@
 #include "..\..\Global.h"
 #include "..\..\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.h"
 #include "..\..\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h"
-#include "..\..\Utility\DebugConsole\DebugConsole.h"
+#include "..\..\Common\DebugText\DebugText.h"
 
 CMeshResorce::CMeshResorce()
 	: m_StaticMeshList		()
@@ -75,6 +75,7 @@ CDX9SkinMesh* CMeshResorce::GetSkin( const std::string& name )
 //-------------------------------------.
 HRESULT CMeshResorce::ModelLoad( HWND hWnd, ID3D11Device* pDevice11, ID3D11DeviceContext* pContext11, LPDIRECT3DDEVICE9 pDevice9 )
 {
+	std::unique_lock<std::mutex> lock( m_Mutex );
 	auto eachLoad = [&]( const fs::directory_entry& entry )
 	{
 		const std::string exe		= entry.path().extension().string();	// 拡張子.
@@ -99,7 +100,7 @@ HRESULT CMeshResorce::ModelLoad( HWND hWnd, ID3D11Device* pDevice11, ID3D11Devic
 	};
 
 	CLog::Print( "------ メッシュ読み込み開始 -------" );
-	CDebugConsole::PushLog( "Mesh Load Begin" );
+	CDebugText::PushLog( "Mesh Load Begin" );
 
 	try {
 		fs::recursive_directory_iterator dir_itr( FILE_PATH ), end_itr;
@@ -114,7 +115,7 @@ HRESULT CMeshResorce::ModelLoad( HWND hWnd, ID3D11Device* pDevice11, ID3D11Devic
 		return E_FAIL;
 	}
 
-	CDebugConsole::PushLog( "Mesh Load End" );
+	CDebugText::PushLog( "Mesh Load End" );
 	CLog::Print( "------ メッシュ読み込み終了 -------" );
 
 	// 読込が終わったので true にする.

@@ -60,7 +60,7 @@ CMain::~CMain()
 //====================================.
 HRESULT CMain::Init()
 {
-	CDebugConsole::Init();
+	CDebugText::PushLog( "App Launch" );
 
 	// DirectX9の構築.
 	if( FAILED( CDirectX9::Create( m_hWnd ) )) return E_FAIL;
@@ -70,6 +70,7 @@ HRESULT CMain::Init()
 	if( FAILED( CImGuiManager::Init( m_hWnd, 
 		CDirectX11::GetDevice(), 
 		CDirectX11::GetContext() ))) return E_FAIL;
+	if( FAILED( CDebugText::Init( CDirectX11::GetContext() ) ))	return E_FAIL;
 
 	// 画像描画クラスの初期化.
 	if( FAILED( m_FPSRender->Init( CDirectX11::GetContext() ) ))		return E_FAIL;
@@ -91,8 +92,6 @@ void CMain::Release()
 	CImGuiManager::Release();
 	CDirectX11::Release();
 	CDirectX9::Release();
-
-	CDebugConsole::Release();
 }
 
 //====================================.
@@ -102,7 +101,6 @@ HRESULT CMain::Load()
 {
 	m_pLoadManager->LoadResource( m_hWnd, CDirectX11::GetDevice(), CDirectX11::GetContext(), CDirectX9::GetDevice() );
 
-	if( FAILED( CDebugText::Init( CDirectX11::GetContext() ) ))	return E_FAIL;
 	CFade::Init();
 
 	return S_OK;
@@ -117,18 +115,15 @@ void CMain::Update()
 	const float	deltaTime = static_cast<float>(m_pFrameRate->GetDeltaTime());
 	const bool	isLoadEnd = m_pLoadManager->ThreadRelease();
 
-	CDebugText::PushText("------------------------------");
-	CDebugText::PushText("L_Ctrl + F6 : EditImGuiRender");
-	CDebugText::PushText("L_Ctrl + F7 : DebugRender");
-	CDebugText::PushText("L_Ctrl + F8 : FPS Render");
-	CDebugText::PushText("------------------------------");
-	CDebugText::PushText("- CollisionRender Change Key -");
-	CDebugText::PushText("------------------------------");
-	CDebugText::PushText("L_Ctrl + F1 : SpherRender");
-	CDebugText::PushText("L_Ctrl + F2 : CapsuleRender");
-	CDebugText::PushText("L_Ctrl + F3 : BoxRender");
-	CDebugText::PushText("L_Ctrl + F4 : RayRender");
-	CDebugText::PushText("------------------------------");
+	CDebugText::PushText( "Index", CDebugText::SEPARATOR );
+	CDebugText::PushText( "Index", "'Left Ctrl' + 'F1' : Sphere Collision Render" );
+	CDebugText::PushText( "Index", "'Left Ctrl' + 'F2' : Capsule Collision Render" );
+	CDebugText::PushText( "Index", "'Left Ctrl' + 'F3' : Box Collision Render" );
+	CDebugText::PushText( "Index", "'Left Ctrl' + 'F4' : Ray Collision Render" );
+	CDebugText::PushText( "Index", "'Left Ctrl' + 'F6' : EditImGui Render" );
+	CDebugText::PushText( "Index", "'Left Ctrl' + 'F7' : Debug Render" );
+	CDebugText::PushText( "Index", "'Left Ctrl' + 'F8' : FPS Render" );
+	CDebugText::PushText( "Index", CDebugText::SEPARATOR );
 
 	CInput::Update( deltaTime );
 
@@ -144,12 +139,10 @@ void CMain::Update()
 	CDebugText::Render();		// デバッグテキストの描画.
 	FPSRender();				// FPSの描画.
 
-	CDebugConsole::PushText( "    FPS    : " + std::to_string( (int)m_pFrameRate->GetFPS() ) );
-	CDebugConsole::PushText( " DeltaTime : " + std::to_string( m_pFrameRate->GetDeltaTime() ) );
-
 	CImGuiManager::Render();
-	CDebugConsole::Render();
 	CDirectX11::SwapChainPresent();
+
+	CInput::SetMouseWheelDelta( 0 );	// ホイール値を初期化.
 }
 
 //====================================.

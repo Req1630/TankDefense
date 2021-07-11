@@ -48,18 +48,18 @@ void CLightManager::Update( const float& deltaTime )
 	const D3DXVECTOR3 direction	= GetInstance()->m_pLight->GetDirection();
 	const D3DXVECTOR3 color		= GetInstance()->m_pLight->GetColor();
 
-	CDebugText::PushText( "-----------------" );
-	CDebugText::PushText( "----  Light  ----" );
-	CDebugText::PushText( "-----------------" );
-	CDebugText::PushText( "'L + M' Is Light Activce Change" );
-	CDebugText::PushText( "'P' Is Position, 'L' Is LookPosition + " );
-	CDebugText::PushText( "'D or A' X Move, 'E or Q' Y Move, 'W or S' Z Move" );
-	CDebugText::PushText( "-----------------" );
-	CDebugText::PushText( "IsActive  : ", GetInstance()->m_pLight->IsActive() == true ? "true" : "false" );
-	CDebugText::PushText( "Pos       : ", pos.x,		", ", pos.y,		", ", pos.z );
-	CDebugText::PushText( "LookPos   : ", lookPos.x,	", ", lookPos.y,	", ", lookPos.z );
-	CDebugText::PushText( "Direction : ", direction.x,	", ", direction.y,	", ", direction.z );
-	CDebugText::PushText( "Color     : ", color.x,		", ", color.y,		", ", color.z );
+	//CDebugText::PushText( "-----------------" );
+	//CDebugText::PushText( "----  Light  ----" );
+	//CDebugText::PushText( "-----------------" );
+	//CDebugText::PushText( "'L + M' Is Light Activce Change" );
+	//CDebugText::PushText( "'P' Is Position, 'L' Is LookPosition + " );
+	//CDebugText::PushText( "'D or A' X Move, 'E or Q' Y Move, 'W or S' Z Move" );
+	//CDebugText::PushText( "-----------------" );
+	//CDebugText::PushText( "IsActive  : ", GetInstance()->m_pLight->IsActive() == true ? "true" : "false" );
+	//CDebugText::PushText( "Pos       : ", pos.x,		", ", pos.y,		", ", pos.z );
+	//CDebugText::PushText( "LookPos   : ", lookPos.x,	", ", lookPos.y,	", ", lookPos.z );
+	//CDebugText::PushText( "Direction : ", direction.x,	", ", direction.y,	", ", direction.z );
+	//CDebugText::PushText( "Color     : ", color.x,		", ", color.y,		", ", color.z );
 }
 
 // ˆÊ’u‚Ì•`‰æ.

@@ -110,8 +110,8 @@ void CSpriteRender::Render(
 		D3DXMatrixTranspose( &cb.mW, &cb.mW );
 
 		// ビューポートの幅,高さを渡す.
-		cb.vViewPort.x	= static_cast<float>(WND_W);
-		cb.vViewPort.y	= static_cast<float>(WND_H);
+		cb.vViewPort.x	= static_cast<float>(CDirectX11::GetWndWidth());
+		cb.vViewPort.y	= static_cast<float>(CDirectX11::GetWndHeight());
 
 		// 色を渡す.
 		cb.vColor = renderState.Color;

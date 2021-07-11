@@ -12,6 +12,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <mutex>
 #include <filesystem>	// C++17 必須.
 
 #include "..\..\Common\Sprite\Sprite.h"
@@ -47,6 +48,7 @@ private:
 	sprite_map m_SpriteList;	// スプライトリスト.
 	bool m_HasFinishedLoading;	// 読込が終わったか.
 
+	std::mutex	m_Mutex;
 private:
 	// コピー・ムーブコンストラクタ, 代入演算子の削除.
 	CSpriteResource( const CSpriteResource & )				= delete;

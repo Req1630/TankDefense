@@ -1,6 +1,7 @@
 #include "SpriteResource.h"
 #include "..\..\Utility\FileManager\FileManager.h"
 #include "..\..\Utility\DebugConsole\DebugConsole.h"
+#include "..\..\Common\DebugText\DebugText.h"
 
 CSpriteResource::CSpriteResource()
 	: m_SpriteList			()
@@ -67,6 +68,7 @@ std::vector<std::string> CSpriteResource::GetSpriteNameList()
 //-------------------------------.
 HRESULT CSpriteResource::SpriteLoad( ID3D11DeviceContext* pContext11 )
 {
+	std::unique_lock<std::mutex> lock( m_Mutex );
 	auto eachLoad = [&]( const fs::directory_entry& entry )
 	{
 		const std::string exe		= entry.path().extension().string();	// 拡張子.
@@ -88,7 +90,7 @@ HRESULT CSpriteResource::SpriteLoad( ID3D11DeviceContext* pContext11 )
 	};
 
 	CLog::Print( "------ 画像読み込み開始 -------" );
-	CDebugConsole::PushLog( "Sprite Load Begin" );
+	CDebugText::PushLog( "Sprite Load Begin" );
 
 	try {
 		fs::recursive_directory_iterator dir_itr(FILE_PATH), end_itr;
@@ -103,7 +105,7 @@ HRESULT CSpriteResource::SpriteLoad( ID3D11DeviceContext* pContext11 )
 		return E_FAIL;
 	}
 
-	CDebugConsole::PushLog( "Sprite Load End" );
+	CDebugText::PushLog( "Sprite Load End" );
 	CLog::Print( "------ 画像読み込み終了 -------" );
 
 	// 読込が終わったので true にする.

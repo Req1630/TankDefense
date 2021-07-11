@@ -1,4 +1,5 @@
 #include "D3DX11.h"
+#include "..\..\Common\DebugText\DebugText.h"
 
 namespace
 {
@@ -51,6 +52,8 @@ HRESULT CDirectX11::Create( HWND hWnd )
 	GetInstance()->m_WndWidth = static_cast<UINT>(WND_W);
 	GetInstance()->m_WndHeight = static_cast<UINT>(WND_H);
 
+	CDebugText::PushLog( "DirectX11 Device Create Start" );
+
 	if( FAILED(GetInstance()->InitDevice11()) )			return E_FAIL;
 	if( FAILED(GetInstance()->InitTexRTV()) )			return E_FAIL;
 	if( FAILED(GetInstance()->InitDSTex()) )			return E_FAIL;
@@ -59,6 +62,7 @@ HRESULT CDirectX11::Create( HWND hWnd )
 	if( FAILED(GetInstance()->InitDeprh()) )			return E_FAIL;
 	if( FAILED(GetInstance()->InitRasterizerState()) )	return E_FAIL;
 
+	CDebugText::PushLog( "DirectX11 Device Create End [Succeeded]" );
 	CLog::Print( "DirectX11デバイス作成 : 成功" );
 
 	return S_OK;

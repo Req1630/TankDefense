@@ -129,6 +129,7 @@ void CSceneManager::ChangeNextScene()
 			Sleep( 1000 );
 			m_IsThreadLoadEnd = m_pScene->Load();
 		});
+	CDebugText::PushLog( "Scene Thread Start : ID[ ", m_Thread.get_id(), " ]" );
 }
 
 //=================================.
@@ -175,6 +176,7 @@ void CSceneManager::ThreadRelease()
 			{
 				if( m_Thread.joinable() != true ){
 					m_isThreadJoined = true;
+					CDebugText::PushLog( "Scene Thread Joined" );
 					break;
 				}
 			}

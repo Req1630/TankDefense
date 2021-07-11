@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
+#include <mutex>
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -43,6 +44,7 @@ private:
 
 private:
 	effect_map m_EffectList;	// エフェクトリスト.
+	std::mutex	m_Mutex;
 	bool m_HasFinishedLoading;	// 読込が終わったか.
 
 private:

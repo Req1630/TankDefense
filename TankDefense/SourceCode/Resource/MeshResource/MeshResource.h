@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <memory>
 #include <vector>
+#include <mutex>
 #include <filesystem>	// C++17 必須.
 
 namespace fs = std::filesystem;
@@ -48,6 +49,7 @@ private:
 private:
 	static_mesh_map m_StaticMeshList;	// スタティックメッシュのリスト.
 	skin_mesh_map	m_SkinMeshList;		// スキンメッシュのリスト.
+	std::mutex	m_Mutex;
 	bool m_HasFinishedLoading;			// 読込が終わったか.
 
 private:

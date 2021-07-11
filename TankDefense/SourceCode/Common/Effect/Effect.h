@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <mutex>
 
 #include <d3d11.h>
 #pragma comment(lib,"d3d11.lib")
@@ -188,6 +189,7 @@ private:
 	static Effekseer::Manager*				m_pManager;
 	static EffekseerRenderer::Renderer*		m_pRenderer;
 	Effekseer::Effect*						m_pEffect;
+	std::mutex								m_Mutex;
 #ifdef ENABLE_XAUDIO2
 	// エフェクトに含まれる音の再生に必要.
 	::EffekseerSound::Sound*		m_pSound;

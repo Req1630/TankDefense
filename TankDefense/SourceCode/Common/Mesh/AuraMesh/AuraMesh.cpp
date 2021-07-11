@@ -1,6 +1,7 @@
 #include "AuraMesh.h"
 #include "..\..\Shader\Shader.h"
 #include "..\..\..\Object\CameraBase\CameraManager\CameraManager.h"
+#include "..\..\..\Utility\DebugConsole\DebugConsole.h"
 
 namespace
 {
@@ -76,9 +77,9 @@ void CAuraMesh::Render()
 		cb.mWVP = mWorld * CCameraManager::GetViewProjMatrix();
 		D3DXMatrixTranspose( &cb.mWVP, &cb.mWVP );//çsóÒÇì]íuÇ∑ÇÈ.
 
-		cb.vColor = { 0.7f, 0.2f, 0.2f, 0.7f };
-		cb.vUV.x += m_ScrollTime;
-		cb.vUV.y += m_ScrollTime;
+		cb.vColor	= { 0.7f, 0.2f, 0.2f, 0.7f };
+		cb.vUV.x	= m_ScrollTime;
+		cb.vUV.y	= m_ScrollTime;
 
 		memcpy_s( pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
 
