@@ -125,9 +125,7 @@ HRESULT	CDX9SkinMesh::InitShader()
 			&pCompiledShader,
 			&pErrors ) ) )
 	{
-		int size = pErrors->GetBufferSize();
-		char* ch = (char*)pErrors->GetBufferPointer();
-		MessageBox( 0, "hlsl読み込み失敗", NULL, MB_OK );
+		ERROR_MESSAGE( shader::GetBlobErrorMsg( pErrors ) );
 		return E_FAIL;
 	}
 	SAFE_RELEASE( pErrors );
@@ -135,7 +133,7 @@ HRESULT	CDX9SkinMesh::InitShader()
 	if( FAILED( shader::CreateVertexShader( m_pDevice11, pCompiledShader, &m_pVertexShader ) ) )
 	{
 		SAFE_RELEASE(pCompiledShader);
-		MessageBox( 0, "バーテックスシェーダー作成失敗", NULL, MB_OK );
+		ERROR_MESSAGE("バーテックスシェーダー作成失敗");
 		return E_FAIL;
 	}
 	//頂点インプットレイアウトを定義	
@@ -173,14 +171,14 @@ HRESULT	CDX9SkinMesh::InitShader()
 			&pCompiledShader, 
 			&pErrors ) ) )
 	{
-		MessageBox( 0, "hlsl読み込み失敗", NULL, MB_OK );
+		ERROR_MESSAGE( shader::GetBlobErrorMsg( pErrors ) );
 		return E_FAIL;
 	}
 	SAFE_RELEASE( pErrors );
 	if( FAILED( shader::CreatePixelShader( m_pDevice11, pCompiledShader, &m_pPixelShader ) ) )
 	{
 		SAFE_RELEASE( pCompiledShader );
-		MessageBox( 0, "ピクセルシェーダー作成失敗", NULL, MB_OK );
+		ERROR_MESSAGE("ピクセルシェーダー作成失敗");
 		return E_FAIL;
 	}
 	SAFE_RELEASE( pCompiledShader );
@@ -505,8 +503,8 @@ HRESULT CDX9SkinMesh::CreateAppMeshFromD3DXMesh( LPD3DXFRAME p )
 				&pAppMesh->pMaterial[i].pTexture, 
 				NULL )))
 			{
-				MessageBox( NULL, "テクスチャ読み込み失敗",
-					"Error", MB_OK );
+				std::string text = pAppMesh->pMaterial[i].TextureName;
+				ERROR_MESSAGE( text + " テクスチャ読込 : 失敗" );
 				return E_FAIL;
 			}
 			// 法線テクスチャを取得.

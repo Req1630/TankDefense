@@ -115,6 +115,7 @@
     <ClCompile Include="SourceCode\Object\Movie\LoadWidgetData\LoadWidgetData.cpp" />
     <ClCompile Include="SourceCode\Object\Movie\MovieManager\MovieManager.cpp" />
     <ClCompile Include="SourceCode\Utility\DebugConsole\DebugConsole.cpp" />
+    <ClCompile Include="SourceCode\Common\Sprite\CircleGage\CircleGage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -236,6 +237,7 @@
     <ClInclude Include="SourceCode\Object\Movie\LoadWidgetData\LoadWidgetData.h" />
     <ClInclude Include="SourceCode\Object\Movie\MovieManager\MovieManager.h" />
     <ClInclude Include="SourceCode\Utility\DebugConsole\DebugConsole.h" />
+    <ClInclude Include="SourceCode\Common\Sprite\CircleGage\CircleGage.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

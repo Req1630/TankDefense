@@ -132,7 +132,7 @@ HRESULT CFont::CreateVerTexBuffer()
 	// 頂点バッファの作成.
 	if( FAILED( m_pDevice11->CreateBuffer(
 		&bd, &InitData, &m_pVertexBufferUI ) ) ){
-		_ASSERT_EXPR( false, L"頂点ﾊﾞｯﾌｧ作成失敗" );
+		ERROR_MESSAGE("頂点ﾊﾞｯﾌｧ作成失敗");
 		return E_FAIL;
 	}
 
@@ -156,7 +156,7 @@ HRESULT CFont::CreateVerTexBuffer()
 	// 頂点バッファの作成.
 	if( FAILED( m_pDevice11->CreateBuffer(
 		&bd, &InitData, &m_pVertexBuffer3D ) ) ){
-		_ASSERT_EXPR( false, L"頂点ﾊﾞｯﾌｧ作成失敗" );
+		ERROR_MESSAGE("頂点ﾊﾞｯﾌｧ作成失敗");
 		return E_FAIL;
 	}
 	return S_OK;

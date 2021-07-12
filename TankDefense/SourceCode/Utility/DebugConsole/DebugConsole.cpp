@@ -184,7 +184,7 @@ void CDebugConsole::PageDraw()
 		for( int i = m_NowSelectIndex-1; i <= m_NowSelectIndex+1; i++ ){
 			if( i < LOG_TAG_INDEX ){
 				tagList.emplace_back( m_TagList.back() );
-			} else if( i > m_TagList.size()-1 ){
+			} else if( i > static_cast<int>(m_TagList.size()-1) ){
 				tagList.emplace_back( "Log" );
 			} else {
 				tagList.emplace_back( m_TagList[i] );
@@ -250,7 +250,7 @@ void CDebugConsole::TextDraw()
 	int i = 0;
 	for( auto& s : m_TextList[tagNme] ){
 
-		if( i >= m_OldTextList.size() ){
+		if( i >= static_cast<int>(m_OldTextList.size()) ){
 			m_OldTextList.emplace_back( s );
 		} else {
 			if( m_OldTextList[i] == s ){

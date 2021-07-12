@@ -25,11 +25,16 @@ enum class enSceneNo : unsigned char
 	GameMain,	// ゲームメイン.
 
 	Edit,
+	EnemyBattle,// 雑魚戦メイン.
+	BossBattle,	// ボス戦メイン.
+	GameClear,	// ゲームクリア.
+	GameOver,	// ゲームオーバー.
+	Ending,		// エンディング.
 
 	Max,
 
 	ResultCheck,		// ゲームクリアかゲームオーバーの確認.
-	Start = Edit,		// 初めのシーン.
+	Start = Title,		// 初めのシーン.
 };
 
 #endif	// #ifndef SCENE_LIST_H.

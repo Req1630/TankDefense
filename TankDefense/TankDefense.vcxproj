@@ -177,6 +177,7 @@
     <ClCompile Include="SourceCode\Common\RenderingTextuer\Shadow\Shadow.cpp" />
     <ClCompile Include="SourceCode\Common\RenderingTextuer\WatercolorPainting\WatercolorPainting.cpp" />
     <ClCompile Include="SourceCode\Common\Shader\Shader.cpp" />
+    <ClCompile Include="SourceCode\Common\Sprite\CircleGage\CircleGage.cpp" />
     <ClCompile Include="SourceCode\Common\Sprite\Sprite.cpp" />
     <ClCompile Include="SourceCode\Common\Sprite\SpriteRender.cpp" />
     <ClCompile Include="SourceCode\Edit\EditorBase.cpp" />
@@ -311,6 +312,7 @@
     <ClInclude Include="SourceCode\Common\RenderingTextuer\Shadow\Shadow.h" />
     <ClInclude Include="SourceCode\Common\RenderingTextuer\WatercolorPainting\WatercolorPainting.h" />
     <ClInclude Include="SourceCode\Common\Shader\Shader.h" />
+    <ClInclude Include="SourceCode\Common\Sprite\CircleGage\CircleGage.h" />
     <ClInclude Include="SourceCode\Common\Sprite\Sprite.h" />
     <ClInclude Include="SourceCode\Common\Sprite\SpriteRender.h" />
     <ClInclude Include="SourceCode\Common\Sprite\SpriteStruct.h" />

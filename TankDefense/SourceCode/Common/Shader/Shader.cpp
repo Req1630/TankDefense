@@ -145,4 +145,10 @@ D3D11_INPUT_ELEMENT_DESC GetTexcoordInputElement()
 	};
 }
 
+// ブロブを読み込んだ際のエラーメッセージを取得.
+const char* GetBlobErrorMsg( ID3DBlob* pBlob )
+{
+	return (char*)pBlob->GetBufferPointer();
+}
+
 };

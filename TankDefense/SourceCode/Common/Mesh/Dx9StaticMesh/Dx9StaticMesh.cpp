@@ -323,7 +323,7 @@ HRESULT CDX9StaticMesh::InitShader()
 			uCompileFlag, 
 			&pCompiledShader, 
 			&pErrors ))){
-		_ASSERT_EXPR(false, L"hlsl読み込み失敗");
+		ERROR_MESSAGE( shader::GetBlobErrorMsg( pErrors ) );
 		return E_FAIL;
 	}
 	SAFE_RELEASE(pErrors);
@@ -331,7 +331,7 @@ HRESULT CDX9StaticMesh::InitShader()
 	// 上記で作成したブロブから「頂点シェーダー」を作成.
 	if( FAILED(
 		shader::CreateVertexShader( m_pDevice11, pCompiledShader, &m_pVertexShader ))){
-		_ASSERT_EXPR(false, L"ﾊﾞｰﾃｯｸｽｼｪｰﾀﾞ作成失敗");
+		ERROR_MESSAGE( "頂点シェーダー作成失敗" );
 		return E_FAIL;
 	}
 
@@ -356,7 +356,7 @@ HRESULT CDX9StaticMesh::InitShader()
 			numElements, 
 			pCompiledShader, 
 			&m_pVertexLayout ))){
-		_ASSERT_EXPR(false, L"頂点ｲﾝﾌﾟｯﾄﾚｲｱｳﾄ作成失敗");
+		ERROR_MESSAGE( "頂点インプットレイアウト作成失敗" );
 		return E_FAIL;
 	}
 	SAFE_RELEASE(pCompiledShader);
@@ -370,7 +370,7 @@ HRESULT CDX9StaticMesh::InitShader()
 			uCompileFlag,
 			&pCompiledShader,
 			&pErrors ))){
-		_ASSERT_EXPR(false, L"hlsl読み込み失敗");
+		ERROR_MESSAGE( shader::GetBlobErrorMsg( pErrors ) );
 		return E_FAIL;
 	}
 	SAFE_RELEASE(pErrors);
@@ -378,7 +378,7 @@ HRESULT CDX9StaticMesh::InitShader()
 	// 上記で作成したブロブから「ピクセルシェーダー」を作成.
 	if( FAILED(
 		shader::CreatePixelShader( m_pDevice11, pCompiledShader, &m_pPixelShader ))){
-		_ASSERT_EXPR(false, L"ﾋﾟｸｾﾙｼｪｰﾀﾞ作成失敗");
+		ERROR_MESSAGE( "ピクセルシェーダー作成失敗" );
 		return E_FAIL;
 	}
 	SAFE_RELEASE(pCompiledShader);

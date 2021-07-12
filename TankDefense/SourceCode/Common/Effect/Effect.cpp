@@ -61,6 +61,7 @@ HRESULT CEffect::Create( ID3D11Device* pDevice11, ID3D11DeviceContext* pContext1
 {
 	if( m_pManager != nullptr ) return S_OK;
 	std::unique_lock<std::mutex> lock( m_Mutex );
+
 #ifdef ENABLE_XAUDIO2
 	// XAudio2の初期化を行う.
 	if (FAILED(
@@ -156,21 +157,19 @@ void CEffect::Destroy()
 HRESULT CEffect::LoadData( const std::string& fileName )
 {
 	std::unique_lock<std::mutex> lock( m_Mutex );
+
 	// 文字変換.
-	const size_t charSize = fileName.length() + 1;	// 入力文字のサイズ+1を取得.
-	wchar_t* FileName = nullptr;
-	FileName = new wchar_t[charSize];				// wchar_t型を"charSize"分確保.
-	size_t ret;										// 変換後のwchar_tのサイズ取得用.
-	mbstowcs_s( &ret, FileName, charSize, fileName.c_str(), _TRUNCATE );
+	// w_charへの変換.
+	int size_needed = MultiByteToWideChar( CP_ACP, 0, &fileName[0], (int)fileName.size(), NULL, 0 );
+	std::wstring wstrTo( size_needed, 0 );
+	MultiByteToWideChar( CP_ACP, 0, &fileName[0], (int)fileName.size(), &wstrTo[0], size_needed );
 
 	// エフェクトの読み込み.
-	m_pEffect = Effekseer::Effect::Create( m_pManager, (const EFK_CHAR*)FileName );
+	m_pEffect = Effekseer::Effect::Create( m_pManager, (const EFK_CHAR*)wstrTo.c_str() );
 	if( m_pEffect == nullptr ){
 		_ASSERT_EXPR(false, L"ｴﾌｪｸﾄ読み込み失敗");
 		return E_FAIL;
 	}
-
-	delete[] FileName;
 
 	return S_OK;
 }

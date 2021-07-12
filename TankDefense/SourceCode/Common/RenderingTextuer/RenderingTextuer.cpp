@@ -180,7 +180,7 @@ HRESULT CRenderTexture::InitVertexShader( const char* filePath, const char* entr
 			uCompileFlag,		// シェーダーコンパイルフラグ.
 			&pCompiledShader,	// ブロブを格納するメモリへのポインタ.
 			&pErrors ))) {		// エラーと警告一覧を格納するメモリへのポインタ.
-		ERROR_MESSAGE( (char*)pErrors->GetBufferPointer() );
+		ERROR_MESSAGE( shader::GetBlobErrorMsg( pErrors ) );
 		return E_FAIL;
 	}
 	SAFE_RELEASE(pErrors);
@@ -239,7 +239,7 @@ HRESULT CRenderTexture::InitPixelShader( const char* filePath, const char* entry
 			uCompileFlag,		// シェーダーコンパイルフラグ.
 			&pCompiledShader,	// ブロブを格納するメモリへのポインタ.
 			&pErrors ))) {		// エラーと警告一覧を格納するメモリへのポインタ.
-		ERROR_MESSAGE( (char*)pErrors->GetBufferPointer() );
+		ERROR_MESSAGE( shader::GetBlobErrorMsg( pErrors ) );
 		return E_FAIL;
 	}
 	SAFE_RELEASE(pErrors);
@@ -296,7 +296,7 @@ HRESULT CRenderTexture::CreateBufferTex(
 	rtvDesc.Texture2D.MipSlice = 0;
 	// RenderTargetView作成.
 	if( FAILED( m_pDevice11->CreateRenderTargetView( *ppTex, &rtvDesc, ppRTV ) )){
-		_ASSERT_EXPR( false, L"RenderTargetView作成失敗" );
+		ERROR_MESSAGE( "レンダーターゲットビュー作成失敗" );
 		return E_FAIL;
 	}
 
@@ -309,7 +309,7 @@ HRESULT CRenderTexture::CreateBufferTex(
 	srvDesc.Texture2D.MostDetailedMip = 0;
 	// テクスチャ作成時と同じフォーマット
 	if( FAILED( m_pDevice11->CreateShaderResourceView( *ppTex, &srvDesc, ppSRV ) )){
-		_ASSERT_EXPR( false, L"デプスステンシル作成失敗" );
+		ERROR_MESSAGE( "デプスステンシル作成失敗" );
 		return E_FAIL;
 	}
 	return S_OK;

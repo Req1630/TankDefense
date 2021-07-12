@@ -128,7 +128,7 @@ HRESULT CRayMesh::InitShader()
 			uCompileFlag,		// シェーダーコンパイルフラグ.
 			&pCompiledShader,	// ブロブを格納するメモリへのポインタ.
 			&pErrors ))) {		// エラーと警告一覧を格納するメモリへのポインタ.
-		ERROR_MESSAGE( (char*)pErrors->GetBufferPointer() );
+		ERROR_MESSAGE( shader::GetBlobErrorMsg( pErrors ) );
 		return E_FAIL;
 	}
 	SAFE_RELEASE(pErrors);
@@ -177,7 +177,7 @@ HRESULT CRayMesh::InitShader()
 			uCompileFlag,		// シェーダーコンパイルフラグ.
 			&pCompiledShader,	// ブロブを格納するメモリへのポインタ.
 			&pErrors ))) {		// エラーと警告一覧を格納するメモリへのポインタ.
-		ERROR_MESSAGE( (char*)pErrors->GetBufferPointer() );
+		ERROR_MESSAGE( shader::GetBlobErrorMsg( pErrors ) );
 		return E_FAIL;
 	}
 	SAFE_RELEASE(pErrors);
