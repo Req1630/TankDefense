@@ -1,6 +1,22 @@
 #ifndef STAGE_STRUCT_H
 #define STAGE_STRUCT_H
 
+#include "..\..\..\..\Utility\Tranceform\Tranceform.h"
+
+// ステージリスト.
+enum enStageList
+{
+	EStageNo_None,
+
+	EStageNo_Enemy=0,
+	EStageNo_Boss,
+
+	EStageNo_Max,
+
+	EStageNo_Begin = EStageNo_Enemy,
+} typedef EStageNo;
+
+// アクターリスト.
 enum enActorList
 {
 	EActorNo_None,
@@ -18,6 +34,7 @@ enum enActorList
 	EActorNo_End	= EActorNo_Max,
 } typedef EActorNo;
 
+// ステージアクター情報.
 struct stActorParam
 {
 	EActorNo	ActorNo;

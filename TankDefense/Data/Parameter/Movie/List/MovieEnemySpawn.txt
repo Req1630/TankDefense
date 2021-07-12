@@ -1,86 +1,90 @@
+//---------------------
+#Time,8.5
+//---------------------
+
 CameraState Start {
 	//---------------------
 	// CameraState No.1
-	#ActiveTime, 0
+	#ActiveTime,0
 	// StartState
-	#Position, 0, 0, 0
-	#Look Position, 0, 0, 0
+	#Position,-30.6394, 28.7222, 20.3534
+	#Look Position,-22.5248, 19.4663, 7.7378
 	// EndState
-	#Position, 0, 0, 0
-	#Look Position, 0, 0, 0
-	#PosMoveTime, 0
-	#LookPosMoveTime, 0
+	#Position,-53.2518, 28.7222, -1.65445
+	#Look Position,-40.0112, 18.8314, -8.70328
+	#PosMoveTime,3.5
+	#LookPosMoveTime,3.5
 	// shakeState No.0
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	// shakeState No.1
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	// shakeState No.2
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	// shakeState No.3
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	//---------------------
 
 	//---------------------
 	// CameraState No.2
-	#ActiveTime, 0
+	#ActiveTime,0
 	// StartState
-	#Position, 0, 0, 0
-	#Look Position, 0, 0, 0
+	#Position,-53.2518, 28.7222, -1.65445
+	#Look Position,-40.1548, 18.4976, -8.96668
 	// EndState
-	#Position, 0, 0, 0
-	#Look Position, 0, 0, 0
-	#PosMoveTime, 0
-	#LookPosMoveTime, 0
+	#Position,-60.6916, 28.7222, 11.6029
+	#Look Position,-46.4029, 19.0589, 7.03839
+	#PosMoveTime,3
+	#LookPosMoveTime,3
 	// shakeState No.0
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	// shakeState No.1
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	// shakeState No.2
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	// shakeState No.3
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	//---------------------
 
 	//---------------------
 	// CameraState No.3
-	#ActiveTime, 0
+	#ActiveTime,0
 	// StartState
-	#Position, 0, 0, 0
-	#Look Position, 0, 0, 0
+	#Position,-60.6916, 28.7222, 11.6029
+	#Look Position,-46.473, 19.0589, 6.82459
 	// EndState
-	#Position, 0, 0, 0
-	#Look Position, 0, 0, 0
-	#PosMoveTime, 0
-	#LookPosMoveTime, 0
+	#Position,-60.6916, 28.7222, 11.6029
+	#Look Position,-46.5714, 19.1164, 6.54119
+	#PosMoveTime,0
+	#LookPosMoveTime,0
 	// shakeState No.0
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,1,	#Frequency,6.4,	#Time,3.1,	#Base Position,-60.6916, 28.7222, 11.6029, 	#IsAttenuation,false, 	#IsPlaying,true
 	// shakeState No.1
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	// shakeState No.2
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	// shakeState No.3
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	//---------------------
 
 	//---------------------
 	// CameraState No.4
-	#ActiveTime, 0
+	#ActiveTime,0
 	// StartState
-	#Position, 0, 0, 0
-	#Look Position, 0, 0, 0
+	#Position,-60.6916, 28.7222, 11.6029
+	#Look Position,-46.473, 21.7291, 6.82458
 	// EndState
-	#Position, 0, 0, 0
-	#Look Position, 0, 0, 0
-	#PosMoveTime, 0
-	#LookPosMoveTime, 0
+	#Position,-49.9073, 28.7222, 29.0843
+	#Look Position,-39.3412, 23.0888, 18.4374
+	#PosMoveTime,3.1
+	#LookPosMoveTime,3.1
 	// shakeState No.0
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	// shakeState No.1
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	// shakeState No.2
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	// shakeState No.3
-	#Amplitube, 0, 	#Frequency, 0, 	#Time, 0, 	#Base Position, 0, 0, 0, 	#IsAttenuation, false, 	#IsPlaying,false
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
 	//---------------------
 
 } CameraState End
@@ -89,77 +93,78 @@ WidgetState Start {
 	//---------------------
 	// WidgetState No.1
 	#SpriteName,loadUfo
-	#AciveStartTime, 0
-	#Position, 0, 0
+	#AciveStartTime,0
+	#Position,769,153.5
 	//AnimationState
 	#IsUVScrollX,false
 	#IsUVScrollY,false
-	#UVScrollSpeedX, 0
-	#UVScrollSpeedY, 0
+	#UVScrollSpeedX,0
+	#UVScrollSpeedY,0
 	#IsAnimation,false
-	#FrameCountSpeed, 0
+	#FrameCountSpeed,0
 	//FadeState
-	#FadeFlag, 0
-	#FadeSpeed, 0
-	#AlphaMax, 1
-	#AlphaMin, 0
+	#FadeFlag,0
+	#FadeSpeed,0
+	#AlphaMax,1
+	#AlphaMin,0
 	//---------------------
 
 	//---------------------
 	// WidgetState No.2
 	#SpriteName,loadUfo
-	#AciveStartTime, 0
-	#Position, 0, 0
+	#AciveStartTime,0
+	#Position,248,285.5
 	//AnimationState
 	#IsUVScrollX,false
 	#IsUVScrollY,false
-	#UVScrollSpeedX, 0
-	#UVScrollSpeedY, 0
+	#UVScrollSpeedX,0
+	#UVScrollSpeedY,0
 	#IsAnimation,false
-	#FrameCountSpeed, 0
+	#FrameCountSpeed,0
 	//FadeState
-	#FadeFlag, 0
-	#FadeSpeed, 0
-	#AlphaMax, 1
-	#AlphaMin, 0
+	#FadeFlag,0
+	#FadeSpeed,0
+	#AlphaMax,1
+	#AlphaMin,0
 	//---------------------
 
 	//---------------------
 	// WidgetState No.3
 	#SpriteName,loadUfo
-	#AciveStartTime, 0
-	#Position, 0, 0
+	#AciveStartTime,0
+	#Position,0,0
 	//AnimationState
 	#IsUVScrollX,false
 	#IsUVScrollY,false
-	#UVScrollSpeedX, 0
-	#UVScrollSpeedY, 0
+	#UVScrollSpeedX,0
+	#UVScrollSpeedY,0
 	#IsAnimation,false
-	#FrameCountSpeed, 0
+	#FrameCountSpeed,0
 	//FadeState
-	#FadeFlag, 0
-	#FadeSpeed, 0
-	#AlphaMax, 1
-	#AlphaMin, 0
+	#FadeFlag,0
+	#FadeSpeed,0
+	#AlphaMax,1
+	#AlphaMin,0
 	//---------------------
 
 	//---------------------
 	// WidgetState No.4
 	#SpriteName,loadUfo
-	#AciveStartTime, 0
-	#Position, 0, 0
+	#AciveStartTime,0
+	#Position,0,0
 	//AnimationState
 	#IsUVScrollX,false
 	#IsUVScrollY,false
-	#UVScrollSpeedX, 0
-	#UVScrollSpeedY, 0
+	#UVScrollSpeedX,0
+	#UVScrollSpeedY,0
 	#IsAnimation,false
-	#FrameCountSpeed, 0
+	#FrameCountSpeed,0
 	//FadeState
-	#FadeFlag, 0
-	#FadeSpeed, 0
-	#AlphaMax, 1
-	#AlphaMin, 0
+	#FadeFlag,0
+	#FadeSpeed,0
+	#AlphaMax,1
+	#AlphaMin,0
 	//---------------------
 
 } WidgetState End
+

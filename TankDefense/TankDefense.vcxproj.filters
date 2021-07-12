@@ -116,6 +116,8 @@
     <ClCompile Include="SourceCode\Object\Movie\MovieManager\MovieManager.cpp" />
     <ClCompile Include="SourceCode\Utility\DebugConsole\DebugConsole.cpp" />
     <ClCompile Include="SourceCode\Common\Sprite\CircleGage\CircleGage.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Stage\Stage.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Stage\StageLoader\StageLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -214,7 +216,6 @@
     <ClInclude Include="SourceCode\Edit\EditorBase.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
     <ClInclude Include="SourceCode\Scene\Scenes\Edit\Edit.h" />
-    <ClInclude Include="SourceCode\Edit\StageEditor\StageStruct.h" />
     <ClInclude Include="SourceCode\Edit\UndoRedo\UndoRedo.h" />
     <ClInclude Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.h" />
     <ClInclude Include="SourceCode\Common\Mesh\AuraMesh\AuraMesh.h" />
@@ -238,6 +239,9 @@
     <ClInclude Include="SourceCode\Object\Movie\MovieManager\MovieManager.h" />
     <ClInclude Include="SourceCode\Utility\DebugConsole\DebugConsole.h" />
     <ClInclude Include="SourceCode\Common\Sprite\CircleGage\CircleGage.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Stage\Stage.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Stage\StageLoader\StageLoader.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Stage\StageStruct.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

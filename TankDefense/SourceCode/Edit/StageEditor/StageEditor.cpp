@@ -4,6 +4,7 @@
 #include "..\..\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h"
 #include "..\..\Utility\Input\Input.h"
 #include "..\..\Edit\EditPlayer\EditPlayer.h"
+#include "..\..\Object\GameObject\Actor\Stage\StageLoader\StageLoader.h"
 
 namespace
 {
@@ -17,10 +18,12 @@ namespace
 
 CStageEditor::CStageEditor()
 	: m_pEditPlayer			( nullptr )
+	, m_pStageLoader		( std::make_unique<CStageLoader>())
 	, m_pUndoRedo			( std::make_unique<CUndoRedo<SActorParam>>( &m_ActorList ))
 	, m_ActorList			()
 	, m_ActorMeshList		()
 	, m_NowSelectActor		()
+	, m_NowStageNo			( EStageNo_Enemy )
 	, m_DeleteActorNo		()
 {
 }
@@ -35,6 +38,10 @@ CStageEditor::~CStageEditor()
 bool CStageEditor::Init()
 {
 	if( InitActorMeshList()		== false ) return false;
+	if( m_pStageLoader->Init()	== false ) return false;
+
+	m_ActorList = m_pStageLoader->GetActorList( m_NowStageNo );
+
 	return true;
 }
 
@@ -61,6 +68,8 @@ void CStageEditor::Update()
 bool CStageEditor::ImGuiRender()
 {
 	if( BeginTab("StageEdit") == false ) return false;
+
+	StageSelect();
 
 	ImGui::TextWrapped( u8"配置しているオブジェクトの数 : %d", m_ActorList.size() );
 	ActorMeshSelectDraw();		ImGui::SameLine();
@@ -117,6 +126,35 @@ void CStageEditor::EffectRneder()
 //------------------------------------.
 void CStageEditor::WidgetRender()
 {
+}
+
+//------------------------------------.
+// ステージ選択.
+//------------------------------------.
+void CStageEditor::StageSelect()
+{
+	const char* stageNameList[] =
+	{
+		"Enemy",
+		"Boss"
+	};
+
+	if( ImGui::BeginCombo( u8"ステージの選択", stageNameList[m_NowStageNo] ) ){
+
+		for( int i = 0; i < EStageNo_Max; i++ ){
+			const bool isSelected = ( i == m_NowStageNo );
+			if( ImGui::Selectable( stageNameList[i], isSelected ) ){
+				m_NowStageNo = static_cast<EStageNo>(i);
+				m_DeleteActorNo = 0;
+				m_ActorList = m_pStageLoader->GetActorList( m_NowStageNo );
+				m_pUndoRedo->StackClear();
+			}
+
+			if( isSelected ) ImGui::SetItemDefaultFocus();
+		}
+
+		ImGui::EndCombo();
+	}
 }
 
 //------------------------------------.
@@ -290,7 +328,7 @@ void CStageEditor::ParameterWriting( const char* filePath )
 		m_MessageText = u8"オブジェクトが配置されていません。";
 		return;
 	}
-	SetParameterWritingMsg( fileManager::BinaryVectorWriting( filePath, m_ActorList ) );
+	SetParameterWritingMsg( m_pStageLoader->WritingActorLst( m_NowStageNo, m_ActorList ) );
 }
 
 //------------------------------------.
@@ -298,7 +336,8 @@ void CStageEditor::ParameterWriting( const char* filePath )
 //------------------------------------.
 void CStageEditor::ParameterLoading( const char* filePath )
 {
-	SetParameterLoadingMsg( fileManager::BinaryVectorReading( filePath, m_ActorList ) );
+	SetParameterLoadingMsg( true );
 	m_DeleteActorNo = 0;
+	m_ActorList = m_pStageLoader->GetActorList( m_NowStageNo );
 	m_pUndoRedo->StackClear();
 }

@@ -215,6 +215,8 @@
     <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActor.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Player\CPlayer.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Stage\Stage.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Stage\StageLoader\StageLoader.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\GameObject.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Widget\MovieWidget\MovieWidget.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Widget\Widget.cpp" />
@@ -325,7 +327,7 @@
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
     <ClInclude Include="SourceCode\Edit\EditPlayer\EditPlayer.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageRender\StageRender.h" />
-    <ClInclude Include="SourceCode\Edit\StageEditor\StageStruct.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Stage\StageStruct.h" />
     <ClInclude Include="SourceCode\Edit\UndoRedo\UndoRedo.h" />
     <ClInclude Include="SourceCode\Global.h" />
     <ClInclude Include="SourceCode\Main\Main.h" />
@@ -353,6 +355,8 @@
     <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActor.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Player\CPlayer.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Stage\Stage.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Stage\StageLoader\StageLoader.h" />
     <ClInclude Include="SourceCode\Object\GameObject\GameObject.h" />
     <ClInclude Include="SourceCode\Object\GameObject\GameObjectList.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Widget\MovieWidget\MovieWidget.h" />

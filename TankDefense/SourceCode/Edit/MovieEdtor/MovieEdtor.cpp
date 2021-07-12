@@ -38,6 +38,7 @@ bool CMovieEditor::Init()
 
 	const SMovieData data = m_pMovieDataLoader->GetMovieData( m_NowSelectMovie );
 
+	m_MovieEndSecTime = data.MovieTime;
 	m_pCameraEdit->SetMovieCameraState( data.CameraList );
 	m_pWidgetEditor->SetWidgetStateList( data.WidgetList );
 
@@ -111,7 +112,11 @@ bool CMovieEditor::ImGuiRender()
 void CMovieEditor::ModelRender()
 {
 	m_pStageRender->Render();
-	m_pActorEdit->ModelRender();
+	if( m_IsMoviePlaying == true ){
+		
+	} else {
+		m_pActorEdit->ModelRender();
+	}
 }
 
 //-----------------------------------.
@@ -126,7 +131,11 @@ void CMovieEditor::EffectRneder()
 //-----------------------------------.
 void CMovieEditor::WidgetRender()
 {
-	m_pWidgetEditor->SpriteRender();
+	if( m_IsMoviePlaying == true ){
+		m_pMovie->SpriteRender();
+	} else {
+		m_pWidgetEditor->SpriteRender();
+	}
 }
 
 //-----------------------------------.
@@ -150,6 +159,7 @@ void CMovieEditor::PlayDraw()
 
 		m_pMovie->SetPlayTime( m_MovieEndSecTime );
 		m_pMovie->SetCameraQueue( m_pCameraEdit->GetMovieCameraState() );
+		m_pMovie->SetWidgetStateList( m_pWidgetEditor->GetWidgetStateList() );
 		m_pMovie->Play();
 	}
 }
@@ -173,6 +183,7 @@ void CMovieEditor::SelectMovieDraw()
 				m_NowSelectMovie = actorMesh.first;
 				const SMovieData data = m_pMovieDataLoader->GetMovieData( m_NowSelectMovie );
 
+				m_MovieEndSecTime = data.MovieTime;
 				m_pCameraEdit->SetMovieCameraState( data.CameraList );
 				m_pWidgetEditor->SetWidgetStateList( data.WidgetList );
 			}
@@ -200,6 +211,15 @@ void CMovieEditor::SaveLoadDraw()
 //-----------------------------------.
 void CMovieEditor::ParameterWriting( const char* filePath )
 {
+	const SMovieData movieData = 
+	{ 
+		m_MovieEndSecTime,
+		m_pCameraEdit->GetMovieCameraState(),
+		m_pWidgetEditor->GetWidgetStateList() 
+	};
+
+	SetParameterWritingMsg( m_pMovieDataLoader->DataWriting( m_NowSelectMovie, movieData ));
+	m_pMovieDataLoader->SetMovieData( m_NowSelectMovie, movieData );
 }
 
 //-----------------------------------.
@@ -207,4 +227,11 @@ void CMovieEditor::ParameterWriting( const char* filePath )
 //-----------------------------------.
 void CMovieEditor::ParameterLoading( const char* filePath )
 {
+	const SMovieData data = m_pMovieDataLoader->GetMovieData( m_NowSelectMovie );
+
+	m_MovieEndSecTime = data.MovieTime;
+	m_pCameraEdit->SetMovieCameraState( data.CameraList );
+	m_pWidgetEditor->SetWidgetStateList( data.WidgetList );
+
+	SetParameterLoadingMsg( true );
 }

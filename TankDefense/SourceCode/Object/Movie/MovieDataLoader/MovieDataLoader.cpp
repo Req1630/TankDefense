@@ -32,10 +32,11 @@ CMovieDataLoader::~CMovieDataLoader()
 //------------------------------.
 // 初期化.
 //------------------------------.
-bool CMovieDataLoader::Init()
+bool CMovieDataLoader::Init( const bool& isAllData )
 {
 	if( InitDataPathList() == false ) return false;
-	if( InitDataList() == false ) return false;
+	if( isAllData == false ) return false;
+ 	if( InitDataList() == false ) return false;
 
 	return true;
 }
@@ -50,7 +51,14 @@ bool CMovieDataLoader::DataLoading( const char* filePath, SMovieData* pMovieData
 	std::vector<std::string>	cameraDataList;
 	std::vector<std::string>	widgetDataList;
 
+	bool isTimeLoad = false;
+
 	for( auto& s : dataList ){
+
+		if( isTimeLoad == false ){
+			pMovieData->MovieTime = std::stof(s);
+			isTimeLoad = true;
+		}
 
 		// カメラ情報の読み込み.
 		LoadingEachData<CCameraDataConverter>( 
@@ -61,7 +69,7 @@ bool CMovieDataLoader::DataLoading( const char* filePath, SMovieData* pMovieData
 			CAERA_STATE_START,
 			CAERA_STATE_END );
 
-		// カメラ情報の読み込み.
+		// 画像情報の読み込み.
 		LoadingEachData<CWidgetDataConverter>( 
 			s,
 			widgetDataList, 
@@ -91,6 +99,9 @@ bool CMovieDataLoader::DataWriting( const EMovieNo& movieNo, const SMovieData& m
 	const std::vector<std::string> cameraDataList = CCameraDataConverter::ToString( movieData.CameraList );
 	const std::vector<std::string> widgetDataList = CWidgetDataConverter::ToString( movieData.WidgetList );
 
+	// 時間の書き込み.
+	WritingTimeData( fileStream, movieData.MovieTime );
+
 	// カメラ情報の書き込み.
 	WritingEachData( fileStream, cameraDataList, CAERA_STATE_START, CAERA_STATE_END );
 
@@ -110,6 +121,15 @@ SMovieData CMovieDataLoader::GetMovieData( const EMovieNo& movieNo )
 {
 	const std::string n = m_MovieNameList.at(movieNo);
 	return m_DataPathList[n].second;
+}
+
+//------------------------------.
+// ムービーデータの設定.
+//------------------------------.
+void CMovieDataLoader::SetMovieData( const EMovieNo& movieNo, const SMovieData& movieData )
+{
+	const std::string n = m_MovieNameList.at(movieNo);
+	m_DataPathList[n].second = movieData;
 }
 
 //------------------------------.
@@ -187,5 +207,16 @@ void CMovieDataLoader::WritingEachData(
 	fs << startTag << std::endl;
 	for( auto& s : dataList ) fs << s << std::endl;
 	fs << endTag << std::endl;
+	fs << std::endl;
+}
+
+//------------------------------.
+// 時間を書き込む.
+//------------------------------.
+void CMovieDataLoader::WritingTimeData( std::fstream& fs, const float& time )
+{
+	fs << "//---------------------" << std::endl;
+	fs << "#Time," << time << std::endl;
+	fs << "//---------------------" << std::endl;
 	fs << std::endl;
 }

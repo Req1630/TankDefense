@@ -1,5 +1,8 @@
 CameraState Start {
 	//---------------------
+	#Time, 1
+	//---------------------
+	//---------------------
 	// CameraState No.1
 	#ActiveTime, 0
 	// StartState

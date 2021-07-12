@@ -1,0 +1,10 @@
+// ここにステージに配置したい、メッシュの名前を記入する.
+// enum enActorList と順番が一致していなければならない.
+
+ufo
+Ground
+Ground_I
+Ground_L
+Tree
+itemSpeed
+

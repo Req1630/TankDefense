@@ -14,7 +14,7 @@ CWidgetEditor::CWidgetEditor()
 	, m_SpriteNameList		()
 	, m_NowPushSelectName	()
 	, m_NowSelectIndex		( -1 )
-	, m_IsAllWidgetRender	( false )
+	, m_IsAllWidgetRender	( true )
 	, m_IsImGuiGamepad		( true )
 {
 }
@@ -78,7 +78,7 @@ void CWidgetEditor::SpriteRender()
 {
 	if( m_NowSelectIndex < 0 ) return;
 
-	m_pWidgetList[m_NowSelectIndex]->Render();
+	m_pWidgetList[m_NowSelectIndex]->SimpleRender();
 
 	if( m_IsAllWidgetRender == false ) return;
 

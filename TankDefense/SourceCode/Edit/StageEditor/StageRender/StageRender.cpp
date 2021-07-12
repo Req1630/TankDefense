@@ -6,11 +6,11 @@
 namespace
 {
 	constexpr char	ACOTR_MESH_LIST_PATH[]			= "Data\\Parameter\\StageObjectList.txt";
-	constexpr char	STAGE_OBJECT_LIST_PATH[]		= "Data\\Parameter\\StageObjectList.bin";
 }
 
 CStageRender::CStageRender()
-	: m_ActorMeshList	()
+	: m_pStageLoader	( std::make_unique<CStageLoader>() )
+	, m_ActorMeshList	()
 	, m_ActorList		()
 {
 }
@@ -24,6 +24,9 @@ CStageRender::~CStageRender()
 //-------------------------.
 bool CStageRender::Init()
 {
+	if( m_pStageLoader->Init() == false ) return false;
+	m_ActorList = m_pStageLoader->GetActorList( EStageNo_Enemy );
+
 	const std::vector<std::string> meshNameList = fileManager::TextLoading(ACOTR_MESH_LIST_PATH);
 
 	if( meshNameList.empty() == true ) return false;
@@ -39,7 +42,7 @@ bool CStageRender::Init()
 		const int no = static_cast<int>(actorNo)+1;
 		actorNo = static_cast<EActorNo>(no);
 	}
-	return fileManager::BinaryVectorReading( STAGE_OBJECT_LIST_PATH, m_ActorList );
+	return true;
 }
 
 //-------------------------.
@@ -52,4 +55,12 @@ void CStageRender::Render()
 		pStaticMesh->SetTranceform(actor.Tranceform);
 		pStaticMesh->Render();
 	}
+}
+
+//-------------------------.
+// ステージの設定.
+//-------------------------.
+void CStageRender::SetStage( const EStageNo& no )
+{
+	m_ActorList = m_pStageLoader->GetActorList( no );
 }

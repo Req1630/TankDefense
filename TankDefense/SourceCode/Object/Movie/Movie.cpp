@@ -1,10 +1,14 @@
 #include "Movie.h"
 #include "..\CameraBase\MovieCamera\MovieCamera.h"
 #include "..\CameraBase\CameraManager\CameraManager.h"
+#include "..\GameObject\Widget\MovieWidget\MovieWidget.h"
 
 CMovie::CMovie()
-	: m_pCamera				( std::make_unique<CMovieCamera>() )
+	: m_pMovieDataLoader	( std::make_unique<CMovieDataLoader>() )
+	, m_pCamera				( std::make_unique<CMovieCamera>() )
 	, m_CameraStateQueue	()
+	, m_CameraStateList		()
+	, m_pWidgetList			()
 	, m_PlayTime			( 0.0f )
 {
 }
@@ -14,11 +18,28 @@ CMovie::~CMovie()
 }
 
 //--------------------------.
+// 初期化関数.
+//--------------------------.
+bool CMovie::Init( const EMovieNo& no )
+{
+	if( m_pMovieDataLoader->Init(false) == false ) return false;
+
+	const SMovieData data = m_pMovieDataLoader->GetMovieData( no );
+
+	m_PlayTime = data.MovieTime;
+	SetCameraQueue( data.CameraList );
+	SetWidgetStateList( data.WidgetList );
+
+	return true;
+}
+
+//--------------------------.
 // 再生.
 //--------------------------.
 void CMovie::Play()
 {
 	SettingCamera();
+	for( auto& w : m_pWidgetList ) w->Play();
 }
 
 //--------------------------.
@@ -43,7 +64,18 @@ void CMovie::Update()
 		}
 	}
 
+	// 画像の更新.
+	for( auto& w : m_pWidgetList ) w->Update( deltaTime );
+
 	m_PlayTime -= deltaTime;
+}
+
+//--------------------------.
+// 画像の描画.
+//--------------------------.
+void CMovie::SpriteRender()
+{
+	for( auto& w : m_pWidgetList ) w->Render();
 }
 
 //--------------------------.
@@ -60,6 +92,36 @@ void CMovie::SetCameraQueue( const std::vector<SMovieCamera>& movieList )
 }
 
 //--------------------------.
+// ウィジェット情報の取得.
+//--------------------------.
+void CMovie::SetWidgetStateList( const std::vector<SMovieWidget>& stateList )
+{
+	const int stateSize		= stateList.size();
+	const int widgetSize	= m_pWidgetList.size();
+	const int diff			= stateSize - widgetSize;
+	if( diff == 0 ){
+
+		// stateSize の方が多い.
+	} else if( diff >= 1 ){
+		for( int i = 0; i < diff; i++ ){
+			m_pWidgetList.emplace_back( std::make_unique<CMovieWidget>() );
+		}
+
+		// widgetSize の方が多い.
+	} else if( diff <= -1 ){
+		for( int i = 0; i < abs(diff); i++ ){
+			m_pWidgetList.pop_back();
+		}
+	}
+	m_pWidgetList.shrink_to_fit();
+
+	for( int i = 0; i < stateSize; i++ ){
+		m_pWidgetList[i]->SetMovieWidgetState( stateList[i] );
+		m_pWidgetList[i]->Init();
+	}
+}
+
+//--------------------------.
 // カメラの設定,
 //--------------------------.
 void CMovie::SettingCamera()
@@ -71,3 +133,4 @@ void CMovie::SettingCamera()
 	}
 	CCameraManager::ChangeCamera( m_pCamera.get() );
 }
+

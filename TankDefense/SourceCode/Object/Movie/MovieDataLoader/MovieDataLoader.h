@@ -22,8 +22,9 @@ enum class enMovieList
 // ムービーデータ.
 struct stMovieData
 {
-	std::vector<SMovieCamera> CameraList;
-	std::vector<SMovieWidget> WidgetList;
+	float						MovieTime;
+	std::vector<SMovieCamera>	CameraList;
+	std::vector<SMovieWidget>	WidgetList;
 } typedef SMovieData;
 
 /************************************
@@ -48,7 +49,7 @@ public:
 	~CMovieDataLoader();
 
 	// 初期化.
-	bool Init();
+	bool Init( const bool& isAllData = true );
 
 	// データの読み込み.
 	bool DataLoading( const char* filePath, SMovieData* pMovieData );
@@ -58,6 +59,8 @@ public:
 
 	// ムービーデータの取得.
 	SMovieData GetMovieData( const EMovieNo& movieNo );
+	// ムービーデータの設定.
+	void SetMovieData( const EMovieNo& movieNo, const SMovieData& movieData );
 
 	// ムービー名リストの取得.
 	inline std::unordered_map<EMovieNo, std::string> GetMovieNameList(){ return m_MovieNameList; }
@@ -84,6 +87,9 @@ private:
 		const std::vector<std::string>& dataList,
 		const char* startTag, 
 		const char* endTag );
+
+	// 時間を書き込む.
+	void WritingTimeData( std::fstream& fs, const float& time );
 
 private:
 	std::unordered_map<EMovieNo, std::string>	m_MovieNameList;

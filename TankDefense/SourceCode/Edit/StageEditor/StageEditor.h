@@ -2,8 +2,10 @@
 #define STAGE_EDITOR_H
 
 #include "..\EditorBase.h"
-#include "StageStruct.h"
+#include "..\..\Object\GameObject\Actor\Stage\StageStruct.h"
 #include "..\UndoRedo\UndoRedo.h"
+
+class CStageLoader;
 
 struct stActorMesh
 {
@@ -45,6 +47,8 @@ public:
 	virtual void SetEditPlayer( CEditPlayer* pPlayer ) override { m_pEditPlayer = pPlayer; }
 
 private:
+	// ステージ選択.
+	void StageSelect();
 	// 配置処理の切り替え.
 	void ChangeArrangement();
 	// アクターの削除処理.
@@ -67,10 +71,12 @@ private:
 
 private:
 	CEditPlayer*							m_pEditPlayer;			// エディタ用プレイヤー.
+	std::unique_ptr<CStageLoader>			m_pStageLoader;			// ステージ読み込みクラス.
 	std::unique_ptr<CUndoRedo<SActorParam>>	m_pUndoRedo;			// 元に戻す操作クラス.
 	std::vector<SActorParam>				m_ActorList;			// 保存用のアクターリスト.
 	actor_mesh_list							m_ActorMeshList;		// アクターメッシュリスト.
 	SActorMesh								m_NowSelectActor;		// 現在選択しているアクター.
+	EStageNo								m_NowStageNo;			// 現在のステージ番号.
 	int										m_DeleteActorNo;		// 削除するアクターの番号.
 };
 

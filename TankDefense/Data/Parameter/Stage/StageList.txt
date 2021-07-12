@@ -1,0 +1,4 @@
+// ステージリスト.
+// ステージ名, ステージオブジェクトパス.
+#Enemy,Data\Parameter\Stage\EnemyStage.bin
+#Boss,Data\Parameter\Stage\BossStage.bin
