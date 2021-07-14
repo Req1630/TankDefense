@@ -104,8 +104,9 @@ void CRenderingTexterManager::Render( std::function<void()>& modelRender )
 	}
 
 	SynthesizeTexture( pLastSRV );
+	pLastSRV = m_pShaderResourceViewList[0];
 
-	LastRender( m_pShaderResourceViewList[0] );
+	LastRender( pLastSRV );
 
 	// ”w–Ê”ñ•\Ž¦‚ðŒ³‚É–ß‚·.
 	SetRasterizerState( ERS_STATE::None );

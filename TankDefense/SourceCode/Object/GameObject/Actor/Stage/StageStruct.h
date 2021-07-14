@@ -28,6 +28,8 @@ enum enActorList
 	EActorNo_Tree,
 	EActorNo_ItemSpeed,
 	EActorNo_Light,
+	EActorNo_LightG,
+	EActorNo_LightR,
 
 	EActorNo_Max,
 

@@ -54,6 +54,5 @@ float4 PS_Main(VS_OUTPUT input) : SV_Target
 	// contribution = ---------------------------------------.
 	//							max(source, 0.0001f).
 	float3 finalColor = color.rgb * contribution * g_Intensity.x;
-//	finalColor = clamp(finalColor, 0.0f, 1.0f);
 	return float4(finalColor, 1.0f);
 }
