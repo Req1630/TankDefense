@@ -107,6 +107,10 @@ void CTitle::Update()
 	if( CKeyInput::IsMomentPress('G') == true ){
 		SetSceneChange();
 	}
+	if( CKeyInput::IsMomentPress('E') == true ){
+		SetSceneChange();
+		m_pSceneManager->ChangeEditScene();
+	}
 
 	m_pPlayer->Update( GetDeltaTime<float>() );
 }

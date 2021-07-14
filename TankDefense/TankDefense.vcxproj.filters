@@ -7,6 +7,8 @@
     <FxCompile Include="Data\Shader\RenderTexture\OutLine\OutLine_PS.hlsl" />
     <FxCompile Include="Data\Shader\RenderTexture\WatercolorPainting\WatercolorPainting_PS.hlsl" />
     <FxCompile Include="Data\Shader\Aura.hlsl" />
+    <FxCompile Include="Data\Shader\RenderTexture\LastRenderTexture_PS.hlsl" />
+    <FxCompile Include="Data\Shader\RenderTexture\FXAA.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\ImGui\imgui.cpp" />

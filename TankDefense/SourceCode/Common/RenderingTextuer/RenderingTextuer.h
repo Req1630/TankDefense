@@ -33,7 +33,7 @@ public:
 	virtual HRESULT Init( ID3D11DeviceContext* pContext11 ) = 0;
 
 	// 解放.
-	void Release();
+	virtual void Release();
 
 	// バッファの設定.
 	virtual void SetBuffer() = 0;

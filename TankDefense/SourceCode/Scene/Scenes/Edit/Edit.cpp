@@ -47,9 +47,9 @@ bool CEdit::Load()
 void CEdit::Update()
 {
 	m_pActiveEditor->Update();
-//	if( CKeyInput::IsMomentPress('G') == true ){
-//		SetSceneChange();
-//}
+	if( CKeyInput::IsMomentPress('E') == true ){
+		SetSceneChange();
+	}
 }
 
 //============================.

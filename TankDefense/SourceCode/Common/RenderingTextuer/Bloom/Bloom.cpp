@@ -51,10 +51,6 @@ void CBloomRender::Render( const int& srvCount, const std::vector<ID3D11ShaderRe
 	m_pContext11->PSSetShader( m_pPixelShader, nullptr, 0 );	// ピクセルシェーダ.
 	m_pContext11->PSSetSamplers( 0, 1, &m_pSampleLinear );		// サンプラのセット.
 
-	m_pContext11->IASetInputLayout( m_pVertexLayout );
-	m_pContext11->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
-	SetRasterizerState( ERS_STATE::Back );
-
 	ID3D11ShaderResourceView* srv = m_pDownSampling->GetShaderResourceViewList()[0];
 	for( int  i = 0; i < BLUR_SAMPLE_NUM; i++ ){
 		// ターゲットビューのクリア.
@@ -77,7 +73,6 @@ void CBloomRender::Render( const int& srvCount, const std::vector<ID3D11ShaderRe
 
 		srv = m_pShaderResourceViewList[i];
 	}
-	SetRasterizerState( ERS_STATE::None );
 }
 
 //------------------------------------.

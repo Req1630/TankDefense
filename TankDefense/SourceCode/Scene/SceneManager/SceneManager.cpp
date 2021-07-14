@@ -74,7 +74,10 @@ void CSceneManager::Update( const float& deltaTime, const bool& isResourceLoadEn
 		}
 		// ロードの描画.
 		LoadRender( deltaTime, false );
+
 	} else {
+		// ウィンドウのサイズが変更されていれば、
+		//	テクスチャのサイズを変更する.
 		m_pRenderingTexManager->ResizeTexture();
 
 		// シーンの更新.
@@ -100,9 +103,12 @@ void CSceneManager::ChangeNextScene()
 		m_NextScene	= EScene::GameMain;
 		break;
 	case EScene::Edit:
+	{
 		m_pScene	= std::make_shared<CEdit>( this );
-		m_NowScene	= m_NextScene;
-		m_NextScene	= EScene::GameMain;
+		const EScene tempScene = m_NextScene;
+		m_NextScene	= m_NowScene;
+		m_NowScene	= tempScene;
+	}
 		break;
 	default:
 		return;
@@ -130,6 +136,14 @@ void CSceneManager::ChangeNextScene()
 			m_IsThreadLoadEnd = m_pScene->Load();
 		});
 	CDebugText::PushLog( "Scene Thread Start : ID[ ", m_Thread.get_id(), " ]" );
+}
+
+//=================================.
+// エディトシーンに変更.
+//=================================.
+void CSceneManager::ChangeEditScene()
+{
+	m_NextScene = EScene::Edit;
 }
 
 //=================================.

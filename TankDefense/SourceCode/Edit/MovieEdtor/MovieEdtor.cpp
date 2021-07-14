@@ -14,6 +14,7 @@ CMovieEditor::CMovieEditor()
 	, m_pActorEdit			( std::make_unique<CActorEditor>() )
 	, m_pWidgetEditor		( std::make_unique<CWidgetEditor>() )
 	, m_pStageRender		( std::make_unique<CStageRender>() )
+	, m_NowStage			( EStageNo_Enemy )
 	, m_NowSelectMovie		( EMovieNo::None )
 	, m_MovieEndSecTime		( 1.0f )
 	, m_IsMoviePlaying		( false )
@@ -186,6 +187,19 @@ void CMovieEditor::SelectMovieDraw()
 				m_MovieEndSecTime = data.MovieTime;
 				m_pCameraEdit->SetMovieCameraState( data.CameraList );
 				m_pWidgetEditor->SetWidgetStateList( data.WidgetList );
+
+				switch( m_NowSelectMovie )
+				{
+				case EMovieNo::EnemySpawn:
+					m_NowStage = EStageNo_Enemy;
+					break;
+				case EMovieNo::BossSpawn:
+				case EMovieNo::BossDefeat:
+					m_NowStage = EStageNo_Boss;
+				default:
+					break;
+				}
+				m_pStageRender->SetStage( m_NowStage );
 			}
 			if( isSelected ) ImGui::SetItemDefaultFocus();
 

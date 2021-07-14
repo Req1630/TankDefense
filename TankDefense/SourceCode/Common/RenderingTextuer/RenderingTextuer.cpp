@@ -27,7 +27,9 @@ CRenderTexture::~CRenderTexture()
 {
 }
 
+//----------------------------------.
 // 初期化.
+//----------------------------------.
 HRESULT CRenderTexture::InitBase( ID3D11DeviceContext* pContext11 )
 {
 	if( m_pDevice11 == nullptr ){
@@ -45,6 +47,8 @@ HRESULT CRenderTexture::InitBase( ID3D11DeviceContext* pContext11 )
 	return S_OK;
 }
 
+//----------------------------------.
+//----------------------------------.
 // 頂点バッファーの作成.
 HRESULT CRenderTexture::InitVertexBuffer()
 {
@@ -87,7 +91,9 @@ HRESULT CRenderTexture::InitVertexBuffer()
 	return S_OK;
 }
 
+//----------------------------------.
 // コンスタントバッファの作成.
+//----------------------------------.
 HRESULT CRenderTexture::InitConstantBuffer()
 {
 	shader::CreateConstantBuffer( m_pDevice11, &m_pConstantBufferInit, sizeof(C_BUFFER_PER_INIT) );
@@ -118,7 +124,9 @@ HRESULT CRenderTexture::InitConstantBuffer()
 	return S_OK;
 }
 
+//----------------------------------.
 // 解放.
+//----------------------------------.
 void CRenderTexture::Release()
 {
 	for( auto& r : m_pRenderTargetViewList )	SAFE_RELEASE( r );
@@ -135,7 +143,9 @@ void CRenderTexture::Release()
 	m_pDevice11 = nullptr;
 }
 
+//----------------------------------.
 // サイズの変更.
+//----------------------------------.
 HRESULT CRenderTexture::Resize()
 {
 	Release();
@@ -143,7 +153,9 @@ HRESULT CRenderTexture::Resize()
 	return S_OK;
 }
 
+//----------------------------------.
 // バッファの設定.
+//----------------------------------.
 void CRenderTexture::SetBuffer( const int& numViews )
 {
 	// G-Bufferテクスチャのクリア.
@@ -160,7 +172,9 @@ void CRenderTexture::SetBuffer( const int& numViews )
 		CDirectX11::GetDepthSV(), D3D11_CLEAR_DEPTH, 1.0f, 0 );
 }
 
+//----------------------------------.
 // 頂点シェーダー作成.
+//----------------------------------.
 HRESULT CRenderTexture::InitVertexShader( const char* filePath, const char* entryName )
 {
 	ID3DBlob* pCompiledShader = nullptr;
@@ -219,7 +233,9 @@ HRESULT CRenderTexture::InitVertexShader( const char* filePath, const char* entr
 	return S_OK;
 }
 
+//----------------------------------.
 // ピクセルシェーダー作成.
+//----------------------------------.
 HRESULT CRenderTexture::InitPixelShader( const char* filePath, const char* entryName )
 {
 	ID3DBlob* pCompiledShader = nullptr;
@@ -254,7 +270,10 @@ HRESULT CRenderTexture::InitPixelShader( const char* filePath, const char* entry
 	}
 	return S_OK;
 }
+
+//----------------------------------.
 // サンプラーの作成.
+//----------------------------------.
 HRESULT CRenderTexture::InitSampleLinear()
 {
 	// テクスチャ用のサンプラ構造体.
@@ -276,7 +295,9 @@ HRESULT CRenderTexture::InitSampleLinear()
 	return S_OK;
 }
 
+//----------------------------------.
 // バッファの作成.
+//----------------------------------.
 HRESULT CRenderTexture::CreateBufferTex(
 	const D3D11_TEXTURE2D_DESC	texDesc,
 	ID3D11RenderTargetView**	ppRTV,

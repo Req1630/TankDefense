@@ -3,6 +3,7 @@
 
 #include "..\EditorBase.h"
 #include "..\..\Object\CameraBase\MovieCamera\MovieCamera.h"
+#include "..\..\Object\GameObject\Actor\Stage\StageStruct.h"
 
 class CMovie;			// ムービー(演出)クラス.
 class CCameraEditor;	// カメラエディタ.
@@ -57,7 +58,7 @@ private:
 	std::unique_ptr<CActorEditor>				m_pActorEdit;		// アクターエディタ.
 	std::unique_ptr<CWidgetEditor>				m_pWidgetEditor;	// ウィジェットエディタ.
 	std::unique_ptr<CStageRender>				m_pStageRender;		// ステージの描画.
-
+	EStageNo	m_NowStage;			// 現在のステージ.
 	EMovieNo	m_NowSelectMovie;	// 現在選択しているムービー.
 	float		m_MovieEndSecTime;	// 動画終了時間.
 	bool		m_IsMoviePlaying;	// 再生中かどうか.

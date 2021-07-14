@@ -208,17 +208,19 @@ D3DXVECTOR2 CInput::GetAxisDxVector( const EAxisBind& key_x, const EAxisBind& ke
 //--------------------------------------------------.
 float CInput::GetAxisValue( const EAxisBind& key )
 {
+	CInput* pInstance = GetInstance();
+
 	float value = 0.0f;
-	if( CKeyInput::IsPress( GetInstance()->m_AxisBindList[key].PlusKey ) == true ){
-		value += GetInstance()->m_AxisBindList[key].MaxValue;
+	if( CKeyInput::IsPress( pInstance->m_AxisBindList[key].PlusKey ) == true ){
+		value += pInstance->m_AxisBindList[key].MaxValue;
 	}
-	if( CKeyInput::IsPress( GetInstance()->m_AxisBindList[key].MinusKey ) == true ){
-		value += GetInstance()->m_AxisBindList[key].MinValue;
+	if( CKeyInput::IsPress( pInstance->m_AxisBindList[key].MinusKey ) == true ){
+		value += pInstance->m_AxisBindList[key].MinValue;
 	}
 	if( value != 0.0f ) return value;
 
 	// ノーマライズした値を取得.
-	value = static_cast<float>(GetInstance()->m_AxisBindList[key].GetValue())/static_cast<float>(SHRT_MAX);
+	value = static_cast<float>(pInstance->m_AxisBindList[key].GetValue())/static_cast<float>(SHRT_MAX);
 	value = pow( value, INPUT_AXIS_POW_VALUE );
 	if( fabsf(value) < 0.01f ) value = 0.0f;
 
@@ -230,10 +232,11 @@ float CInput::GetAxisValue( const EAxisBind& key )
 //--------------------------------------------------.
 bool CInput::IsScreenMiddleMouse()
 {
+	CInput* pInstance = GetInstance();
 	RECT rect;
-	if( GetClientRect( GetInstance()->m_hWnd, &rect ) == FALSE ) return false;
-	return (( rect.left < GetInstance()->m_MouseNowPoint.x && GetInstance()->m_MouseNowPoint.x < rect.right ) &&
-			( rect.top < GetInstance()->m_MouseNowPoint.y && GetInstance()->m_MouseNowPoint.y < rect.bottom ));
+	if( GetClientRect( pInstance->m_hWnd, &rect ) == FALSE ) return false;
+	return (( rect.left < pInstance->m_MouseNowPoint.x && pInstance->m_MouseNowPoint.x < rect.right ) &&
+			( rect.top < pInstance->m_MouseNowPoint.y && pInstance->m_MouseNowPoint.y < rect.bottom ));
 }
 
 //--------------------------------------------------.

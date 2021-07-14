@@ -32,6 +32,8 @@ public:
 
 	// 初期化.
 	virtual HRESULT Init( ID3D11DeviceContext* pContext11 ) override;
+	// 解放.
+	virtual void Release() override;
 
 	// 描画関数.
 	void Render( std::function<void()>& func );
@@ -40,17 +42,23 @@ public:
 	HRESULT ResizeTexture();
 
 private:
+	// 各画像を合成する.
+	void SynthesizeTexture( ID3D11ShaderResourceView* pSRV );
 	// 最終描画.
 	void LastRender( ID3D11ShaderResourceView* pSRV );
 
 	// バッファの設定.
-	virtual void SetBuffer() override {}
+	virtual void SetBuffer() override;
 	// テクスチャの初期化.
-	virtual HRESULT InitBufferTex() override { return S_OK; }
+	virtual HRESULT InitBufferTex() override;
 	// シェーダーリソースビューの数を取得.
 	virtual int GetSRVCount()  override { return 0; }
 
+	// ピクセルシェーダーの初期化.
+	HRESULT InitLastPixelShader();
+
 private:
+	ID3D11PixelShader*					m_pLastPixelShader;	// ピクセルシェーダー.
 	std::unique_ptr<CGBufferRender>		m_pGBuffer;
 	std::unique_ptr<CLightingRender>	m_pLighting;
 	std::unique_ptr<COutLineRender>		m_pOutLine;

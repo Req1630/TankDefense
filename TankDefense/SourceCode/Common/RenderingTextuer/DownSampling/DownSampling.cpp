@@ -92,13 +92,11 @@ void CDownSamplingRender::Render( const int& srvCount, const std::vector<ID3D11S
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
 	m_pContext11->IASetVertexBuffers( 0, 1, &m_pVertexBuffer, &stride, &offset );
-	m_pContext11->IASetInputLayout( m_pVertexLayout );
-	m_pContext11->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
 
 	m_pContext11->PSSetShaderResources( 0, srvCount, &srvList[0] );
-	SetRasterizerState( ERS_STATE::Back );
+
 	m_pContext11->Draw( 4, 0 );
-	SetRasterizerState( ERS_STATE::None );
+
 	std::vector<ID3D11ShaderResourceView*> resetSrvList(srvCount);
 	m_pContext11->PSSetShaderResources( 0, srvCount, &resetSrvList[0] );
 }
