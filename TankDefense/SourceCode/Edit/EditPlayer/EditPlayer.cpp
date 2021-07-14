@@ -7,7 +7,7 @@
 
 namespace
 {
-	constexpr char	MESH_NAME[]			= "a_s";
+	constexpr char	MESH_NAME[]			= "houtou_saki_s";
 	constexpr float ACTOR_ROT_SPEED		= 0.1f;
 	constexpr float	CAMERA_HEIGHT		= 10.0f;
 	constexpr float	CAMERA_LENGTH		= 20.0f;
@@ -75,7 +75,9 @@ void CEditPlayer::Render()
 {
 	m_pSkinMesh->SetAnimSpeed( GetDeltaTime() );
 	m_pSkinMesh->SetTranceform( m_Tranceform );
+	m_pSkinMesh->SetRasterizerState( ERS_STATE::Wire );
 	m_pSkinMesh->Render();
+	m_pSkinMesh->SetRasterizerState( ERS_STATE::None );
 }
 
 //-------------------------------------.
@@ -127,6 +129,7 @@ void CEditPlayer::MoveController()
 void CEditPlayer::RotationController()
 {
 	if( m_IsRotController == false ) return;
+
 	if( CInput::IsHold( EKeyBind::Edit_RightRot ) )	m_PutTranceform.Rotation.y += ACTOR_ROT_SPEED;
 	if( CInput::IsHold( EKeyBind::Edit_LeftRot ) )	m_PutTranceform.Rotation.y -= ACTOR_ROT_SPEED;
 

@@ -212,6 +212,7 @@
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Actor.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Bullet\CBullet.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemyBase.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnManager.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActor.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Player\CPlayer.cpp" />
@@ -327,6 +328,8 @@
     <ClInclude Include="SourceCode\Edit\StageEditor\StageEditor.h" />
     <ClInclude Include="SourceCode\Edit\EditPlayer\EditPlayer.h" />
     <ClInclude Include="SourceCode\Edit\StageEditor\StageRender\StageRender.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnManager.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnStruct.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Stage\StageStruct.h" />
     <ClInclude Include="SourceCode\Edit\UndoRedo\UndoRedo.h" />
     <ClInclude Include="SourceCode\Global.h" />

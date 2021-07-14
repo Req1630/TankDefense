@@ -30,7 +30,7 @@ cbuffer per_frame : register(b1)
 float4 PS_Main(VS_OUTPUT input) : SV_Target
 {
 	// 描画されたモデルなどの色情報を取得.
-	float4 color = float4( g_GBufferColor[GBUFFER_COLOR].Sample(g_SamLinear, input.Tex).rgb, 1.0f );
+	float4 color = float4( g_GBufferColor[GBUFFER_BACK].Sample(g_SamLinear, input.Tex).rgb, 1.0f );
 	
 	// テクスチャの明度を落とす.
 	// --- softknee ---.

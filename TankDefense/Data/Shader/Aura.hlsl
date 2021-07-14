@@ -41,6 +41,8 @@ PS_OUTPUT PS_Main(VS_OUTPUT input )
 	
 	color.a *= (1.0f - frac(input.PosW.y * 0.5f + g_vUV.x * 5.0f)) * alpha;
 	
+	color.a = input.PosW.y <= 0.0f ? 0.9f : color.a;
+	
 	PS_OUTPUT output = (PS_OUTPUT) 0;
 	output.Color	= color;
 	output.Normal	= float4(0.0f, 0.0f, 0.0f, 0.0f);

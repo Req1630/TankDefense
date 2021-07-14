@@ -27,6 +27,7 @@ enum enActorList
 	EActorNo_Ground_L,
 	EActorNo_Tree,
 	EActorNo_ItemSpeed,
+	EActorNo_Light,
 
 	EActorNo_Max,
 

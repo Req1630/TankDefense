@@ -38,6 +38,8 @@ void CActorEditor::Update()
 
 	if( m_IsImGuiGamepad == true ) return;
 	if( m_pEditPlayer == nullptr ) return;
+
+	m_pEditPlayer->SetIsRotController( true );
 	m_pEditPlayer->Update();
 
 	SActorEditState& state = m_ActorEditStateList[m_NowSelectIndex];

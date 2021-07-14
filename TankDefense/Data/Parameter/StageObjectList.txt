@@ -7,4 +7,5 @@ Ground_I
 Ground_L
 Tree
 itemSpeed
+light
 

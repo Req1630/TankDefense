@@ -42,7 +42,7 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	
 	float3 ambient	= (g_vAmbient.rgb*0.5f) * (finalColor.rgb*0.5f);
 	float3 diffuse	= saturate(dot(l, n)) + g_vDiffuse.rgb;
-	float3 specular	= pow(saturate(dot(r, v)), 2.0f ) * g_vSpecular.rgb;
+	float3 specular	= pow(saturate(dot(r, v)), 2.0f ) + g_vSpecular.rgb;
 		
 	// ハーフランバート.
 	float lightIntensity = saturate(dot(bumpNormal, input.LightDir)) * g_vIntensity.x;

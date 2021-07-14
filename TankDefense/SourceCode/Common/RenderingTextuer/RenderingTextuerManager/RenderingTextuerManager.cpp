@@ -59,7 +59,7 @@ void CRenderingTexterManager::Render( std::function<void()>& func )
 	
 	// ƒuƒ‹[ƒ€‚Ì•`‰æ.
 	if( bit::IsBitFlag( m_RenderFlag, ERenderFlag_Bloom ) == true ){
-		std::vector<ID3D11ShaderResourceView*> srvList(1, pLastSRV);
+		std::vector<ID3D11ShaderResourceView*> srvList( 1, pLastSRV );
 		m_pBloom->Render( 1, srvList );
 	}
 

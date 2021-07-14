@@ -22,10 +22,13 @@ public:
 	void Render();
 
 	// 配置情報の取得.
-	STranceform GetPutTranceform() { return m_PutTranceform; }
+	inline STranceform GetPutTranceform() { return m_PutTranceform; }
 
 	// 置けるかどうか.
-	bool IsPut(){ return m_IsPut; }
+	inline bool IsPut(){ return m_IsPut; }
+
+	// 回転操作を行うかどうか.
+	inline void SetIsRotController( const bool& isRotController ){ m_IsRotController = isRotController; }
 
 private:
 	// カメラ操作.

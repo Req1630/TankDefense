@@ -4,28 +4,17 @@
 #include "..\EditorBase.h"
 #include "..\UndoRedo\UndoRedo.h"
 #include "..\StageEditor\StageEditor.h"
+#include "..\..\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnStruct.h"
 
-class CAuraMesh;		// オーラメッシュクラス.
-class CStageRender;		// ステージ描画クラス.
+class CAuraMesh;			// オーラメッシュクラス.
+class CStageRender;			// ステージ描画クラス.
+class CEnemySpawnManager;	// 敵スポーン管理クラス.
 
 /***************************************************
 * 敵スポーン範囲エディタ.
 **/
 class CEnemySpawnRangeEditor : public CEditorBase
 {
-	struct stBoxRange
-	{
-		D3DXVECTOR2 Range;		// 範囲,
-		STranceform	Tranceform;	// 座標など.
-		stBoxRange()
-			: Range			( 10.0f, 10.0f )
-			, Tranceform	()
-		{}
-		stBoxRange( const D3DXVECTOR2& range, const STranceform& t )
-			: Range			( range )
-			, Tranceform	( t )
-		{}
-	} typedef SBoxRange;
 public:
 	CEnemySpawnRangeEditor();
 	virtual ~CEnemySpawnRangeEditor();
@@ -47,6 +36,8 @@ public:
 	virtual void SetEditPlayer( CEditPlayer* pPlayer ) override { m_pEditPlayer = pPlayer; }
 
 private:
+	// ステージ選択.
+	void StageSelect();
 	// 配置処理の切り替え.
 	void ChangeArrangement();
 	// アクターの削除処理.
@@ -66,13 +57,15 @@ private:
 	virtual void ParameterLoading( const char* filePath ) override;
 
 private:
-	CEditPlayer*							m_pEditPlayer;			// エディタ用プレイヤー.
-	std::unique_ptr<CAuraMesh>				m_pAuraMesh;			// オーラメッシュ
-	std::unique_ptr<CUndoRedo<SBoxRange>>	m_pUndoRedo;			// 元に戻す操作クラス.
-	std::unique_ptr<CStageRender>			m_pStageRender;			// ステージの描画.
-	std::vector<SBoxRange>					m_BoxRangeList;			// 範囲のリスト.
-	SBoxRange								m_NowSelectActor;		// 現在選択しているアクター.
-	int										m_DeleteActorNo;		// 削除するアクターの番号.
+	CEditPlayer*								m_pEditPlayer;			// エディタ用プレイヤー.
+	std::unique_ptr<CAuraMesh>					m_pAuraMesh;			// オーラメッシュ
+	std::unique_ptr<CUndoRedo<SSpawnBoxRange>>	m_pUndoRedo;			// 元に戻す操作クラス.
+	std::unique_ptr<CStageRender>				m_pStageRender;			// ステージの描画.
+	std::unique_ptr<CEnemySpawnManager>			m_pEnemySpawnManager;	// 敵スポーン管理クラス.
+	std::vector<SSpawnBoxRange>					m_BoxRangeList;			// 範囲のリスト.
+	SSpawnBoxRange								m_NowSelectActor;		// 現在選択しているアクター.
+	EStageNo									m_NowStageNo;			// 現在のステージ番号.
+	int											m_DeleteActorNo;		// 削除するアクターの番号.
 };
 
 #endif	// #ifndef ENEMY_SPAEN_RANGE_EDITOR_H.

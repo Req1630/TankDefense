@@ -118,6 +118,7 @@
     <ClCompile Include="SourceCode\Common\Sprite\CircleGage\CircleGage.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Stage\Stage.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Stage\StageLoader\StageLoader.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -242,6 +243,8 @@
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Stage\Stage.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Stage\StageLoader\StageLoader.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Stage\StageStruct.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnManager.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnStruct.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

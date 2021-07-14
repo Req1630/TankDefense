@@ -6,6 +6,7 @@
 #include "..\EditPlayer\EditPlayer.h"
 #include "..\..\Common\Mesh\AuraMesh\AuraMesh.h"
 #include "..\StageEditor\StageRender\StageRender.h"
+#include "..\..\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnManager.h"
 
 namespace
 {
@@ -21,10 +22,12 @@ namespace
 CEnemySpawnRangeEditor::CEnemySpawnRangeEditor()
 	: m_pEditPlayer			( nullptr )
 	, m_pAuraMesh			( std::make_unique<CAuraMesh>() )
-	, m_pUndoRedo			( std::make_unique<CUndoRedo<SBoxRange>>( &m_BoxRangeList ))
+	, m_pUndoRedo			( std::make_unique<CUndoRedo<SSpawnBoxRange>>( &m_BoxRangeList ))
 	, m_pStageRender		( std::make_unique<CStageRender>() )
+	, m_pEnemySpawnManager	( std::make_unique<CEnemySpawnManager>() )
 	, m_BoxRangeList		()
 	, m_NowSelectActor		()
+	, m_NowStageNo			( EStageNo_Enemy )
 	, m_DeleteActorNo		( 0 )
 {
 }
@@ -38,8 +41,12 @@ CEnemySpawnRangeEditor::~CEnemySpawnRangeEditor()
 //------------------------------------.
 bool CEnemySpawnRangeEditor::Init()
 {
-	if( m_pStageRender->Init()	== false )	return false;
-	if( FAILED( m_pAuraMesh->Init() ))		return false;
+	if( m_pStageRender->Init()			== false )	return false;
+	if( m_pEnemySpawnManager->Init()	== false )	return false;
+	if( FAILED( m_pAuraMesh->Init() ))				return false;
+
+	m_BoxRangeList = m_pEnemySpawnManager->GetActorList( m_NowStageNo );
+
 	return true;
 }
 
@@ -50,11 +57,13 @@ void CEnemySpawnRangeEditor::Update()
 {
 	if( m_IsImGuiGamepad == true ) return;
 	if( m_pEditPlayer == nullptr ) return; 
+
+	m_pEditPlayer->SetIsRotController( false );
 	m_pEditPlayer->Update();
 
 	if( m_pEditPlayer->IsPut() == true ){
 		const int listSize = static_cast<int>(m_BoxRangeList.size());
-		const SBoxRange actorParam = { m_NowSelectActor.Range, m_pEditPlayer->GetPutTranceform() };
+		const SSpawnBoxRange actorParam = { m_NowSelectActor.Range, m_pEditPlayer->GetPutTranceform() };
 		m_BoxRangeList.insert( m_BoxRangeList.begin()+listSize, actorParam );
 		m_pUndoRedo->PushUndo( listSize, false, actorParam );
 	}
@@ -68,6 +77,8 @@ void CEnemySpawnRangeEditor::Update()
 bool CEnemySpawnRangeEditor::ImGuiRender()
 {
 	if( BeginTab("EnemySpawnEdit") == false ) return false;
+
+	StageSelect();
 
 	ImGui::TextWrapped( u8"配置しているオブジェクトの数 : %d", m_BoxRangeList.size() );
 	ChangeRangeDraw();
@@ -129,6 +140,36 @@ void CEnemySpawnRangeEditor::WidgetRender()
 }
 
 //------------------------------------.
+// ステージ選択.
+//------------------------------------.
+void CEnemySpawnRangeEditor::StageSelect()
+{
+	const char* stageNameList[] =
+	{
+		"Enemy",
+		"Boss"
+	};
+
+	if( ImGui::BeginCombo( u8"ステージの選択", stageNameList[m_NowStageNo] ) ){
+
+		for( int i = 0; i < EStageNo_Max; i++ ){
+			const bool isSelected = ( i == m_NowStageNo );
+			if( ImGui::Selectable( stageNameList[i], isSelected ) ){
+				m_NowStageNo = static_cast<EStageNo>(i);
+				m_DeleteActorNo = 0;
+				m_pStageRender->SetStage( m_NowStageNo );
+				m_BoxRangeList = m_pEnemySpawnManager->GetActorList( m_NowStageNo );
+				m_pUndoRedo->StackClear();
+			}
+
+			if( isSelected ) ImGui::SetItemDefaultFocus();
+		}
+
+		ImGui::EndCombo();
+	}
+}
+
+//------------------------------------.
 // 配置処理の切り替え.
 //------------------------------------.
 void CEnemySpawnRangeEditor::ChangeArrangement()
@@ -148,7 +189,7 @@ void CEnemySpawnRangeEditor::DeleteActor()
 {
 	if( ImGui::Button( u8"削除" ) ){
 		if( m_BoxRangeList.empty() == true ) return;
-		const SBoxRange parm = m_BoxRangeList[m_DeleteActorNo];
+		const SSpawnBoxRange parm = m_BoxRangeList[m_DeleteActorNo];
 		m_BoxRangeList.erase( m_BoxRangeList.begin() + m_DeleteActorNo );
 		m_pUndoRedo->PushUndo( m_DeleteActorNo, true, parm );
 		m_DeleteActorNo = 0;
@@ -255,7 +296,7 @@ void CEnemySpawnRangeEditor::ParameterWriting( const char* filePath )
 		m_MessageText = u8"オブジェクトが配置されていません。";
 		return;
 	}
-	SetParameterWritingMsg( fileManager::BinaryVectorWriting( filePath, m_BoxRangeList ) );
+	SetParameterWritingMsg( m_pEnemySpawnManager->WritingActorLst( m_NowStageNo, m_BoxRangeList ) );
 }
 
 //------------------------------------.
@@ -263,7 +304,8 @@ void CEnemySpawnRangeEditor::ParameterWriting( const char* filePath )
 //------------------------------------.
 void CEnemySpawnRangeEditor::ParameterLoading( const char* filePath )
 {
-	SetParameterLoadingMsg( fileManager::BinaryVectorReading( filePath, m_BoxRangeList ) );
+	SetParameterLoadingMsg( true );
 	m_DeleteActorNo = 0;
+	m_BoxRangeList = m_pEnemySpawnManager->GetActorList( m_NowStageNo );
 	m_pUndoRedo->StackClear();
 }

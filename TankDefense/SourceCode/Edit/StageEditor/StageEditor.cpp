@@ -52,6 +52,8 @@ void CStageEditor::Update()
 {
 	if( m_IsImGuiGamepad == true ) return;
 	if( m_pEditPlayer == nullptr ) return;
+
+	m_pEditPlayer->SetIsRotController( true );
 	m_pEditPlayer->Update();
 
 	if( m_pEditPlayer->IsPut() == true ){
