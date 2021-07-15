@@ -10,6 +10,26 @@
 template<class T>
 class CEachActorEditorBase
 {
+protected:
+	struct stDragPrameter
+	{
+		std::string	Label;
+		float		Speed;
+		float		Min;
+		float		Max;
+		std::string Format;
+		std::string Msg;
+
+		stDragPrameter()
+			: Label		( "" )
+			, Speed		( 1.0f )
+			, Min		( 0.0f )
+			, Max		( 1.0f )
+			, Format	( "%.4f" )
+			, Msg		( "" )
+		{}
+	} typedef SDragPrameter;
+
 public:
 	CEachActorEditorBase()
 		: m_Prameter	()
@@ -34,8 +54,10 @@ public:
 
 protected:
 	// ドラッグVectorの表示.
-	void DragVector3( const char* label, D3DXVECTOR3* v, float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char* format = "%.3f" );
-	
+	void DragVector3( D3DXVECTOR3* v, const SDragPrameter& p );
+	// ドラッグFloatの表示.
+	void DragFloat( float* v, const SDragPrameter& p );
+
 protected:
 	T			m_Prameter;		// パラメータ.
 	EParamNo	m_PrameterNo;	// パラメータ番号.
@@ -65,11 +87,22 @@ bool CEachActorEditorBase<T>::ReadingParam()
 // ドラッグVectorの表示.
 //------------------------------.
 template<typename T>
-void CEachActorEditorBase<T>::DragVector3( const char* label, D3DXVECTOR3* v, float v_speed, float v_min, float v_max, const char* format )
+void CEachActorEditorBase<T>::DragVector3( D3DXVECTOR3* v, const SDragPrameter& p )
 {
-	ImGui::DragFloat( label, v.x, v_speed, v_min, v_max, format );
-	ImGui::DragFloat( label, v.y, v_speed, v_min, v_max, format );
-	ImGui::DragFloat( label, v.z, v_speed, v_min, v_max, format );
+	DragFloat( v.x, p );
+	DragFloat( v.y, p );
+	DragFloat( v.z, p );
+}
+
+//------------------------------.
+// ドラッグFloatの表示.
+//------------------------------.
+template<typename T>
+void CEachActorEditorBase<T>::DragFloat( float* v, const SDragPrameter& p )
+{
+	ImGui::DragFloat( p.Label.c_str(), v, p.Speed, p.Min, p.Max, p.Format.c_str() );
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( p.Msg.c_str() );
 }
 
 #endif	// #ifndef EACH_ACTOR_EDITOR_BASE_H.

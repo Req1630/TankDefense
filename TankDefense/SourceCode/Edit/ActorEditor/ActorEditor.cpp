@@ -1,6 +1,8 @@
 #include "ActorEditor.h"
+#include "EachActorEditor/PlayerEditor/PlayerEditor.h"
 
 CActorEditor::CActorEditor()
+	: m_pPlayerEdit	( std::make_unique<CPlayerEditor>() )
 {
 }
 
@@ -13,6 +15,8 @@ CActorEditor::~CActorEditor()
 //---------------------------------.
 bool CActorEditor::Init()
 {
+	if( m_pPlayerEdit->Init() == false ) return false;
+
 	return true;
 }
 
@@ -21,6 +25,7 @@ bool CActorEditor::Init()
 //---------------------------------.
 void CActorEditor::Update()
 {
+	m_pPlayerEdit->Update();
 }
 
 //---------------------------------.
@@ -28,6 +33,8 @@ void CActorEditor::Update()
 //---------------------------------.
 bool CActorEditor::ImGuiRender()
 {
+	m_pPlayerEdit->ImGuiRender();
+
 	return true;
 }
 
@@ -36,6 +43,7 @@ bool CActorEditor::ImGuiRender()
 //---------------------------------.
 void CActorEditor::ModelRender()
 {
+	m_pPlayerEdit->ModelRender();
 }
 
 //---------------------------------.

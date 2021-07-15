@@ -3,6 +3,8 @@
 
 #include "..\EditorBase.h"
 
+class CPlayerEditor;		// プレイヤーエディタ.
+
 /****************************************
 *	アクターエディタクラス.
 **/
@@ -31,6 +33,8 @@ private:
 	// パラメータの読み込み.
 	virtual void ParameterLoading( const char* filePath ) override;
 
+private:
+	std::unique_ptr<CPlayerEditor>	m_pPlayerEdit;
 };
 
 #endif	// #ifndef ACTOR_EDITOR_H.
