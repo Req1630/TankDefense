@@ -34,7 +34,7 @@ enum class enSceneNo : unsigned char
 	Max,
 
 	ResultCheck,		// ゲームクリアかゲームオーバーの確認.
-	Start = Title,		// 初めのシーン.
+	Start = Edit,		// 初めのシーン.
 };
 
 #endif	// #ifndef SCENE_LIST_H.

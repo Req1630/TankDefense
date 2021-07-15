@@ -74,20 +74,42 @@ bool CCameraEditor::ImGuiRender()
 	if( m_pMovieShakeCamera	== nullptr ) return false;
 	if( m_NowSelectIndex < 0 ) return false;
 
-	MoveCameraSettigDraw( u8"基底となるカメラの設定", m_pMovieMoveCamera->StartState );
 	ImGui::Separator();
+	if( ImGui::TreeNode( u8"基底となるカメラの設定" ) ){
+		ImGui::SameLine();
+		CImGuiManager::HelpMarker( u8"移動したいカメラを設定する際、開始位置となる情報" );
+		MoveCameraSettigDraw( u8"基底となるカメラの設定", m_pMovieMoveCamera->StartState );
+		ImGui::TreePop();
+	} else {
+		ImGui::SameLine();
+		CImGuiManager::HelpMarker( u8"移動したいカメラを設定する際、開始位置となる情報" );
+	}
 
 	if( ImGui::TreeNode( u8"移動情報の設定" ) ){
+		ImGui::SameLine();
+		CImGuiManager::HelpMarker( 
+			u8"移動したいカメラを設定する際、\n"
+			u8"移動時間や、移動終了位置などの情報を設定できる"
+		);
 		MoveCameraDraw();
 		ImGui::TreePop();
+	} else {
+		ImGui::SameLine();
+		CImGuiManager::HelpMarker( 
+			u8"移動したいカメラを設定する際、\n"
+			u8"移動時間や、移動終了位置などの情報を設定できる"
+		);
 	}
 
 	if( ImGui::TreeNode( u8"揺れ情報の設定" ) ){
+		ImGui::SameLine();
+		CImGuiManager::HelpMarker( u8"カメラを揺らす際、揺れ時間や、揺れの強さを設定できる" );
 		ShakeCameraDraw();
 		ImGui::TreePop();
+	} else {
+		ImGui::SameLine();
+		CImGuiManager::HelpMarker( u8"カメラを揺らす際、揺れ時間や、揺れの強さを設定できる" );
 	}
-
-	
 
 	return true;
 }
@@ -359,9 +381,20 @@ void CCameraEditor::ShakeCameraDraw()
 		ImGui::PushID( i );
 		if( ImGui::TreeNode( u8"設定情報##1" ) ){
 			ImGui::DragFloat(	u8"振れ幅",		&state.Amplitube,	0.1f, 0.0f, 180.0f );
+			ImGui::SameLine();
+			CImGuiManager::HelpMarker( u8"揺れの大きさ、値が大きければ、揺れが大きくなる" );
 			ImGui::DragFloat(	u8"周波数",		&state.Frequency,	0.1f, 0.0f, 180.0f );
-			ImGui::DragFloat(	u8"揺れ時間",	&state.Time,		0.1f, 0.0f, 180.0f );
+			ImGui::SameLine();
+			CImGuiManager::HelpMarker( u8"一秒間に何回揺れるか" );
+			ImGui::DragFloat(	u8"揺れ時間(秒)",	&state.Time,		0.1f, 0.0f, 180.0f );
+			ImGui::SameLine();
+			CImGuiManager::HelpMarker( u8"揺れの時間" );
 			ImGui::Checkbox(	u8"減衰するか",	&state.IsAttenuation );
+			ImGui::SameLine();
+			CImGuiManager::HelpMarker(
+				u8"チェックボックスをオンにすれば\n"
+				u8"揺れが終わりに近づくにつれ、揺れが緩くなる"
+			);
 			if( i < 2 ){
 				if( ImGui::Button(	u8"現在の位置を基底座標として設定" ) ){
 					state.BasePosition = m_CameraState.Position;

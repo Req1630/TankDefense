@@ -5,7 +5,7 @@
 
 namespace
 {
-	constexpr char	ACOTR_MESH_LIST_PATH[]			= "Data\\Parameter\\StageObjectList.txt";
+	constexpr char	ACOTR_MESH_LIST_PATH[]			= "Data\\Parameter\\Stage\\StageObjectList.txt";
 }
 
 CStageRender::CStageRender()

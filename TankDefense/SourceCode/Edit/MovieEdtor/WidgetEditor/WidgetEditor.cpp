@@ -55,15 +55,31 @@ bool CWidgetEditor::ImGuiRender()
 	PushWidgetDraw();
 	SelectEidtParameterDraw();
 	ImGui::Checkbox( u8"すべての画像を描画する", &m_IsAllWidgetRender );
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( 
+		u8"オンにすれば、このムービーに追加されている画像をすべて確認できる\n"
+		u8"オフにすれば、編集している画像だけ表示される"
+	);
+
 	if( ImGui::Button( u8"動きを確認する" ) ){
 		for( auto& w : m_pWidgetList ) w->Play();
 		m_IsPlay = true;
 	}
 	ImGui::SameLine();
+	CImGuiManager::HelpMarker( 
+		u8"ボタンを押せば画像の動きを確認することができる"
+	);
+	ImGui::SameLine();
 	if( ImGui::Button( u8"動きを停止する" ) ){
 		for( auto& w : m_pWidgetList ) w->Reset();
 		m_IsPlay = false;
 	}
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( 
+		u8"ボタンを押せば画像の動きを停止させる\n"
+		u8"*動きを確認するボタンを押した場合、"
+		u8" この停止ボタンを押さなければならない"
+	);
 
 	ImGui::Separator();
 	WidgetParameterDraw();
@@ -168,6 +184,11 @@ void CWidgetEditor::WidgetControll()
 void CWidgetEditor::PushWidgetDraw()
 {
 	ImGui::Text( u8"追加したい画像を選択" );
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( 
+		u8"下のコンボボックスから追加したい画像を選択し\n"
+		u8"右下の追加ボタンを押せば画像がついかされる"
+	);
 	if( ImGui::BeginCombo( "##1", m_NowPushSelectName.c_str() ) ){
 
 		for( auto& n : m_SpriteNameList ){
@@ -200,6 +221,11 @@ void CWidgetEditor::PushWidgetDraw()
 void CWidgetEditor::SelectEidtParameterDraw()
 {
 	ImGui::Text( u8"編集したい画像を選択" );
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( 
+		u8"下のコンボボックスから編集したい画像を選択すれば、\n"
+		u8"選択した画像を編集できる"
+	);
 
 	std::string name = "None";
 	if( m_NowSelectIndex >= 0 ){
@@ -217,6 +243,7 @@ void CWidgetEditor::SelectEidtParameterDraw()
 				m_NowSelectIndex = i;
 				m_NowSelectState = state;
 			}
+
 			if( isSelected ) ImGui::SetItemDefaultFocus();
 			i++;
 		}
@@ -237,13 +264,22 @@ void CWidgetEditor::WidgetParameterDraw()
 	if( ImGui::TreeNode( u8"パラメータを編集する" ) ){
 		ImGui::PushItemWidth( 160.0f );
 
-		ImGui::DragFloat( u8"動作開始時間", &m_NowSelectState.AciveStartTime, 0.1f, 0.0f, 180.0f );
+		ImGui::DragFloat( u8"動作開始時間(秒)", &m_NowSelectState.AciveStartTime, 0.1f, 0.0f, 180.0f );
+		ImGui::SameLine();
+		CImGuiManager::HelpMarker( u8"画像の動作が始まる時間" );
 
 		ImGui::Text( u8" Position" );
 		ImGui::SameLine();
 		if( ImGui::Button( u8"位置を動かす *GamePadのみ" ) ){
 			OffImGuiGamepad();
 		}
+		ImGui::SameLine();
+		CImGuiManager::HelpMarker( 
+			u8"左スティック 上下左右\n" 
+			u8"DPad         上下左右\n" 
+			u8"セレクトボタンでエディタ画面に戻る\n" 
+		);
+
 		ImGui::Indent();
 		ImGui::DragFloat( u8"X", &m_NowSelectState.Position.x, 0.5f, -1280.00f, 1280.0f );
 		ImGui::DragFloat( u8"Y", &m_NowSelectState.Position.y, 0.5f, -1280.00f, 1280.0f );

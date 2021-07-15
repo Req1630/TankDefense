@@ -10,9 +10,7 @@
 
 namespace
 {
-	constexpr char	ACOTR_MESH_LIST_PATH[]			= "Data\\Parameter\\StageObjectList.txt";
-	constexpr char	STAGE_OBJECT_LIST_PATH[]		= "Data\\Parameter\\StageObjectList.bin";
-	constexpr char	ENEMY_SPAWN_RANGE_LIST_PATH[]	= "Data\\Parameter\\EnemySpawnRangeList.bin";
+	constexpr char	STAGE_OBJECT_LIST_PATH[]		= "Data\\Parameter\\Stage\\StageObjectList.bin";
 	constexpr char	SELECT_COMBO_NAME[]				= u8"配置したい出現範囲を変更してください";
 	constexpr char	DELETE_COMBO_NAME[]				= u8"削除したいオブジェクトを選択してください";
 	constexpr float	DELETE_ACTOR_COLOR[]			= { 2.5f, 1.5f, 1.5f, 1.0f };
@@ -87,8 +85,8 @@ bool CEnemySpawnRangeEditor::ImGuiRender()
 	DeleteActor();
 	UndoRedoDraw();
 
-	SaveButton( ENEMY_SPAWN_RANGE_LIST_PATH ); 	ImGui::SameLine();
-	LoadButton( ENEMY_SPAWN_RANGE_LIST_PATH ); 	ImGui::SameLine();
+	SaveButton( "" ); 	ImGui::SameLine();
+	LoadButton( "" ); 	ImGui::SameLine();
 	MessageRender();
 	ImGui::Separator();
 	ControllerDraw();
@@ -167,6 +165,8 @@ void CEnemySpawnRangeEditor::StageSelect()
 
 		ImGui::EndCombo();
 	}
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( u8"編集したいステージを選択することができる" );
 }
 
 //------------------------------------.
@@ -177,6 +177,11 @@ void CEnemySpawnRangeEditor::ChangeArrangement()
 	if( ImGui::Button( u8"配置" ) ){
 		OffImGuiGamepad();
 	}
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( 
+		u8"配置を押すと、プレイヤーを動かして、\n"
+		u8"オブジェクトを配置することができる"
+	);
 	if( CInput::IsMomentPress(EKeyBind::Edit_BackMenu) ){
 		OnImGuiGamepad();
 	}
@@ -194,6 +199,11 @@ void CEnemySpawnRangeEditor::DeleteActor()
 		m_pUndoRedo->PushUndo( m_DeleteActorNo, true, parm );
 		m_DeleteActorNo = 0;
 	}
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( 
+		u8"左のコンボボックスから削除したいオブジェクトを選択して\n"
+		u8"削除ボタンを押すと、そのオブジェクトを削除することができる"
+	);
 }
 
 //------------------------------------.
@@ -202,8 +212,13 @@ void CEnemySpawnRangeEditor::DeleteActor()
 void CEnemySpawnRangeEditor::ChangeRangeDraw()
 {
 	ImGui::Text( SELECT_COMBO_NAME );
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( u8"設定した範囲に敵がスポーンする" );
+
+	ImGui::PushItemWidth( 160.0 );
 	ImGui::DragFloat( u8"Ｘ方向のサイズ", &m_NowSelectActor.Range.x, 1.0f, 1.0f, 100.0f );
 	ImGui::DragFloat( u8"Ｚ方向のサイズ", &m_NowSelectActor.Range.y, 1.0f, 1.0f, 100.0f );
+	ImGui::PopItemWidth();
 }
 
 //------------------------------------.

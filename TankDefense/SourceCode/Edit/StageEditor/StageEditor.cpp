@@ -8,8 +8,7 @@
 
 namespace
 {
-	constexpr char	ACOTR_MESH_LIST_PATH[]		= "Data\\Parameter\\StageObjectList.txt";
-	constexpr char	STAGE_OBJECT_LIST_PATH[]	= "Data\\Parameter\\StageObjectList.bin";
+	constexpr char	ACOTR_MESH_LIST_PATH[]		= "Data\\Parameter\\Stage\\StageObjectList.txt";
 	constexpr char	SELECT_COMBO_NAME[]			= u8"配置したいオブジェクトを選択してください";
 	constexpr char	DELETE_COMBO_NAME[]			= u8"削除したいオブジェクトを選択してください";
 	constexpr float	DELETE_ACTOR_COLOR[]		= { 2.5f, 1.5f, 1.5f, 1.0f };
@@ -80,8 +79,8 @@ bool CStageEditor::ImGuiRender()
 	DeleteActor();
 	UndoRedoDraw();
 
-	SaveButton( STAGE_OBJECT_LIST_PATH ); 	ImGui::SameLine();
-	LoadButton( STAGE_OBJECT_LIST_PATH ); 	ImGui::SameLine();
+	SaveButton( "" ); 	ImGui::SameLine();
+	LoadButton( "" ); 	ImGui::SameLine();
 	MessageRender();
 	ImGui::Separator();
 	ControllerDraw();
@@ -157,6 +156,8 @@ void CStageEditor::StageSelect()
 
 		ImGui::EndCombo();
 	}
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( u8"編集したいステージを選択することができる" );
 }
 
 //------------------------------------.
@@ -167,6 +168,11 @@ void CStageEditor::ChangeArrangement()
 	if( ImGui::Button( u8"配置" ) ){
 		OffImGuiGamepad();
 	}
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( 
+		u8"配置を押すと、プレイヤーを動かして、\n"
+		u8"オブジェクトを配置することができる"
+	);
 	if( CInput::IsMomentPress(EKeyBind::Edit_BackMenu) ){
 		OnImGuiGamepad();
 	}
@@ -184,6 +190,11 @@ void CStageEditor::DeleteActor()
 		m_pUndoRedo->PushUndo( m_DeleteActorNo, true, parm );
 		m_DeleteActorNo = 0;
 	}
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( 
+		u8"左のコンボボックスから削除したいオブジェクトを選択して\n"
+		u8"削除ボタンを押すと、そのオブジェクトを削除することができる"
+	);
 }
 
 //------------------------------------.
