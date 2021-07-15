@@ -180,9 +180,12 @@
     <ClCompile Include="SourceCode\Common\Sprite\CircleGage\CircleGage.cpp" />
     <ClCompile Include="SourceCode\Common\Sprite\Sprite.cpp" />
     <ClCompile Include="SourceCode\Common\Sprite\SpriteRender.cpp" />
+    <ClCompile Include="SourceCode\Edit\ActorEditor\ActorEditor.cpp" />
+    <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\EachActorEditorBase.cpp" />
+    <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\PlayerEditor\PlayerEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\EditorBase.cpp" />
     <ClCompile Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.cpp" />
-    <ClCompile Include="SourceCode\Edit\MovieEdtor\ActorEditor\ActorEditor.cpp" />
+    <ClCompile Include="SourceCode\Edit\MovieEdtor\ActorEditor\MovieActorEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\MovieEdtor\CameraEditor\CameraEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\MovieEdtor\MovieEdtor.cpp" />
     <ClCompile Include="SourceCode\Edit\MovieEdtor\WidgetEditor\WidgetEditor.cpp" />
@@ -319,9 +322,12 @@
     <ClInclude Include="SourceCode\Common\Sprite\Sprite.h" />
     <ClInclude Include="SourceCode\Common\Sprite\SpriteRender.h" />
     <ClInclude Include="SourceCode\Common\Sprite\SpriteStruct.h" />
+    <ClInclude Include="SourceCode\Edit\ActorEditor\ActorEditor.h" />
+    <ClInclude Include="SourceCode\Edit\ActorEditor\EachActorEditor\EachActorEditorBase.h" />
+    <ClInclude Include="SourceCode\Edit\ActorEditor\EachActorEditor\PlayerEditor\PlayerEditor.h" />
     <ClInclude Include="SourceCode\Edit\EditorBase.h" />
     <ClInclude Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.h" />
-    <ClInclude Include="SourceCode\Edit\MovieEdtor\ActorEditor\ActorEditor.h" />
+    <ClInclude Include="SourceCode\Edit\MovieEdtor\ActorEditor\MovieActorEditor.h" />
     <ClInclude Include="SourceCode\Edit\MovieEdtor\CameraEditor\CameraEditor.h" />
     <ClInclude Include="SourceCode\Edit\MovieEdtor\MovieEdtor.h" />
     <ClInclude Include="SourceCode\Edit\MovieEdtor\WidgetEditor\WidgetEditor.h" />
@@ -330,6 +336,7 @@
     <ClInclude Include="SourceCode\Edit\StageEditor\StageRender\StageRender.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnManager.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnStruct.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Player\PlayerParameter.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Stage\StageStruct.h" />
     <ClInclude Include="SourceCode\Edit\UndoRedo\UndoRedo.h" />
     <ClInclude Include="SourceCode\Global.h" />

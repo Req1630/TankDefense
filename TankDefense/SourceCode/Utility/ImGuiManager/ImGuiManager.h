@@ -78,11 +78,6 @@ public:
 	// 描画関数を追加する.
 	static void PushRenderProc( std::function<void()> proc );
 
-	// ドラッグの表示.
-	static void DragDouble( const char* label, double* v, const double& speed = 0.001 );
-	static void DragFloat( const char* label, float* v, const float& speed = 0.001f );
-	static void DragInt( const char* label, int* v, const float& speed = 1.0f );
-
 	// ヘルプマークの表示.
 	static void HelpMarker( const char* desc );
 

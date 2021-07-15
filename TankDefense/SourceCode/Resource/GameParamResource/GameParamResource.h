@@ -8,6 +8,7 @@
 
 #include "..\..\Common\RenderingTextuer\OutLine\OutLine.h"
 #include "..\..\Common\RenderingTextuer\DownSampling\DownSampling.h"
+#include "..\..\Object\GameObject\Actor\Player\PlayerParameter.h"
 #include "..\..\Utility\FileManager\FileManager.h"
 
 #include <variant>
@@ -18,7 +19,10 @@
 enum class enParamNo : unsigned int
 {
 	None,
-	OutLine	= 0,
+
+	Player = 0,
+
+	OutLine,
 	DownSamle,
 
 	Max,
@@ -28,13 +32,16 @@ class CGameParamResource
 {
 	using paramTypeList = 
 		std::variant<
+			SPlayerParam,
 			COutLineRender::OUTLINE_CBUFFER,
-			CDownSamplingRender::SDownSamplePrame>;
+			CDownSamplingRender::SDownSamplePrame
+		>;
 
 	const std::unordered_map<EParamNo, std::string> PARAM_FILE_PATH_LIST
 	{
-		{ EParamNo::OutLine, "Data\\Parameter\\Outline.bin" },
-		{ EParamNo::DownSamle, "Data\\Parameter\\DownSamle.bin" },
+		{ EParamNo::Player,		"Data\\Parameter\\ActorParam\\Player.bin"	},
+		{ EParamNo::OutLine,	"Data\\Parameter\\Outline.bin"		},
+		{ EParamNo::DownSamle,	"Data\\Parameter\\DownSamle.bin"	},
 	};
 public:
 	CGameParamResource();
@@ -60,7 +67,7 @@ public:
 
 	// パラメータの読み込み.
 	template<class T>
-	static T ReadParam( const EParamNo& no )
+	static T ReadingParam( const EParamNo& no )
 	{
 		T tmp;
 		fileManager::BinaryReading( GetInstance()->PARAM_FILE_PATH_LIST.at(no).c_str(), tmp );
@@ -68,6 +75,7 @@ public:
 	}
 	
 	// パラメータの書き込み.
+	// isListSave パラメータリストに上書きして、データを保存するか.
 	template<class T>
 	static bool WritingParam( const EParamNo& no, const T& param, const bool& isListSave = false )
 	{

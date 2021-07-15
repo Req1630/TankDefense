@@ -1,5 +1,5 @@
-#ifndef ACTOR_EDITOR_H
-#define ACTOR_EDITOR_H
+#ifndef MOVIE_ACTOR_EDITOR_H
+#define MOVIE_ACTOR_EDITOR_H
 
 #include "..\..\..\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.h"
 #include "..\..\..\Object\GameObject\Actor\MovieActor\MovieActor.h"
@@ -14,7 +14,7 @@ class CEditPlayer;	// ステージエディタ用のプレイヤー.
 /*********************************
 *	アクターエディタクラス.
 **/
-class CActorEditor
+class CMovieActorEditor
 {
 	// アクターの選択状態.
 	enum enSelectStateFlag : unsigned char
@@ -59,8 +59,8 @@ class CActorEditor
 		{}
 	} typedef SActorEditState;
 public:
-	CActorEditor();
-	~CActorEditor();
+	CMovieActorEditor();
+	~CMovieActorEditor();
 
 	// 更新処理.
 	void Update();
@@ -113,4 +113,4 @@ private:
 	bool												m_IsImGuiGamepad;
 };
 
-#endif	// #ifndef ACTOR_EDITOR_H.
+#endif	// #ifndef MOVIE_ACTOR_EDITOR_H.

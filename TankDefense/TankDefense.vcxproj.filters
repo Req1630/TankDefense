@@ -107,7 +107,6 @@
     <ClCompile Include="SourceCode\Object\Movie\Movie.cpp" />
     <ClCompile Include="SourceCode\Object\Movie\LoadCameraData\LoadCameraData.cpp" />
     <ClCompile Include="SourceCode\Object\Movie\MovieDataLoader\MovieDataLoader.cpp" />
-    <ClCompile Include="SourceCode\Edit\MovieEdtor\ActorEditor\ActorEditor.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemyBase.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActor.cpp" />
@@ -121,6 +120,10 @@
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Stage\Stage.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Stage\StageLoader\StageLoader.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnManager.cpp" />
+    <ClCompile Include="SourceCode\Edit\ActorEditor\ActorEditor.cpp" />
+    <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\EachActorEditorBase.cpp" />
+    <ClCompile Include="SourceCode\Edit\MovieEdtor\ActorEditor\MovieActorEditor.cpp" />
+    <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\PlayerEditor\PlayerEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -231,7 +234,6 @@
     <ClInclude Include="SourceCode\Object\Movie\Movie.h" />
     <ClInclude Include="SourceCode\Object\Movie\LoadCameraData\LoadCameraData.h" />
     <ClInclude Include="SourceCode\Object\Movie\MovieDataLoader\MovieDataLoader.h" />
-    <ClInclude Include="SourceCode\Edit\MovieEdtor\ActorEditor\ActorEditor.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemyBase.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActor.h" />
@@ -247,6 +249,11 @@
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Stage\StageStruct.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnManager.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\EnemySpawnManager\EnemySpawnStruct.h" />
+    <ClInclude Include="SourceCode\Edit\ActorEditor\ActorEditor.h" />
+    <ClInclude Include="SourceCode\Edit\ActorEditor\EachActorEditor\EachActorEditorBase.h" />
+    <ClInclude Include="SourceCode\Edit\MovieEdtor\ActorEditor\MovieActorEditor.h" />
+    <ClInclude Include="SourceCode\Edit\ActorEditor\EachActorEditor\PlayerEditor\PlayerEditor.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Player\PlayerParameter.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

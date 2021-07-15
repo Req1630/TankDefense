@@ -1,4 +1,4 @@
-#include "ActorEditor.h"
+#include "MovieActorEditor.h"
 #include "..\..\..\Utility\ImGuiManager\ImGuiManager.h"
 #include "..\..\..\Utility\Input\Input.h"
 #include "..\..\..\Utility\BitFlagManager\BitFlagManager.h"
@@ -11,7 +11,7 @@ namespace
 	constexpr float SELECT_ACTOR_COLOR_DOWN_SPEED	= 0.02f;
 };
 
-CActorEditor::CActorEditor()
+CMovieActorEditor::CMovieActorEditor()
 	: m_pEditPlayer			( nullptr )
 	, m_pEnemyList			()
 	, m_ActorEditStateList	()
@@ -24,14 +24,14 @@ CActorEditor::CActorEditor()
 {
 }
 
-CActorEditor::~CActorEditor()
+CMovieActorEditor::~CMovieActorEditor()
 {
 }
 
 //---------------------------.
 // 更新処理.
 //---------------------------.
-void CActorEditor::Update()
+void CMovieActorEditor::Update()
 {
 	m_DeltaTime = GetDeltaTime();
 
@@ -71,7 +71,7 @@ void CActorEditor::Update()
 //---------------------------.
 // ImGui描画.
 //---------------------------.
-bool CActorEditor::ImGuiRender()
+bool CMovieActorEditor::ImGuiRender()
 {
 	ActorNodeDraw();
 	PushActorNodeDraw();
@@ -84,7 +84,7 @@ bool CActorEditor::ImGuiRender()
 //---------------------------.
 // モデル描画.
 //---------------------------.
-void CActorEditor::ModelRender()
+void CMovieActorEditor::ModelRender()
 {
 	if( m_pEditPlayer == nullptr ) return;
 	if( m_NowSelectIndex < 0 ) return;
@@ -96,7 +96,7 @@ void CActorEditor::ModelRender()
 //---------------------------.
 // 全部のアクターの描画.
 //---------------------------.
-void CActorEditor::AllActorRender()
+void CMovieActorEditor::AllActorRender()
 {
 	CDX9SkinMesh* pSkinMesh = nullptr;
 	int i = 0;
@@ -117,7 +117,7 @@ void CActorEditor::AllActorRender()
 //---------------------------.
 // 現在選択されているアクターの描画.
 //---------------------------.
-void CActorEditor::NowSelectActorRender()
+void CMovieActorEditor::NowSelectActorRender()
 {
 	// 現在選択されているアクターの描画.
 	SActorEditState& state = m_ActorEditStateList[m_NowSelectIndex];
@@ -152,7 +152,7 @@ void CActorEditor::NowSelectActorRender()
 //---------------------------.
 // アクターノードの表示.
 //---------------------------.
-void CActorEditor::ActorNodeDraw()
+void CMovieActorEditor::ActorNodeDraw()
 {
 	ImGui::PushItemWidth( 160.0f );
 	std::string noName = "None";
@@ -182,7 +182,7 @@ void CActorEditor::ActorNodeDraw()
 //---------------------------.
 // 追加アクターノードの表示.
 //---------------------------.
-void CActorEditor::PushActorNodeDraw()
+void CMovieActorEditor::PushActorNodeDraw()
 {
 	ImGui::SetNextTreeNodeOpen( m_IsPushNodeOpen );
 	if( ImGui::TreeNode( u8"新しく追加する" ) ){
@@ -221,7 +221,7 @@ void CActorEditor::PushActorNodeDraw()
 //---------------------------.
 // アクターパラメータの表示.
 //---------------------------.
-void CActorEditor::ActorParameterDraw()
+void CMovieActorEditor::ActorParameterDraw()
 {
 	if( m_NowSelectIndex < 0 ) return;
 	SMovieActor& state = m_ActorEditStateList[m_NowSelectIndex].MovieState;
@@ -261,7 +261,7 @@ void CActorEditor::ActorParameterDraw()
 //---------------------------.
 // 座標の表示.
 //---------------------------.
-void CActorEditor::PositionDraw( const char* c, const D3DXVECTOR3& pos )
+void CMovieActorEditor::PositionDraw( const char* c, const D3DXVECTOR3& pos )
 {
 	std::string msg = c;
 	msg += "\n x : %f\n y : %f\n z : %f\n";
@@ -274,7 +274,7 @@ void CActorEditor::PositionDraw( const char* c, const D3DXVECTOR3& pos )
 //---------------------------.
 // リストの追加.
 //---------------------------.
-void CActorEditor::PushList( const EActorNo& no )
+void CMovieActorEditor::PushList( const EActorNo& no )
 {
 	switch( no )
 	{
@@ -302,7 +302,7 @@ void CActorEditor::PushList( const EActorNo& no )
 //---------------------------.
 // リストのサイズを取得.
 //---------------------------.
-int CActorEditor::GetListSize( const EActorNo& no )
+int CMovieActorEditor::GetListSize( const EActorNo& no )
 {
 	switch( no )
 	{
@@ -319,7 +319,7 @@ int CActorEditor::GetListSize( const EActorNo& no )
 //---------------------------.
 // アクター番号を文字に変換.
 //---------------------------.
-std::string CActorEditor::ActorNoToString( const EActorNo& no )
+std::string CMovieActorEditor::ActorNoToString( const EActorNo& no )
 {
 	switch( no )
 	{
@@ -337,7 +337,7 @@ std::string CActorEditor::ActorNoToString( const EActorNo& no )
 //---------------------------.
 // 各メッシュの取得.
 //---------------------------.
-CDX9SkinMesh* CActorEditor::GetSkinMesh( const EActorNo& no, const int& index )
+CDX9SkinMesh* CMovieActorEditor::GetSkinMesh( const EActorNo& no, const int& index )
 {
 	switch( no )
 	{
@@ -354,7 +354,7 @@ CDX9SkinMesh* CActorEditor::GetSkinMesh( const EActorNo& no, const int& index )
 //------------------------------------.
 // ImGuiでゲームパッド操作を有効にする.
 //------------------------------------.
-void CActorEditor::OnImGuiGamepad()
+void CMovieActorEditor::OnImGuiGamepad()
 {
 	// ImGuiでコントローラー操作を有効化.
 	CImGuiManager::EnableGamepad();
@@ -365,7 +365,7 @@ void CActorEditor::OnImGuiGamepad()
 //------------------------------------.
 // ImGuiでゲームパッド操作を無効にする.
 //------------------------------------.
-void CActorEditor::OffImGuiGamepad()
+void CMovieActorEditor::OffImGuiGamepad()
 {
 	// ImGuiでコントローラー操作を無効化.
 	CImGuiManager::DisableGamepad();

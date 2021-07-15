@@ -1,7 +1,7 @@
 #include "MovieEdtor.h"
 #include "..\..\Object\Movie\Movie.h"
 #include "CameraEditor/CameraEditor.h"
-#include "ActorEditor/ActorEditor.h"
+#include "ActorEditor/MovieActorEditor.h"
 #include "WidgetEditor/WidgetEditor.h"
 #include "..\StageEditor\StageRender\StageRender.h"
 #include "..\..\Object\Movie\MovieDataLoader\MovieDataLoader.h"
@@ -11,7 +11,7 @@ CMovieEditor::CMovieEditor()
 	, m_pMovieDataLoader	( std::make_unique<CMovieDataLoader>() )
 	, m_pMovie				( std::make_unique<CMovie>() )
 	, m_pCameraEdit			( std::make_unique<CCameraEditor>() )
-	, m_pActorEdit			( std::make_unique<CActorEditor>() )
+	, m_pActorEdit			( std::make_unique<CMovieActorEditor>() )
 	, m_pWidgetEditor		( std::make_unique<CWidgetEditor>() )
 	, m_pStageRender		( std::make_unique<CStageRender>() )
 	, m_NowStage			( EStageNo_Enemy )

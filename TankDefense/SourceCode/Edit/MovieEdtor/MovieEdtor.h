@@ -7,7 +7,7 @@
 
 class CMovie;			// ムービー(演出)クラス.
 class CCameraEditor;	// カメラエディタ.
-class CActorEditor;		// アクターエディタ.
+class CMovieActorEditor;// アクターエディタ.
 class CWidgetEditor;	// ウィジェットエディタ.
 class CStageRender;		// ステージ描画クラス.
 class CMovieDataLoader;	// ムービデータ読み込みクラス.
@@ -55,7 +55,7 @@ private:
 	std::unique_ptr<CMovieDataLoader>			m_pMovieDataLoader;	// ムービー読み込みクラス.
 	std::unique_ptr<CMovie>						m_pMovie;			// ムービー.
 	std::unique_ptr<CCameraEditor>				m_pCameraEdit;		// カメラエディタ.
-	std::unique_ptr<CActorEditor>				m_pActorEdit;		// アクターエディタ.
+	std::unique_ptr<CMovieActorEditor>			m_pActorEdit;		// アクターエディタ.
 	std::unique_ptr<CWidgetEditor>				m_pWidgetEditor;	// ウィジェットエディタ.
 	std::unique_ptr<CStageRender>				m_pStageRender;		// ステージの描画.
 	EStageNo	m_NowStage;			// 現在のステージ.

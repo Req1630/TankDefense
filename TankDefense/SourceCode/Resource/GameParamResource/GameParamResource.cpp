@@ -24,6 +24,7 @@ CGameParamResource* CGameParamResource::GetInstance()
 //-------------------------------.
 void CGameParamResource::ReadAllParam()
 {
-	GetInstance()->m_ParamList.emplace_back( ReadParam<COutLineRender::OUTLINE_CBUFFER>(EParamNo::OutLine) );
-	GetInstance()->m_ParamList.emplace_back( ReadParam<CDownSamplingRender::SDownSamplePrame>(EParamNo::DownSamle) );
+	GetInstance()->m_ParamList.emplace_back( ReadingParam<SPlayerParam>(EParamNo::Player) );
+	GetInstance()->m_ParamList.emplace_back( ReadingParam<COutLineRender::OUTLINE_CBUFFER>(EParamNo::OutLine) );
+	GetInstance()->m_ParamList.emplace_back( ReadingParam<CDownSamplingRender::SDownSamplePrame>(EParamNo::DownSamle) );
 }

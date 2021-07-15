@@ -125,21 +125,6 @@ void CImGuiManager::PushRenderProc( std::function<void()> proc )
 	GetInstance()->m_RenderQueue.push( proc );
 }
 
-void CImGuiManager::DragDouble( const char* label, double* v, const double& speed )
-{
-	ImGui::DragFloat( label, (float*)v, (float)speed, -1000.0f, 1000.0f, "%.5f" );
-}
-
-void CImGuiManager::DragFloat( const char* label, float* v, const float& speed  )
-{
-	ImGui::DragFloat( label, v, speed, -1000.0f, 1000.0f, "%.5f" );
-}
-
-void CImGuiManager::DragInt( const char* label, int* v, const float& speed )
-{
-	ImGui::DragInt( label, v, speed, -1000, 1000 );
-}
-
 //----------------------.
 // ヘルプマークの表示.
 //----------------------.
