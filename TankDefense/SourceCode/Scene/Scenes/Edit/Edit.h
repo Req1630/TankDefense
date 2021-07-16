@@ -9,6 +9,7 @@ class CStageEditor;
 class CEnemySpawnRangeEditor;
 class CMovieEditor;
 class CEditPlayer;
+class CActorEditor;
 
 /**********************************
 *	エディタシーンクラス.

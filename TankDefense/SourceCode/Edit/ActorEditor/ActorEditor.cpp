@@ -33,8 +33,11 @@ void CActorEditor::Update()
 //---------------------------------.
 bool CActorEditor::ImGuiRender()
 {
+	if( BeginTab("ActorEdit") == false ) return false;
+
 	m_pPlayerEdit->ImGuiRender();
 
+	EndTab();
 	return true;
 }
 

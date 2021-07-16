@@ -1,4 +1,5 @@
 #include "PlayerEditor.h"
+#include "PlayerParam.h"
 
 CPlayerEditor::CPlayerEditor()
 {
@@ -14,7 +15,8 @@ CPlayerEditor::~CPlayerEditor()
 //------------------------------------.
 bool CPlayerEditor::Init()
 {
-	if( ReadingParam() == false ) return false;
+	if( ReadingParam()									== false ) return false;
+	if( ReadingDragParameter(PLAYER_PARAM_FILE_PATH)	== false ) return false;
 
 	return true;
 }
@@ -31,6 +33,7 @@ void CPlayerEditor::Update()
 //------------------------------------.
 bool CPlayerEditor::ImGuiRender()
 {
+	EditParameterDraw( EPlayerParamNo_Max );
 	return true;
 }
 
