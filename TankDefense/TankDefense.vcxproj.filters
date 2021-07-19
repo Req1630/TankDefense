@@ -124,6 +124,7 @@
     <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\EachActorEditorBase.cpp" />
     <ClCompile Include="SourceCode\Edit\MovieEdtor\ActorEditor\MovieActorEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\PlayerEditor\PlayerEditor.cpp" />
+    <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\EnemyEditor\EnemyEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -254,6 +255,7 @@
     <ClInclude Include="SourceCode\Edit\MovieEdtor\ActorEditor\MovieActorEditor.h" />
     <ClInclude Include="SourceCode\Edit\ActorEditor\EachActorEditor\PlayerEditor\PlayerEditor.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Player\PlayerParameter.h" />
+    <ClInclude Include="SourceCode\Edit\ActorEditor\EachActorEditor\EnemyEditor\EnemyEditor.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

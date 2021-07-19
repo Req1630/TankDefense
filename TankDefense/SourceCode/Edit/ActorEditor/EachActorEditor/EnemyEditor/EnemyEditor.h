@@ -1,17 +1,17 @@
-#ifndef PLAYER_EDITOR_H
-#define PLAYER_EDITOR_H
+#ifndef ENEMY_EDITOR_H
+#define ENEMY_EDITOR_H
 
 #include "..\EachActorEditorBase.h"
 #include "..\..\..\..\Object\GameObject\Actor\Player\PlayerParameter.h"
 
 /************************************
-*	プレイヤーエディタ.
+*	エネミーエディタ.
 **/
-class CPlayerEditor : public CEachActorEditorBase<SPlayerParam>
+class CEnemyEditor : public CEachActorEditorBase<SPlayerParam>
 {
 public:
-	CPlayerEditor();
-	virtual ~CPlayerEditor();
+	CEnemyEditor();
+	virtual ~CEnemyEditor();
 
 	// 初期化.
 	virtual bool Init() override;
@@ -23,4 +23,4 @@ public:
 	virtual void ModelRender() override;
 };
 
-#endif	// #ifndef PLAYER_EDITOR_H.
+#endif	// #ifndef ENEMY_EDITOR_H.

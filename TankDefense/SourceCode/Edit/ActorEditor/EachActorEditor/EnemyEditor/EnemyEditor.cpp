@@ -1,22 +1,20 @@
-#include "PlayerEditor.h"
-#include "PlayerParam.h"
+#include "EnemyEditor.h"
 
-CPlayerEditor::CPlayerEditor()
+CEnemyEditor::CEnemyEditor()
 {
 	m_PrameterNo = EParamNo::Player;
 }
 
-CPlayerEditor::~CPlayerEditor()
+CEnemyEditor::~CEnemyEditor()
 {
 }
 
 //------------------------------------.
 // èâä˙âª.
 //------------------------------------.
-bool CPlayerEditor::Init()
+bool CEnemyEditor::Init()
 {
-	if( ReadingParam()									== false ) return false;
-	if( ReadingDragParameter(PLAYER_PARAM_FILE_PATH)	== false ) return false;
+	if( ReadingParam() == false ) return false;
 
 	return true;
 }
@@ -24,17 +22,16 @@ bool CPlayerEditor::Init()
 //------------------------------------.
 // çXêV.
 //------------------------------------.
-void CPlayerEditor::Update()
+void CEnemyEditor::Update()
 {
 }
 
 //------------------------------------.
 // ImGuiï`âÊ.
 //------------------------------------.
-bool CPlayerEditor::ImGuiRender()
+bool CEnemyEditor::ImGuiRender()
 {
-
-	EditParameterDraw( EPlayerParamNo_Max );
+	ImGui::Text("test");
 
 	return true;
 }
@@ -42,6 +39,6 @@ bool CPlayerEditor::ImGuiRender()
 //------------------------------------.
 // ÉÇÉfÉãï`âÊ.
 //------------------------------------.
-void CPlayerEditor::ModelRender()
+void CEnemyEditor::ModelRender()
 {
 }

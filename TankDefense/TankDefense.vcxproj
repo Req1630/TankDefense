@@ -182,6 +182,7 @@
     <ClCompile Include="SourceCode\Common\Sprite\SpriteRender.cpp" />
     <ClCompile Include="SourceCode\Edit\ActorEditor\ActorEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\EachActorEditorBase.cpp" />
+    <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\EnemyEditor\EnemyEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\PlayerEditor\PlayerEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\EditorBase.cpp" />
     <ClCompile Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.cpp" />
@@ -324,6 +325,7 @@
     <ClInclude Include="SourceCode\Common\Sprite\SpriteStruct.h" />
     <ClInclude Include="SourceCode\Edit\ActorEditor\ActorEditor.h" />
     <ClInclude Include="SourceCode\Edit\ActorEditor\EachActorEditor\EachActorEditorBase.h" />
+    <ClInclude Include="SourceCode\Edit\ActorEditor\EachActorEditor\EnemyEditor\EnemyEditor.h" />
     <ClInclude Include="SourceCode\Edit\ActorEditor\EachActorEditor\PlayerEditor\PlayerEditor.h" />
     <ClInclude Include="SourceCode\Edit\EditorBase.h" />
     <ClInclude Include="SourceCode\Edit\EnemySpawnRangeEditor\EnemySpawnRangeEditor.h" />
