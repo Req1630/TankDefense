@@ -104,13 +104,13 @@ void CTitle::Update()
 	CDebugText::PushText( "vec X : ", m_effect2.GetTotalInstanceCount() );
 	CDebugText::PushText( "vec Y : ", m_effect1.GetTotalInstanceCount() );
 	CDebugText::PushText( "vec Z : ", vec.z );
-	if( CKeyInput::IsMomentPress('G') == true ){
-		SetSceneChange();
-	}
-	if( CKeyInput::IsMomentPress('E') == true ){
-		SetSceneChange();
-		m_pSceneManager->ChangeEditScene();
-	}
+	//if( CKeyInput::IsMomentPress('G') == true ){
+	//	SetSceneChange();
+	//}
+	//if( CKeyInput::IsMomentPress('E') == true ){
+	//	SetSceneChange();
+	//	m_pSceneManager->ChangeEditScene();
+	//}
 
 	m_pPlayer->Update( GetDeltaTime<float>() );
 }
@@ -120,7 +120,7 @@ void CTitle::Update()
 //============================.
 void CTitle::ModelRender()
 {
-	m_pStaticMesh->Render();
+//	m_pStaticMesh->Render();
 	m_pSkinMesh->Render();
 
 	SSpriteRenderState s = m_Sprite->GetRenderState();

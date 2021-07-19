@@ -3,6 +3,7 @@
 #include "..\Lighting\Lighting.h"
 #include "..\OutLine\OutLine.h"
 #include "..\Bloom\Bloom.h"
+#include "..\CascadedShadowMap\CascadedShadowMap.h"
 #include "..\..\Shader\Shader.h"
 #include "..\..\..\Utility\ImGuiManager\ImGuiManager.h"
 #include "..\..\..\Utility\BitFlagManager\BitFlagManager.h"
@@ -21,12 +22,15 @@ CRenderingTexterManager::CRenderingTexterManager()
 	, m_pLighting			( nullptr )
 	, m_pOutLine			( nullptr )
 	, m_pBloom				( nullptr )
+	, m_pShadowMap			( nullptr )
 	, m_RenderFlag			( 0 )
 {
-	m_pGBuffer	= std::make_unique<CGBufferRender>();
-	m_pLighting	= std::make_unique<CLightingRender>();
-	m_pOutLine	= std::make_unique<COutLineRender>();
-	m_pBloom	= std::make_unique<CBloomRender>();
+	m_pGBuffer		= std::make_unique<CGBufferRender>();
+	m_pLighting		= std::make_unique<CLightingRender>();
+	m_pOutLine		= std::make_unique<COutLineRender>();
+	m_pBloom		= std::make_unique<CBloomRender>();
+	m_pShadowMap	= CCascadedShadowMap::GetInstance();
+
 	bit::OnBitFlag( &m_RenderFlag, ERenderFlag_OllOn );
 }
 
@@ -46,6 +50,7 @@ HRESULT CRenderingTexterManager::Init( ID3D11DeviceContext* pContext11 )
 	if( FAILED( m_pLighting->Init( pContext11 ) ))	return E_FAIL;
 	if( FAILED( m_pOutLine->Init( pContext11 ) ))	return E_FAIL;
 	if( FAILED( m_pBloom->Init( pContext11 ) ))		return E_FAIL;
+	if( FAILED( m_pShadowMap->Init( pContext11 )))	return E_FAIL;
 
 	return S_OK;
 }
@@ -71,8 +76,11 @@ void CRenderingTexterManager::Release()
 // ï`âÊä÷êî.
 void CRenderingTexterManager::Render( std::function<void()>& modelRender )
 {
-	m_pGBuffer->SetBuffer();
+	m_pShadowMap->Update();
+	modelRender();			// ÉÇÉfÉãÇÃï`âÊ.
+	m_pShadowMap->SetEndRender();
 
+	m_pGBuffer->SetBuffer();
 	modelRender();	// ÉÇÉfÉãÇÃï`âÊ.
 
 	// Ç±Ç±Ç©ÇÁîwñ Çï`âÊÇ≥ÇπÇ»Ç¢.
@@ -117,6 +125,12 @@ void CRenderingTexterManager::Render( std::function<void()>& modelRender )
 			ImGui::Begin( "RenderingTexture" );
 			const float size = ImGui::GetWindowWidth() / static_cast<float>(m_WndWidth)*0.9f;
 			const ImVec2 imageSize = { static_cast<float>(m_WndWidth)*size, static_cast<float>(m_WndHeight)*size };
+			if( ImGui::TreeNode("Shadow") ){
+				for( int i = 0; i <  m_pShadowMap->GetSRVCount(); i++ ){
+					ImGui::Image( m_pShadowMap->GetShaderResourceViewList()[i], imageSize );
+				}
+				ImGui::TreePop();
+			}
 			if( ImGui::TreeNode("G-Buffer") ){
 				for( int i = 0; i <  m_pGBuffer->GetSRVCount(); i++ ){
 					ImGui::Image( m_pGBuffer->GetShaderResourceViewList()[i], imageSize );

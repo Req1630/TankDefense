@@ -1,6 +1,7 @@
 #include "Dx9StaticMesh.h"
 #include "..\..\..\Object\CameraBase\CameraManager\CameraManager.h"
 #include "..\..\..\Object\LightBase\LightManager\LightManager.h"
+#include "..\..\RenderingTextuer\CascadedShadowMap\CascadedShadowMap.h"
 #include "..\..\Shader\Shader.h"
 
 // シェーダーファイル名.
@@ -25,7 +26,26 @@ CDX9StaticMesh::CDX9StaticMesh()
 	, m_pMaterials			( nullptr )
 	, m_NumAttr				( 0 )
 	, m_AttrID				()
+	, m_ShadowRenderFunc	()
 {
+	m_pShadowMap = CCascadedShadowMap::GetInstance();
+	m_ShadowRenderFunc = [&]()
+	{ 
+		// 頂点バッファをセット.
+		UINT stride = m_pMesh->GetNumBytesPerVertex();
+		UINT offset = 0;
+		m_pContext11->IASetVertexBuffers(
+			0, 1, &m_pVertexBuffer, &stride, &offset);
+		// プリミティブ・トポロジーをセット.
+		m_pContext11->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+		// 属性の数だけ、それぞれの属性のインデックスバッファを描画.
+		for( DWORD No = 0; No < m_NumAttr; No++ ){
+			// インデックスバッファをセット.
+			m_pContext11->IASetIndexBuffer( m_ppIndexBuffer[No], DXGI_FORMAT_R32_UINT, 0 );
+			// ポリゴンをレンダリング.
+			m_pContext11->DrawIndexed( m_pMaterials[m_AttrID[No]].dwNumFace*3, 0, 0 );
+		}
+	};
 }
 
 CDX9StaticMesh::~CDX9StaticMesh()
@@ -396,6 +416,9 @@ void CDX9StaticMesh::Render()
 	// ワールド行列.
 	D3DXMATRIX mWorld = m_Tranceform.GetWorldMatrix();
 
+	// 頂点インプットレイアウトをセット.
+	m_pContext11->IASetInputLayout(m_pVertexLayout);
+	if( m_pShadowMap->Render( false, mWorld, m_ShadowRenderFunc ) == true ) return;
 
 	// 使用するシェーダーのセット.
 	m_pContext11->VSSetShader( m_pVertexShader, nullptr, 0 );
@@ -474,9 +497,6 @@ void CDX9StaticMesh::RenderMesh(
 
 	m_pContext11->VSSetConstantBuffers( 0, 1, &m_pCBufferPerMesh );
 	m_pContext11->PSSetConstantBuffers( 0, 1, &m_pCBufferPerMesh );
-
-	// 頂点インプットレイアウトをセット.
-	m_pContext11->IASetInputLayout(m_pVertexLayout);
 
 	// プリミティブ・トポロジーをセット.
 	m_pContext11->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );

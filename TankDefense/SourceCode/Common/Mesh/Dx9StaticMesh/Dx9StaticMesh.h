@@ -4,6 +4,10 @@
 #include "..\..\Common.h"
 #include "..\MeshStruct.h"
 
+#include <functional>
+
+class CCascadedShadowMap;
+
 /*************************************************
 *	スタティックメッシュ.
 **/
@@ -87,7 +91,7 @@ private:
 	void RenderMesh(
 		D3DXMATRIX& mWorld, 
 		const D3DXMATRIX& mView, 
-		const D3DXMATRIX& mProj);
+		const D3DXMATRIX& mProj );
 	
 private:
 	HWND				m_hWnd;					// ウィンドウハンドル.
@@ -103,6 +107,8 @@ private:
 	ID3D11Buffer**		m_ppIndexBuffer;		// インデックスバッファ.
 	ID3D11SamplerState*	m_pSampleLinear;		// サンプラ.
 
+	CCascadedShadowMap*	m_pShadowMap;			// シャドウマップ(外部からポインタを取得.).
+
 	LPD3DXMESH			m_pMesh;				// メッシュオブジェクト.
 	LPD3DXMESH			m_pMeshForRay;			// レイとの当たり判定用メッシュオブジェクト.
 	DWORD				m_NumMaterials;			// マテリアル数.
@@ -110,6 +116,8 @@ private:
 	MY_MATERIAL*	m_pMaterials;				// マテリアル構造体.
 	DWORD			m_NumAttr;					// 属性数.
 	DWORD			m_AttrID[300];				// 属性ID ※300属性まで.
+
+	std::function<void()>	m_ShadowRenderFunc;
 
  };
 

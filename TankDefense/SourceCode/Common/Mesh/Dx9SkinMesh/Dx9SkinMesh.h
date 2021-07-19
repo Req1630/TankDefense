@@ -9,6 +9,10 @@
 #include "..\..\Common.h"
 #include "..\MeshStruct.h"
 
+#include <functional>
+
+class CCascadedShadowMap;
+
 struct stAnimationController
 {
 	LPD3DXANIMATIONCONTROLLER	pAC;
@@ -178,6 +182,8 @@ private:
 	ID3D11Buffer*			m_pCBufferPerFrame;		//コンスタントバッファ(フレーム毎).
 	ID3D11Buffer*			m_pCBufferPerBone;		//コンスタントバッファ(ボーン毎).
 
+	CCascadedShadowMap*		m_pShadowMap;			// シャドウマップ(外部からポインタを取得.).
+
 	D3DXMATRIX		m_mWorld;
 	D3DXMATRIX		m_mRotation;
 
@@ -205,6 +211,8 @@ private:
 
 	//アニメーションフレーム.
 	int		m_iFrame;
+
+	std::function<void(SKIN_PARTS_MESH* pMesh)>	m_ShadowRenderFunc;
 
 	HRESULT InitShader();
 	HRESULT CreateIndexBuffer( DWORD dwSize, int* pIndex, ID3D11Buffer** ppIndexBuffer );

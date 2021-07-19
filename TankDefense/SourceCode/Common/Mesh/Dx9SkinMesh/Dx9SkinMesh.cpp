@@ -7,6 +7,7 @@
 #include "..\..\Shader\Shader.h"
 #include "..\..\..\Object\CameraBase\CameraManager\CameraManager.h"
 #include "..\..\..\Object\LightBase\LightManager\LightManager.h"
+#include "..\..\RenderingTextuer\CascadedShadowMap\CascadedShadowMap.h"
 
 //シェーダ名(ディレクトリも含む)
 const char SHADER_VS_NAME[] = "Data\\Shader\\SkinMesh.hlsl";
@@ -42,8 +43,48 @@ CDX9SkinMesh::CDX9SkinMesh()
 	, m_pD3dxMesh(nullptr)
 	, m_FilePath()
 	, m_iFrame()
+	, m_ShadowRenderFunc()
 {
+	m_pShadowMap = CCascadedShadowMap::GetInstance();
+	m_ShadowRenderFunc = [&](SKIN_PARTS_MESH* pMesh)
+	{ 
+		//アニメーションフレームを進める スキンを更新.
+		D3D11_MAPPED_SUBRESOURCE pData;
+		if( SUCCEEDED(
+			m_pContext11->Map(
+			m_pCBufferPerBone, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData ) ) )
+		{
+			CBUFFER_PER_BONES cb;
+			for( int i=0; i<pMesh->iNumBone; i++ )
+			{
+				D3DXMATRIX mat = GetCurrentPoseMatrix( pMesh, i );
+				D3DXMatrixTranspose( &mat, &mat );
+				cb.mBone[i] = mat;
+			}
+			memcpy_s( pData.pData, pData.RowPitch, (void*)&cb, sizeof( cb ) );
+			m_pContext11->Unmap(m_pCBufferPerBone, 0 );
+		}
+		m_pContext11->VSSetConstantBuffers(	1, 1, &m_pCBufferPerBone);
+		m_pContext11->PSSetConstantBuffers(	1, 1, &m_pCBufferPerBone);
 
+
+		//頂点ﾊﾞｯﾌｧをｾｯﾄ.
+		UINT stride = sizeof( MY_SKINVERTEX );
+		UINT offset = 0;
+		m_pContext11->IASetVertexBuffers(
+			0, 1, &pMesh->pVertexBuffer, &stride, & offset );
+		//ﾌﾟﾘﾐﾃｨﾌﾞ・ﾄﾎﾟﾛｼﾞｰをｾｯﾄ.
+		m_pContext11->IASetPrimitiveTopology(
+			D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		//属性の数だけ、それぞれの属性のｲﾝﾃﾞｯｸｽﾊﾞｯﾌｧを描画.
+		for( DWORD i=0; i<pMesh->dwNumMaterial; i++ )
+		{
+			m_pContext11->IASetIndexBuffer(
+				pMesh->ppIndexBuffer[i], DXGI_FORMAT_R32_UINT, 0 );
+			//ﾌﾟﾘﾐﾃｨﾌﾞ(ﾎﾟﾘｺﾞﾝ)をﾚﾝﾀﾞﾘﾝｸﾞ.
+			m_pContext11->DrawIndexed( pMesh->pMaterial[i].dwNumFace * 3, 0, 0 );
+		}
+	};
 }
 
 
@@ -685,26 +726,27 @@ VOID CDX9SkinMesh::DrawFrame( LPD3DXFRAME p )
 	}
 }
 
-
 //パーツメッシュを描画.
 void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYMESHCONTAINER* pContainer )
 {
+	//ワールド行列.
+	m_mWorld = m_Tranceform.GetWorldMatrix();
+
+	std::function<void()> func = [&]()
+	{
+		m_ShadowRenderFunc(pMesh);
+	};
+
+	//頂点インプットレイアウトをセット.
+	m_pContext11->IASetInputLayout(	m_pVertexLayout );
+	SetNewPoseMatrices( pMesh, m_iFrame, pContainer );
+	if( m_pShadowMap->Render( true, m_mWorld, func ) == true ) return;
+
 	D3D11_MAPPED_SUBRESOURCE pData;
 
 	//使用するシェーダのセット.
 	m_pContext11->VSSetShader( m_pVertexShader, nullptr, 0 );
 	m_pContext11->PSSetShader( m_pPixelShader, nullptr, 0 );
-
-	//ワールド行列.
-	m_mWorld = m_Tranceform.GetWorldMatrix();
-
-
-	//アニメーションフレームを進める スキンを更新.
-	m_iFrame++;
-	if( m_iFrame >= 3600 ){
-		m_iFrame = 0;
-	}
-	SetNewPoseMatrices( pMesh, m_iFrame, pContainer );
 
 	//------------------------------------------------.
 	//	コンスタントバッファに情報を送る(ボーン).
@@ -732,9 +774,6 @@ void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYME
 	UINT offset = 0;
 	m_pContext11->IASetVertexBuffers(
 		0, 1, &pMesh->pVertexBuffer, &stride, & offset );
-
-	//頂点インプットレイアウトをセット.
-	m_pContext11->IASetInputLayout(	m_pVertexLayout );
 
 	//プリミティブ・トポロジーをセット.
 	m_pContext11->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );

@@ -8,6 +8,7 @@ class CGBufferRender;
 class CLightingRender;
 class COutLineRender;
 class CBloomRender;
+class CCascadedShadowMap;
 
 /********************************************
 *	レンダリングテクスチャの管理クラス.
@@ -63,6 +64,7 @@ private:
 	std::unique_ptr<CLightingRender>	m_pLighting;
 	std::unique_ptr<COutLineRender>		m_pOutLine;
 	std::unique_ptr<CBloomRender>		m_pBloom;
+	CCascadedShadowMap*					m_pShadowMap;	// シングルトン用.
 	unsigned int						m_RenderFlag;
 };
 

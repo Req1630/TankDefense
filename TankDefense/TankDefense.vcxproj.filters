@@ -9,6 +9,7 @@
     <FxCompile Include="Data\Shader\Aura.hlsl" />
     <FxCompile Include="Data\Shader\RenderTexture\LastRenderTexture_PS.hlsl" />
     <FxCompile Include="Data\Shader\RenderTexture\FXAA.hlsl" />
+    <FxCompile Include="Data\Shader\ShadowMap.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Library\ImGui\imgui.cpp" />
@@ -37,7 +38,6 @@
     <ClCompile Include="SourceCode\Common\RenderingTextuer\OutLine\OutLine.cpp" />
     <ClCompile Include="SourceCode\Common\RenderingTextuer\RenderingTextuer.cpp" />
     <ClCompile Include="SourceCode\Common\RenderingTextuer\RenderingTextuerManager\RenderingTextuerManager.cpp" />
-    <ClCompile Include="SourceCode\Common\RenderingTextuer\Shadow\Shadow.cpp" />
     <ClCompile Include="SourceCode\Common\RenderingTextuer\WatercolorPainting\WatercolorPainting.cpp" />
     <ClCompile Include="SourceCode\Common\Shader\Shader.cpp" />
     <ClCompile Include="SourceCode\Common\Sprite\Sprite.cpp" />
@@ -125,6 +125,7 @@
     <ClCompile Include="SourceCode\Edit\MovieEdtor\ActorEditor\MovieActorEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\PlayerEditor\PlayerEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\EnemyEditor\EnemyEditor.cpp" />
+    <ClCompile Include="SourceCode\Common\RenderingTextuer\CascadedShadowMap\CascadedShadowMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -155,7 +156,6 @@
     <ClInclude Include="SourceCode\Common\RenderingTextuer\OutLine\OutLine.h" />
     <ClInclude Include="SourceCode\Common\RenderingTextuer\RenderingTextuer.h" />
     <ClInclude Include="SourceCode\Common\RenderingTextuer\RenderingTextuerManager\RenderingTextuerManager.h" />
-    <ClInclude Include="SourceCode\Common\RenderingTextuer\Shadow\Shadow.h" />
     <ClInclude Include="SourceCode\Common\RenderingTextuer\WatercolorPainting\WatercolorPainting.h" />
     <ClInclude Include="SourceCode\Common\Shader\Shader.h" />
     <ClInclude Include="SourceCode\Common\Sprite\Sprite.h" />
@@ -256,6 +256,7 @@
     <ClInclude Include="SourceCode\Edit\ActorEditor\EachActorEditor\PlayerEditor\PlayerEditor.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Player\PlayerParameter.h" />
     <ClInclude Include="SourceCode\Edit\ActorEditor\EachActorEditor\EnemyEditor\EnemyEditor.h" />
+    <ClInclude Include="SourceCode\Common\RenderingTextuer\CascadedShadowMap\CascadedShadowMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
