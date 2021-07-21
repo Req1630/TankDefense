@@ -120,13 +120,18 @@ void CTitle::Update()
 //============================.
 void CTitle::ModelRender()
 {
-//	m_pStaticMesh->Render();
+	m_pStaticMesh->Render();
 	m_pSkinMesh->Render();
 
-	SSpriteRenderState s = m_Sprite->GetRenderState();
-	s.Tranceform.Scale = { 3.0f, 3.0f, 3.0f };
-	s.Color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	m_Sprite->Render3D( false, &s );
+	CDX9StaticMesh* pStaticMesh = CMeshResorce::GetStatic("normTest");
+
+	pStaticMesh->SetPosition( { -2.0f, 3.0f, -10.0f } );
+	pStaticMesh->Render();
+
+	//SSpriteRenderState s = m_Sprite->GetRenderState();
+	//s.Tranceform.Scale = { 3.0f, 3.0f, 3.0f };
+	//s.Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	//m_Sprite->Render3D( false, &s );
 
 	m_effect2.Render();
 	m_effect1.Render();

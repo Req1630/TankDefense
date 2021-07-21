@@ -31,6 +31,15 @@ class CCascadedShadowMap : public CRenderTexture
 	};
 
 public:
+	static const int CASCADED_NUM	= 4;	// 分割数.
+
+	struct CBUFFER_PER_SHADOW
+	{
+		D3DXMATRIX	ShadowVP[CASCADED_NUM];
+		D3DXVECTOR4	SpritPos[CASCADED_NUM];
+	};
+
+public:
 	CCascadedShadowMap();
 	virtual ~CCascadedShadowMap();
 
@@ -51,7 +60,10 @@ public:
 	// バッファの設定.
 	virtual void SetBuffer() override;
 	// シェーダーリソースビューの数を取得.
-	virtual int GetSRVCount() override { return m_CascadedNum; }
+	virtual int GetSRVCount() override { return CASCADED_NUM; }
+
+	std::vector<D3DXMATRIX>&	GetShadowMatrix()	{ return m_ShadowMatrix; };
+	std::vector<float>&			GetSpritPosition()	{ return m_SplitPos; };
 
 protected:
 	// テクスチャの初期化.
@@ -64,7 +76,8 @@ private:
 	// 平行分割処理.
 	void ComputeSplitPositions(
 		const int splitCount, const float lamda, 
-		const float nearClip, const float farClip );
+		const float nearClip, const float farClip,
+		std::vector<float>& spritPos );
 	// 分割した視錘台の8角をもとめて，ライトのビュー射影空間でAABBを求める.
 	SBBox CalculateFrustum( float nearClip, float farClip, D3DXMATRIX& viewProj );
 	// クロップ行列を求める.
@@ -79,7 +92,8 @@ private:
 	D3DXMATRIX				m_ViewMatrix;			// ビュー.
 	float					m_MaxClipDistance;		// 最大クリッピング距離.
 	float					m_MinClipDistance;		// 最小クリッピング距離.
-	int						m_CascadedNum;			// 分割数.
+	float					m_AspectWindow;			// ウィンドウのアスペクト比.
+	float					m_FovCamera;			// カメラの比率.
 	bool					m_IsEndRender;
 
 private:

@@ -34,7 +34,7 @@ bool CPlayer::Init()
 	m_pSkinMesh->SetAnimSpeed( GetDeltaTime<double>() );
 
 	m_pBullet = new CBullet();
-
+	CCameraManager::ChangeCamera( m_pLookCamera.get() );
 	return true;
 }
 
@@ -64,7 +64,7 @@ void CPlayer::Update( const float & deltaTime )
 
 	//ƒJƒƒ‰‚ðÝ’è.
 	m_pLookCamera->RotationLookAtObject( m_pos, speed );
-	CCameraManager::ChangeCamera( m_pLookCamera.get() );
+	
 
 	m_pBullet->Update( m_DeltaTime );
 }

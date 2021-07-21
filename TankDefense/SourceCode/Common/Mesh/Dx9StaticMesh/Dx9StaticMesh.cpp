@@ -417,11 +417,13 @@ void CDX9StaticMesh::Render()
 	D3DXMATRIX mWorld = m_Tranceform.GetWorldMatrix();
 
 	// 頂点インプットレイアウトをセット.
-	m_pContext11->IASetInputLayout(m_pVertexLayout);
+	m_pContext11->IASetInputLayout( m_pVertexLayout );
 	if( m_pShadowMap->Render( false, mWorld, m_ShadowRenderFunc ) == true ) return;
 
 	// 使用するシェーダーのセット.
 	m_pContext11->VSSetShader( m_pVertexShader, nullptr, 0 );
+
+#if 0
 	m_pContext11->PSSetShader( m_pPixelShader, nullptr, 0 );
 
 	// シェーダーのコンスタントバッファに各種データを渡す.
@@ -454,6 +456,8 @@ void CDX9StaticMesh::Render()
 
 	m_pContext11->VSSetConstantBuffers( 2, 1, &m_pCBufferPerFrame);
 	m_pContext11->PSSetConstantBuffers( 2, 1, &m_pCBufferPerFrame);
+
+#endif
 
 	D3DXMATRIX mView = CCameraManager::GetViewMatrix();
 	D3DXMATRIX mProj = CCameraManager::GetProjMatrix();

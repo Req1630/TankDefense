@@ -5,11 +5,9 @@
 
 namespace
 {
-	constexpr char	SHADER_NAME[]		= "Data\\Shader\\ShadowMap.hlsl";	// ピクセルシェーダー名.
-	constexpr char	VS_SHADER_ENTRY_NAME[]	= "VS_Main";	// ピクセルシェーダーエントリー名.
+	constexpr char	SHADER_NAME[]			= "Data\\Shader\\ShadowMap.hlsl";	// ピクセルシェーダー名.
 	constexpr char	PS_SHADER_ENTRY_NAME[]	= "PS_Main";	// ピクセルシェーダーエントリー名.
-
-	constexpr int CASCADED_NUM			= 4;
+	
 	const D3DXVECTOR3 VIEW_UP_VECTOR	= { 0.0f, 1.0f, 0.0f };	// 上方向ベクトル.
 	const D3DXMATRIX SHADOW_BIAS = 
 	{
@@ -24,12 +22,13 @@ CCascadedShadowMap::CCascadedShadowMap()
 	: m_pSkinVertexShader		( nullptr )
 	, m_pConstantBufferFrame	( nullptr )
 	, m_ShadowMatrix			( CASCADED_NUM )
-	, m_SplitPos				( CASCADED_NUM+1 )
+	, m_SplitPos				( CASCADED_NUM )
 	, m_ProjMatrix				()
 	, m_ViewMatrix				()
 	, m_MaxClipDistance			( 1000.0f )
-	, m_MinClipDistance			( 0.1f )
-	, m_CascadedNum				( CASCADED_NUM )
+	, m_MinClipDistance			( 0.01f )
+	, m_AspectWindow			( 0.0f )
+	, m_FovCamera				( 0.0f )
 	, m_IsEndRender				( false )
 {
 }
@@ -61,6 +60,9 @@ HRESULT CCascadedShadowMap::Init( ID3D11DeviceContext* pContext11 )
 	if( FAILED( InitPixelShader( SHADER_NAME, PS_SHADER_ENTRY_NAME ) )) return E_FAIL;
 	if( FAILED( shader::CreateConstantBuffer( m_pDevice11, &m_pConstantBufferFrame, sizeof(C_CBUFFER) ))) return E_FAIL;
 
+	m_AspectWindow = static_cast<float>(m_WndWidth)/static_cast<float>(m_WndHeight);
+	m_FovCamera = static_cast<float>(3.141519/4.0);
+
 	return S_OK;
 }
 
@@ -70,8 +72,6 @@ HRESULT CCascadedShadowMap::Init( ID3D11DeviceContext* pContext11 )
 void CCascadedShadowMap::Update()
 {
 	m_IsEndRender = false;
-
-	this->SetBuffer();
 
 	D3DXVECTOR3 pos = CLightManager::GetPosition();
 	D3DXVECTOR3 lookPos = CLightManager::GetLookPosition();
@@ -83,27 +83,32 @@ void CCascadedShadowMap::Update()
 		&lookPos,			// カメラ注視座標.
 		&VIEW_UP_VECTOR );	// カメラベクトル.
 
+	const float size = D3DXVec3Length( &(lookPos-pos) );
+	m_MinClipDistance = size * 0.5f;
+	m_MaxClipDistance = size * 1.001f + m_MinClipDistance;
+
 	// プロジェクション(射影)変換.
 	D3DXMatrixOrthoLH(
-		&m_ProjMatrix,			// (out)ProjMatrix.
-		600.0f,					// 視野角.
-		600.0f,					// 画面アスペクト比.
-		m_MinClipDistance,		// 最小描画距離.
-		m_MaxClipDistance );	// 最大描画距離.
+		&m_ProjMatrix,				// (out)ProjMatrix.
+		size,						// 視野角.
+		size,						// 画面アスペクト比.
+		m_MinClipDistance,			// 最小描画距離.
+		m_MaxClipDistance );		// 最大描画距離.
 
 	// 平行分割処理.
-	ComputeSplitPositions( m_CascadedNum, 0.84f, m_MinClipDistance, m_MaxClipDistance );
+	std::vector<float> spritPos( CASCADED_NUM + 1 );
+	ComputeSplitPositions( CASCADED_NUM, 0.84f, 0.01f, 1000.0f, spritPos );
 
 	// カスケード処理.
-	for( int i = 0; i < m_CascadedNum; i++ ){
+	for( int i = 0; i < CASCADED_NUM; i++ ){
 		// ライトのビュー射影行列.
-		m_ShadowMatrix[i] = m_ViewMatrix * m_ProjMatrix * SHADOW_BIAS;
+		m_ShadowMatrix[i] = m_ViewMatrix * m_ProjMatrix;
 
 		// 分割した視錘台の8角をもとめて，
 		//	ライトのビュー射影空間でAABBを求める.
 		SBBox box = CalculateFrustum(
-			m_SplitPos[ i + 0 ],
-			m_SplitPos[ i + 1 ],
+			spritPos[ i + 0 ],
+			spritPos[ i + 1 ],
 			m_ShadowMatrix[ i ] );
 
 		// クロップ行列を求める.
@@ -111,8 +116,14 @@ void CCascadedShadowMap::Update()
 
 		// シャドウマップ行列と分割位置を設定.
 		m_ShadowMatrix[i]	= m_ShadowMatrix[i] * crop;
-		m_SplitPos[i]		= m_SplitPos[i+1];
+		m_SplitPos[i]		= spritPos[i+1];
 	}
+
+	this->SetBuffer();
+	m_pContext11->PSSetShader( m_pPixelShader, nullptr, 0 );	// ピクセルシェーダ.
+
+	m_pContext11->VSSetConstantBuffers( 0, 1, &m_pConstantBufferFrame );	// 頂点シェーダ.
+	m_pContext11->PSSetConstantBuffers( 0, 1, &m_pConstantBufferFrame );	// ピクセルシェーダー.
 }
 
 //------------------------------------.
@@ -124,12 +135,8 @@ bool CCascadedShadowMap::Render( const bool& isSkin, const D3DXMATRIX& mW, std::
 
 	// 使用するシェーダのセット.
 	m_pContext11->VSSetShader( isSkin == true ? m_pSkinVertexShader : m_pVertexShader, nullptr, 0 );	// 頂点シェーダ.
-	m_pContext11->PSSetShader( m_pPixelShader, nullptr, 0 );	// ピクセルシェーダ.
 
-	m_pContext11->VSSetConstantBuffers( 4, 1, &m_pConstantBufferFrame );	// 頂点シェーダ.
-	m_pContext11->PSSetConstantBuffers( 4, 1, &m_pConstantBufferFrame );	// ピクセルシェーダー.
-
-	for( int i = 0; i < m_CascadedNum; i++ ){
+	for( int i = 0; i < CASCADED_NUM; i++ ){
 		// レンダーターゲットの設定.
 		m_pContext11->OMSetRenderTargets( 1, &m_pRenderTargetViewList[i], CDirectX11::GetDepthSV() );
 		// デプスステンシルバッファ.
@@ -170,8 +177,8 @@ void CCascadedShadowMap::SetBuffer()
 HRESULT CCascadedShadowMap::InitBufferTex()
 {
 	D3D11_TEXTURE2D_DESC texDesc;
-	texDesc.Width				= m_WndWidth ;						// 幅.
-	texDesc.Height				= m_WndHeight;						// 高さ.
+	texDesc.Width				= m_WndWidth;								// 幅.
+	texDesc.Height				= m_WndHeight;								// 高さ.
 	texDesc.MipLevels			= 1;								// ミップマップレベル:1.
 	texDesc.ArraySize			= 1;								// 配列数:1.
 	texDesc.Format				= DXGI_FORMAT_R32_FLOAT;			// 32ビットフォーマット.
@@ -182,11 +189,11 @@ HRESULT CCascadedShadowMap::InitBufferTex()
 	texDesc.CPUAccessFlags		= 0;								// CPUからはアクセスしない.
 	texDesc.MiscFlags			= 0;								// その他の設定なし.
 
-	m_pRenderTargetViewList.resize( m_CascadedNum );
-	m_pShaderResourceViewList.resize( m_CascadedNum );
-	m_pTexture2DList.resize( m_CascadedNum );
+	m_pRenderTargetViewList.resize( CASCADED_NUM );
+	m_pShaderResourceViewList.resize( CASCADED_NUM );
+	m_pTexture2DList.resize( CASCADED_NUM );
 
-	for( int i = 0; i < m_CascadedNum; i++ ){
+	for( int i = 0; i < CASCADED_NUM; i++ ){
 		if( FAILED( CreateBufferTex(
 			texDesc,
 			&m_pRenderTargetViewList[i],
@@ -261,7 +268,8 @@ HRESULT CCascadedShadowMap::InitVertexShader()
 //------------------------------------.
 void CCascadedShadowMap::ComputeSplitPositions(
 	const int splitCount, const float lamda, 
-	const float nearClip, const float farClip )
+	const float nearClip, const float farClip,
+	std::vector<float>& spritPos )
 {
 	// 分割数が１の場合は，普通のシャドウマップと同じ.
 	if ( splitCount == 1 )
@@ -294,14 +302,14 @@ void CCascadedShadowMap::ComputeSplitPositions(
 		float Ci_uni = nearClip + f_sub_n * i * inv_m;
 
 		// 上記の２つの演算結果を線形補間する.
-		m_SplitPos[i] = lamda * Ci_log + Ci_uni * ( 1.0f - lamda );
+		spritPos[i] = lamda * Ci_log + Ci_uni * ( 1.0f - lamda );
 	}
 
 	// 最初は, ニア平面までの距離を設定.
-	m_SplitPos[ 0 ] = nearClip;
+	spritPos[ 0 ] = nearClip;
 
 	// 最後は, ファー平面までの距離を設定.
-	m_SplitPos[ splitCount ] = farClip;
+	spritPos[ splitCount ] = farClip;
 }
 
 //------------------------------------.
@@ -320,14 +328,11 @@ CCascadedShadowMap::SBBox CCascadedShadowMap::CalculateFrustum( float nearClip, 
 	D3DXVec3Cross( &vY, &vZ, &vX );
 	D3DXVec3Normalize( &vY, &vY );
 
-	float aspect = static_cast<float>(m_WndWidth)/static_cast<float>(m_WndHeight);
-	float fov    = static_cast<float>(3.141519/4.0);
+	float nearPlaneHalfHeight = tanf( m_FovCamera * 0.5f ) * nearClip;
+	float nearPlaneHalfWidth  = nearPlaneHalfHeight * m_AspectWindow;
 
-	float nearPlaneHalfHeight = tanf( fov * 0.5f ) * nearClip;
-	float nearPlaneHalfWidth  = nearPlaneHalfHeight * aspect;
-
-	float farPlaneHalfHeight = tanf( fov * 0.5f ) * farClip;
-	float farPlaneHalfWidth  = farPlaneHalfHeight * aspect;
+	float farPlaneHalfHeight = tanf( m_FovCamera * 0.5f ) * farClip;
+	float farPlaneHalfWidth  = farPlaneHalfHeight * m_AspectWindow;
 
 	D3DXVECTOR3 nearPlaneCenter = CCameraManager::GetPosition() + vZ * nearClip;
 	D3DXVECTOR3 farPlaneCenter  = CCameraManager::GetPosition() + vZ * farClip;;

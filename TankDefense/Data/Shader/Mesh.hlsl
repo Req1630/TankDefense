@@ -25,6 +25,11 @@ VS_OUTPUT VS_Main( VS_INPUT input )
 	output.LightDir	= g_vLightDir.xyz;
 	output.EyeVector = normalize( g_vCamPos.xyz - output.PosW.xyz );
 	output.Tex = input.Tex;
+	
+	for( int i = 0; i < SHADOW_CASCADED_NUM; i++ ){
+		matrix shadowMat = mul(g_mW, g_mShadowVP[i]);
+		output.ShadowPos[i] = mul(float4(input.Pos, 1.0f), shadowMat);
+	}
 
 	return output;
 }

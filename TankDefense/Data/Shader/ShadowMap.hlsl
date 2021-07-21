@@ -2,7 +2,7 @@
 // コンスタントバッファ.
 //-------------------------------------------------.
 // メッシュ毎.
-cbuffer per_mesh : register(b4)
+cbuffer per_mesh : register(b0)
 {
 	matrix g_LightWVP; // ライトのワールド、ビュー、プロジェクション.
 };

@@ -746,7 +746,6 @@ void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYME
 
 	//使用するシェーダのセット.
 	m_pContext11->VSSetShader( m_pVertexShader, nullptr, 0 );
-	m_pContext11->PSSetShader( m_pPixelShader, nullptr, 0 );
 
 	//------------------------------------------------.
 	//	コンスタントバッファに情報を送る(ボーン).
@@ -778,6 +777,9 @@ void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYME
 	//プリミティブ・トポロジーをセット.
 	m_pContext11->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
+#if 0
+	m_pContext11->PSSetShader( m_pPixelShader, nullptr, 0 );
+
 	//------------------------------------------------.
 	//	コンスタントバッファに情報を設定(フレームごと).
 	//------------------------------------------------.
@@ -806,7 +808,7 @@ void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYME
 	}
 	m_pContext11->VSSetConstantBuffers(	2, 1, &m_pCBufferPerFrame);
 	m_pContext11->PSSetConstantBuffers(	2, 1, &m_pCBufferPerFrame);
-
+#endif 
 
 	//------------------------------------------------.
 	//	コンスタントバッファに情報を設定(メッシュごと).

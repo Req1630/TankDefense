@@ -3,6 +3,8 @@
 
 #include "..\RenderingTextuer.h"
 
+class CCascadedShadowMap;
+
 /*********************************************
 *	G-Bufferの描画クラス.
 **/
@@ -37,6 +39,24 @@ public:
 protected:
 	// テクスチャの初期化.
 	virtual HRESULT InitBufferTex() override;
+
+private:
+	// 更新.
+	void Update();
+
+	// フレーム時渡す値の更新.
+	void UpdateFrame();
+	// 影情報を渡す値の更新.
+	void UpdateShadow();
+
+	// シャドウ用サンプラーの作成.
+	HRESULT InitShadowSampler();
+
+private:
+	ID3D11Buffer*		m_pConstantBufferFrame;		// コンスタントバッファ.
+	ID3D11Buffer*		m_pConstantBufferShadow;	// コンスタントバッファ.
+	ID3D11SamplerState*	m_pShadowMapSampler;		// シャドウマップ用サンプラー.
+	CCascadedShadowMap*	m_pShadowMap;				// シングルトン(外部から取得).
 };
 
 #endif	// #ifndef G_BUFFER_RENDER_H.
