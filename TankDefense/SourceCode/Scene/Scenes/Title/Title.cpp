@@ -144,6 +144,46 @@ void CTitle::ModelRender()
 //============================.
 void CTitle::SpriteRender()
 {
-	m_Sprite->Render();
+#if 0
+	D3DXVECTOR2 vec = D3DXVECTOR2(1.0f,0.0f);
+	static float angle = 0.0f;
+
+	for( int i = 0; i < 4; i++ ){
+		// s—ñ‰ñ“].
+		float fmat[3][3];
+		fmat[0][0] = cosf(angle);
+		fmat[0][1] = sinf(angle);
+		fmat[0][2] = 0.0f;
+
+		fmat[1][0] = -sinf(angle);
+		fmat[1][1] = cosf(angle);
+		fmat[1][2] = 0.0f;
+
+		fmat[2][0] = 0.0f;
+		fmat[2][1] = 0.0f;
+		fmat[2][2] = 1.0f;
+		
+		D3DXVECTOR2 fvec2;
+
+		// TransformCoord.
+		float _x = ( vec.x * fmat[0][0] ) + ( vec.y * fmat[1][0] ) + fmat[2][0];
+		float _y = ( vec.x * fmat[0][1] ) + ( vec.y * fmat[1][1] ) + fmat[2][1];
+		
+		float w = ((vec.x * fmat[0][2] ) + (vec.y * fmat[1][2] ) + fmat[2][2]);
+		if(w) w	= 1.0f / w;
+
+		fvec2.x = _x * w;
+		fvec2.y = _y * w;
+
+		SSpriteRenderState rs;
+		rs.Tranceform.Position = 
+			D3DXVECTOR3( 100.0f, 100.0f, 0.0f) + 
+			D3DXVECTOR3( fvec2.x, fvec2.y, 0.0f ) * 100.0f;
+		rs.Tranceform.Scale = D3DXVECTOR3( 0.1f, 0.1f, 0.0f );
+		m_Sprite->Render( &rs );
+		angle += D3DX_PI*0.5f;
+	}
+	angle += 0.01f;
+#endif
 }
 
