@@ -85,7 +85,7 @@ void CCascadedShadowMap::Update()
 
 	const float size = D3DXVec3Length( &(lookPos-pos) );
 	m_MinClipDistance = size * 0.5f;
-	m_MaxClipDistance = size * 1.001f + m_MinClipDistance;
+	m_MaxClipDistance = size + m_MinClipDistance;
 
 	// プロジェクション(射影)変換.
 	D3DXMatrixOrthoLH(

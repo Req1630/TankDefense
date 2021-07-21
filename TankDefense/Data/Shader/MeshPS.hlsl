@@ -11,7 +11,7 @@ struct PS_OUTPUT
 };
 
 // 影の計算.
-float OutShadowColor( float4 pos, int index );
+float OutShadowColor( float4 pos, int index, float shadowPow );
 
 //-------------------------------------------------
 //	ピクセルシェーダ.
@@ -24,11 +24,13 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	
 	////////////////////////////////////////////////.
 	// 影の計算.
+	////////////////////////////////////////////////.
 	float dist = input.Pos.w;
 	float shadowColor = 1.0f;
+	float shaodwPower = 0.5f;
 	for( int i = 0; i < SHADOW_CASCADED_NUM; i++ ){
 		if( dist < g_SpritPositon[i].x || i == SHADOW_CASCADED_NUM-1 ){
-			shadowColor = OutShadowColor( input.ShadowPos[i], i );
+			shadowColor = OutShadowColor( input.ShadowPos[i], i, shaodwPower );
 			break;
 		}
 	}
@@ -36,6 +38,7 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	
 	////////////////////////////////////////////////.
 	// 法線の取得.
+	////////////////////////////////////////////////.
 	float3 bumpNormal = float3( 0.0f, 0.0f, 0.0f );
 	// テクスチャの法線が何もない場合、ポリゴンの法線を取得する、
 	//	ある場合は、色をベクトルへ変換する.
@@ -48,10 +51,10 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	
 	////////////////////////////////////////////////.
 	// ライティングの計算.
+	////////////////////////////////////////////////.
 	float3 n = normColor.xyz;
 	float3 v = normalize(g_vCamPos.xyz - input.PosW.xyz);
 	float3 l = normalize(input.LightDir);
-	float d = length(input.LightDir);
 	
 	float3 r = 2.0f * n * dot(n, l) - l;
 	float3 ambient	= (g_vAmbient.rgb*0.5f) * (texColor.rgb*0.5f);
@@ -60,6 +63,7 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	
 	////////////////////////////////////////////////.
 	// ハーフランバート.
+	////////////////////////////////////////////////.
 	float lightIntensity = saturate(dot(bumpNormal, input.LightDir)) * g_vIntensity.x;
 	lightIntensity = lightIntensity * 0.5f + 0.5f;
 	lightIntensity = lightIntensity * lightIntensity;
@@ -69,12 +73,14 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	
 	////////////////////////////////////////////////.
 	// 法線をテクスチャ用に変換.
+	////////////////////////////////////////////////.
 	// -1 ~ 1 を 0 ~ 1 に変換.
 	bumpNormal = normalize(bumpNormal)*0.5+0.5f;
 	float z = input.Pos.z/input.Pos.w;
 	
 	////////////////////////////////////////////////.
 	// 最終描画.
+	////////////////////////////////////////////////.
 	PS_OUTPUT output = (PS_OUTPUT)0;
 	output.Color	= finalColor;
 	output.Normal	= float4(bumpNormal, 1.0f);
@@ -87,11 +93,10 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 }
 
 // 影の計算.
-float OutShadowColor( float4 pos, int index )
+float OutShadowColor( float4 pos, int index, float shadowPow )
 {
 	float2 cord	= pos.xy	/ pos.w;
 	float z		= pos.z		/ pos.w;
 	float depthColor = g_ShadowTexture[index].SampleCmpLevelZero( g_ShadowSamLinear, cord, z - 0.01f ).r;
-	
-	return saturate( depthColor + 0.5f );
+	return saturate( depthColor + shadowPow );
 };

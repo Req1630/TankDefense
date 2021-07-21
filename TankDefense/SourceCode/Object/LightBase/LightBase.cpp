@@ -3,7 +3,7 @@
 
 namespace
 {
-	const D3DXVECTOR3	DEFFULT_LIGHT_POSITON	= { 50.0f, 80.0f, -10.0f };
+	const D3DXVECTOR3	DEFFULT_LIGHT_POSITON	= { 50.0f, 60.0f, -10.0f };
 	constexpr float		MOVE_SPEED				= 1.0f;
 };
 
@@ -11,7 +11,7 @@ CLightBase::CLightBase()
 	: m_LookPosition	( -10.0f, -10.0f, 10.0f )
 	, m_Direction		( 0.0f, 0.0f, 0.0f )
 	, m_Color			( 1.0f, 1.0f, 1.0f )
-	, m_Intensity		( 2.0f )
+	, m_Intensity		( 1.0f )
 	, m_IsActive		( false )
 {
 	m_Tranceform.Position = DEFFULT_LIGHT_POSITON;
