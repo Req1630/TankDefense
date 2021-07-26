@@ -21,20 +21,19 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	float4 texColor		= g_Texture.Sample(g_SamLinear, input.Tex);		// テクスチャ色.
 	float4 normColor	= g_NormTexture.Sample(g_SamLinear, input.Tex);	// 法線色.
 	float4 finalColor	= texColor;	// 最終色.
+	finalColor.rgb	*= g_vColor.xyz;
+	finalColor.a	*= g_vColor.a;
 	
 	////////////////////////////////////////////////.
 	// 影の計算.
 	////////////////////////////////////////////////.
-	float dist = input.Pos.w;
-	float shadowColor = 1.0f;
-	float shaodwPower = 0.5f;
+	float shadowDepth = 0.5f;	// 影の濃さ.
 	for( int i = 0; i < SHADOW_CASCADED_NUM; i++ ){
-		if( dist < g_SpritPositon[i].x || i == SHADOW_CASCADED_NUM-1 ){
-			shadowColor = OutShadowColor( input.ShadowPos[i], i, shaodwPower );
+		if( input.Pos.w < g_SpritPositon[i].x || i == SHADOW_CASCADED_NUM-1 ){
+			finalColor.rgb *= OutShadowColor( input.ShadowPos[i], i, shadowDepth );
 			break;
 		}
 	}
-	finalColor.rgb *= shadowColor;
 	
 	////////////////////////////////////////////////.
 	// 法線の取得.
@@ -60,6 +59,8 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	float3 ambient	= (g_vAmbient.rgb*0.5f) * (texColor.rgb*0.5f);
 	float3 diffuse	= saturate(dot(l, n)) + g_vDiffuse.rgb;
 	float3 specular	= pow(saturate(dot(r, v)), 2.0f ) + g_vSpecular.rgb;
+	finalColor.rgb	*= saturate(ambient+diffuse+specular);
+	
 	
 	////////////////////////////////////////////////.
 	// ハーフランバート.
@@ -67,15 +68,12 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	float lightIntensity = saturate(dot(bumpNormal, input.LightDir)) * g_vIntensity.x;
 	lightIntensity = lightIntensity * 0.5f + 0.5f;
 	lightIntensity = lightIntensity * lightIntensity;
+	finalColor.rgb	*= lightIntensity;
 	
-	finalColor.rgb *= saturate(ambient+diffuse+specular) * lightIntensity * g_vColor.xyz;
-	finalColor.a *= g_vColor.a;
-	
-	////////////////////////////////////////////////.
 	// 法線をテクスチャ用に変換.
-	////////////////////////////////////////////////.
 	// -1 ~ 1 を 0 ~ 1 に変換.
 	bumpNormal = normalize(bumpNormal)*0.5+0.5f;
+	// 深度値を取得.
 	float z = input.Pos.z/input.Pos.w;
 	
 	////////////////////////////////////////////////.
@@ -95,8 +93,8 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 // 影の計算.
 float OutShadowColor( float4 pos, int index, float shadowPow )
 {
-	float2 cord	= pos.xy	/ pos.w;
-	float z		= pos.z		/ pos.w;
-	float depthColor = g_ShadowTexture[index].SampleCmpLevelZero( g_ShadowSamLinear, cord, z - 0.01f ).r;
-	return saturate( depthColor + shadowPow );
+	float2	cord	= pos.xy	/ pos.w;
+	float	z		= pos.z		/ pos.w;
+	float	depthColor = g_ShadowTexture[index].SampleCmpLevelZero( g_ShadowSamLinear, cord, z - 0.01f ).r;
+	return	saturate( depthColor + shadowPow );
 };

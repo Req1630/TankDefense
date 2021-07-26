@@ -62,8 +62,13 @@ public:
 	// シェーダーリソースビューの数を取得.
 	virtual int GetSRVCount() override { return CASCADED_NUM; }
 
+	// 影行列の取得.
 	std::vector<D3DXMATRIX>&	GetShadowMatrix()	{ return m_ShadowMatrix; };
+	// 分割座標の取得.
 	std::vector<float>&			GetSpritPosition()	{ return m_SplitPos; };
+
+	// 影情報の描画が終了したか.
+	inline bool IsEndRender() const { return m_IsEndRender; }
 
 protected:
 	// テクスチャの初期化.
@@ -94,7 +99,7 @@ private:
 	float					m_MinClipDistance;		// 最小クリッピング距離.
 	float					m_AspectWindow;			// ウィンドウのアスペクト比.
 	float					m_FovCamera;			// カメラの比率.
-	bool					m_IsEndRender;
+	bool					m_IsEndRender;			// 影情報の描画が終了したか.
 
 private:
 	// コピー・ムーブコンストラクタ, 代入演算子の削除.

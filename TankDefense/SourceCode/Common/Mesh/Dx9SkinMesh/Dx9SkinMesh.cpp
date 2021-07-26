@@ -386,17 +386,8 @@ void CDX9SkinMesh::Render( SAnimationController* pAC )
 	m_CameraPos = CCameraManager::GetPosition();
 	m_CameraLookPos = CCameraManager::GetLookPosition();
 
-	if (pAC == nullptr)
-	{
-		if (m_pD3dxMesh->m_pAnimController)
-		{
-			BlendAnimUpdate();
-			m_pD3dxMesh->m_pAnimController->AdvanceTime(m_dAnimSpeed, NULL);
-		}
-	} else {
-		pAC->BlendAnimUpdate( m_dAnimSpeed );
-		pAC->pAC->AdvanceTime(m_dAnimSpeed, NULL);
-	}
+	// アニメーションの更新.
+	AnimUpdate( pAC );
 
 	D3DXMATRIX m;
 	D3DXMatrixIdentity( &m );
@@ -740,6 +731,8 @@ void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYME
 	//頂点インプットレイアウトをセット.
 	m_pContext11->IASetInputLayout(	m_pVertexLayout );
 	SetNewPoseMatrices( pMesh, m_iFrame, pContainer );
+
+	// 影を情報をテクスチャに描画.
 	if( m_pShadowMap->Render( true, m_mWorld, func ) == true ) return;
 
 	D3D11_MAPPED_SUBRESOURCE pData;
@@ -1140,6 +1133,25 @@ void CDX9SkinMesh::ChangeAnimBlend( int index, int oldIndex, SAnimationControlle
 	}
 	m_IsChangeAnim = true;
 	m_dAnimTime = 0.0;
+}
+
+// アニメーションの更新.
+void CDX9SkinMesh::AnimUpdate( SAnimationController* pAC )
+{
+	// 影情報の描画時だけアニメーションを更新する.
+	if( m_pShadowMap->IsEndRender() == true ) return;
+
+	if( pAC == nullptr )
+	{
+		if (m_pD3dxMesh->m_pAnimController)
+		{
+			BlendAnimUpdate();
+			m_pD3dxMesh->m_pAnimController->AdvanceTime(m_dAnimSpeed, NULL);
+		}
+	} else {
+		pAC->BlendAnimUpdate( m_dAnimSpeed );
+		pAC->pAC->AdvanceTime(m_dAnimSpeed, NULL);
+	}
 }
 
 // ブレンドアニメーションの更新.

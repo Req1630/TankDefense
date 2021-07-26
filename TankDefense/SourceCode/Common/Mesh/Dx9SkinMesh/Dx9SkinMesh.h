@@ -148,9 +148,6 @@ public:
 	// アニメーションをブレンドして切り替え.
 	void ChangeAnimBlend( int index, int oldIndex, SAnimationController* pAC = nullptr );
 
-	// ブレンドアニメーションの更新.
-	void BlendAnimUpdate();
-
 	//アニメーション停止時間を取得.
 	double GetAnimPeriod( int index );
 	//アニメーション数を取得.
@@ -237,6 +234,11 @@ private:
 	//パーツ描画.
 	void DrawPartsMesh( SKIN_PARTS_MESH* p, D3DXMATRIX World, MYMESHCONTAINER* pContainer );
 	void DrawPartsMeshStatic( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYMESHCONTAINER* pContainer );
+
+	// アニメーションの更新.
+	void AnimUpdate( SAnimationController* pAC );
+	// ブレンドアニメーションの更新.
+	void BlendAnimUpdate();
 
 	//全てのメッシュを削除.
 	void DestroyAllMesh( D3DXFRAME* pFrame );
