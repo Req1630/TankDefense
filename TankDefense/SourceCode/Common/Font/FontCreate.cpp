@@ -103,6 +103,7 @@ HRESULT CFontCreate::CreateFontTexture2D( const char* c, ID3D11ShaderResourceVie
 	D3D11_MAPPED_SUBRESOURCE hMappedResource;
 	if( FAILED( m_pContext11->Map( 
 		texture2D, 0, D3D11_MAP_WRITE_DISCARD, 0, &hMappedResource ))){
+		SAFE_RELEASE( texture2D );
 		return E_FAIL;
 	}
 
@@ -149,8 +150,11 @@ HRESULT CFontCreate::CreateFontTexture2D( const char* c, ID3D11ShaderResourceVie
 	srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
 
 	if( FAILED( m_pDevice11->CreateShaderResourceView( texture2D, &srvDesc, resource ))){
+		SAFE_RELEASE( texture2D );
 		return E_FAIL;
 	}
+
+	SAFE_RELEASE( texture2D );
 
 	return S_OK;
 }
