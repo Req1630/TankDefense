@@ -43,6 +43,7 @@ CDX9SkinMesh::CDX9SkinMesh()
 	, m_pD3dxMesh(nullptr)
 	, m_FilePath()
 	, m_iFrame()
+	, m_ShadowDepth(0.5f)
 	, m_ShadowRenderFunc()
 {
 	m_pShadowMap = CCascadedShadowMap::GetInstance();
@@ -823,6 +824,9 @@ void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYME
 
 		// F‚ð“n‚·.
 		cb.vColor = m_Color;
+
+		// ‰e‚Ì”Z‚³‚ð“n‚·.
+		cb.vShadowDepth.x = 1.0f - m_ShadowDepth;
 
 		memcpy_s(pDat.pData, pDat.RowPitch, (void*)&cb, sizeof(cb));
 		m_pContext11->Unmap(m_pCBufferPerMesh, 0);

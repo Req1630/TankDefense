@@ -6,9 +6,10 @@
 // メッシュ単位で渡す情報.
 struct CBUFFER_PER_MESH
 {
-	D3DXMATRIX	mW;		// ワールド行列.
-	D3DXMATRIX	mWVP;	// ワールド,ビュー,プロジェクションの合成変換行列.
-	D3DXVECTOR4 vColor;	// 色.
+	D3DXMATRIX	mW;				// ワールド行列.
+	D3DXMATRIX	mWVP;			// ワールド,ビュー,プロジェクションの合成変換行列.
+	D3DXVECTOR4 vColor;			// 色.
+	D3DXVECTOR4 vShadowDepth;	// 影の濃さ(x のみ使用).
 };
 
 // マテリアル単位で渡す情報.

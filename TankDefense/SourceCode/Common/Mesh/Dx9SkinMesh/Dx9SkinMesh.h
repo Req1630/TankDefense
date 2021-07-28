@@ -163,6 +163,11 @@ public:
 	//ﾒｯｼｭを取得.
 	LPD3DXMESH GetMesh() const { return m_pMeshForRay; }
 
+	// 自身にかける影の濃さ.
+	//	キャラクターは薄く、地面は濃くなど
+	//	範囲 0 ~ 1.
+	inline void SetShadowDepth( const float& depth ){ m_ShadowDepth = depth; }
+
 private:
 	HWND m_hWnd;
 
@@ -208,6 +213,8 @@ private:
 
 	//アニメーションフレーム.
 	int		m_iFrame;
+
+	float	m_ShadowDepth;	// 自身にかける影の濃さ.
 
 	std::function<void(SKIN_PARTS_MESH* pMesh)>	m_ShadowRenderFunc;
 

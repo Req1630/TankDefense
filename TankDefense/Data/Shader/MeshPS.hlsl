@@ -27,10 +27,9 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	////////////////////////////////////////////////.
 	// ‰e‚ÌŒvŽZ.
 	////////////////////////////////////////////////.
-	float shadowDepth = 0.5f;	// ‰e‚Ì”Z‚³.
 	for( int i = 0; i < SHADOW_CASCADED_NUM; i++ ){
 		if( input.Pos.w < g_SpritPositon[i].x || i == SHADOW_CASCADED_NUM-1 ){
-			finalColor.rgb *= OutShadowColor( input.ShadowPos[i], i, shadowDepth );
+			finalColor.rgb *= OutShadowColor( input.ShadowPos[i], i, g_vShadowDepth.x );
 			break;
 		}
 	}

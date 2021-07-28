@@ -7,7 +7,7 @@
 
 namespace
 {
-	constexpr char	MESH_NAME[]			= "houtou_saki_s";
+	constexpr char	MESH_NAME[]			= "a_s";
 	constexpr float ACTOR_ROT_SPEED		= 0.1f;
 	constexpr float	CAMERA_HEIGHT		= 10.0f;
 	constexpr float	CAMERA_LENGTH		= 20.0f;

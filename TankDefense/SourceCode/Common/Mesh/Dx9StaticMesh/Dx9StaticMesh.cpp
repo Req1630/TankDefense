@@ -26,6 +26,7 @@ CDX9StaticMesh::CDX9StaticMesh()
 	, m_pMaterials			( nullptr )
 	, m_NumAttr				( 0 )
 	, m_AttrID				()
+	, m_ShadowDepth			( 0.5f )
 	, m_ShadowRenderFunc	()
 {
 	m_pShadowMap = CCascadedShadowMap::GetInstance();
@@ -491,6 +492,9 @@ void CDX9StaticMesh::RenderMesh(
 
 		// F‚ğ“n‚·.
 		cb.vColor = m_Color;
+
+		// ‰e‚Ì”Z‚³‚ğ“n‚·.
+		cb.vShadowDepth.x = 1.0f - m_ShadowDepth;
 
 		memcpy_s( pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb));
 

@@ -14,9 +14,10 @@ SamplerComparisonState	g_ShadowSamLinear	: register(s1);
 //コンスタントバッファ(メッシュごと).
 cbuffer per_mesh		: register(b0)
 {
-	matrix	g_mW;		// ワールド行列.
-	matrix	g_mWVP;		// ワールドから射影までの変換行列.
-	float4	g_vColor;	// 色.
+	matrix	g_mW;			// ワールド行列.
+	matrix	g_mWVP;			// ワールドから射影までの変換行列.
+	float4	g_vColor;		// 色.
+	float4	g_vShadowDepth;	// 影の濃さ.
 };
 // マテリアル毎に変更.
 cbuffer per_material : register(b1)
