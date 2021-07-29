@@ -142,6 +142,7 @@ void CPlayer::AttackController()
 		D3DXVECTOR3 ShotMoveVec;
 		ShotMoveVec.x = sinf( m_CameraRot.y );
 		ShotMoveVec.z = cosf( m_CameraRot.y );
+		ShotMoveVec.y = 0.0f;
 
 		// ’e‚Ì”­ŽË.
 		m_pWeapon->Shot( ShotMoveVec );
