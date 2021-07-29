@@ -43,6 +43,7 @@ CDX9SkinMesh::CDX9SkinMesh()
 	, m_pD3dxMesh(nullptr)
 	, m_FilePath()
 	, m_iFrame()
+	, m_ShadowDepth(0.5f)
 	, m_ShadowRenderFunc()
 {
 	m_pShadowMap = CCascadedShadowMap::GetInstance();
@@ -386,17 +387,8 @@ void CDX9SkinMesh::Render( SAnimationController* pAC )
 	m_CameraPos = CCameraManager::GetPosition();
 	m_CameraLookPos = CCameraManager::GetLookPosition();
 
-	if (pAC == nullptr)
-	{
-		if (m_pD3dxMesh->m_pAnimController)
-		{
-			BlendAnimUpdate();
-			m_pD3dxMesh->m_pAnimController->AdvanceTime(m_dAnimSpeed, NULL);
-		}
-	} else {
-		pAC->BlendAnimUpdate( m_dAnimSpeed );
-		pAC->pAC->AdvanceTime(m_dAnimSpeed, NULL);
-	}
+	// アニメーションの更新.
+	AnimUpdate( pAC );
 
 	D3DXMATRIX m;
 	D3DXMatrixIdentity( &m );
@@ -740,13 +732,14 @@ void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYME
 	//頂点インプットレイアウトをセット.
 	m_pContext11->IASetInputLayout(	m_pVertexLayout );
 	SetNewPoseMatrices( pMesh, m_iFrame, pContainer );
+
+	// 影を情報をテクスチャに描画.
 	if( m_pShadowMap->Render( true, m_mWorld, func ) == true ) return;
 
 	D3D11_MAPPED_SUBRESOURCE pData;
 
 	//使用するシェーダのセット.
 	m_pContext11->VSSetShader( m_pVertexShader, nullptr, 0 );
-	m_pContext11->PSSetShader( m_pPixelShader, nullptr, 0 );
 
 	//------------------------------------------------.
 	//	コンスタントバッファに情報を送る(ボーン).
@@ -778,6 +771,9 @@ void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYME
 	//プリミティブ・トポロジーをセット.
 	m_pContext11->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
+#if 0
+	m_pContext11->PSSetShader( m_pPixelShader, nullptr, 0 );
+
 	//------------------------------------------------.
 	//	コンスタントバッファに情報を設定(フレームごと).
 	//------------------------------------------------.
@@ -806,7 +802,7 @@ void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYME
 	}
 	m_pContext11->VSSetConstantBuffers(	2, 1, &m_pCBufferPerFrame);
 	m_pContext11->PSSetConstantBuffers(	2, 1, &m_pCBufferPerFrame);
-
+#endif 
 
 	//------------------------------------------------.
 	//	コンスタントバッファに情報を設定(メッシュごと).
@@ -828,6 +824,9 @@ void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYME
 
 		// 色を渡す.
 		cb.vColor = m_Color;
+
+		// 影の濃さを渡す.
+		cb.vShadowDepth.x = 1.0f - m_ShadowDepth;
 
 		memcpy_s(pDat.pData, pDat.RowPitch, (void*)&cb, sizeof(cb));
 		m_pContext11->Unmap(m_pCBufferPerMesh, 0);
@@ -1138,6 +1137,25 @@ void CDX9SkinMesh::ChangeAnimBlend( int index, int oldIndex, SAnimationControlle
 	}
 	m_IsChangeAnim = true;
 	m_dAnimTime = 0.0;
+}
+
+// アニメーションの更新.
+void CDX9SkinMesh::AnimUpdate( SAnimationController* pAC )
+{
+	// 影情報の描画時だけアニメーションを更新する.
+	if( m_pShadowMap->IsEndRender() == true ) return;
+
+	if( pAC == nullptr )
+	{
+		if (m_pD3dxMesh->m_pAnimController)
+		{
+			BlendAnimUpdate();
+			m_pD3dxMesh->m_pAnimController->AdvanceTime(m_dAnimSpeed, NULL);
+		}
+	} else {
+		pAC->BlendAnimUpdate( m_dAnimSpeed );
+		pAC->pAC->AdvanceTime(m_dAnimSpeed, NULL);
+	}
 }
 
 // ブレンドアニメーションの更新.

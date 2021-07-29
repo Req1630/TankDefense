@@ -6,15 +6,6 @@
 
 #include "MeshPS.hlsli"
 
-//定義.
-#define MAX_BONE_MATRICES (255)
-
-//ボーンのポーズ行列が入る.
-cbuffer per_bones		: register( b3 )
-{
-	matrix g_mConstBoneWorld[MAX_BONE_MATRICES];
-};
-
 //スキニング後の頂点・法線が入る.
 struct Skin
 {
@@ -103,6 +94,11 @@ VS_OUTPUT VS_Main( VSSkinIn input )
 	output.LightDir	= g_vLightDir.xyz;
 	output.EyeVector	= normalize( g_vCamPos.xyz - output.PosW.xyz );
 	output.Tex			= input.Tex;
+	
+	for( int i = 0; i < SHADOW_CASCADED_NUM; i++ ){
+		matrix shadowMat = mul(g_mW, g_mShadowVP[i]);
+		output.ShadowPos[i] = mul(vSkinned.Pos, shadowMat);
+	}
 
 	return output;
 }

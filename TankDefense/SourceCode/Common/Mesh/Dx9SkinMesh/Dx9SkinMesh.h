@@ -148,9 +148,6 @@ public:
 	// アニメーションをブレンドして切り替え.
 	void ChangeAnimBlend( int index, int oldIndex, SAnimationController* pAC = nullptr );
 
-	// ブレンドアニメーションの更新.
-	void BlendAnimUpdate();
-
 	//アニメーション停止時間を取得.
 	double GetAnimPeriod( int index );
 	//アニメーション数を取得.
@@ -165,6 +162,11 @@ public:
 
 	//ﾒｯｼｭを取得.
 	LPD3DXMESH GetMesh() const { return m_pMeshForRay; }
+
+	// 自身にかける影の濃さ.
+	//	キャラクターは薄く、地面は濃くなど
+	//	範囲 0 ~ 1.
+	inline void SetShadowDepth( const float& depth ){ m_ShadowDepth = depth; }
 
 private:
 	HWND m_hWnd;
@@ -212,6 +214,8 @@ private:
 	//アニメーションフレーム.
 	int		m_iFrame;
 
+	float	m_ShadowDepth;	// 自身にかける影の濃さ.
+
 	std::function<void(SKIN_PARTS_MESH* pMesh)>	m_ShadowRenderFunc;
 
 	HRESULT InitShader();
@@ -237,6 +241,11 @@ private:
 	//パーツ描画.
 	void DrawPartsMesh( SKIN_PARTS_MESH* p, D3DXMATRIX World, MYMESHCONTAINER* pContainer );
 	void DrawPartsMeshStatic( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYMESHCONTAINER* pContainer );
+
+	// アニメーションの更新.
+	void AnimUpdate( SAnimationController* pAC );
+	// ブレンドアニメーションの更新.
+	void BlendAnimUpdate();
 
 	//全てのメッシュを削除.
 	void DestroyAllMesh( D3DXFRAME* pFrame );

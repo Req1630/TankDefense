@@ -79,6 +79,11 @@ public:
 	// メッシュの取得.
 	inline LPD3DXMESH GetMesh() const { return m_pMeshForRay; }
 
+	// 自身にかける影の濃さ.
+	//	キャラクターは薄く、地面は濃くなど.
+	//	範囲 0 ~ 1.
+	inline void SetShadowDepth( const float& depth ){ m_ShadowDepth = depth; }
+
 private:
 	// メッシュ読み込み.
 	HRESULT LoadXMesh(const char* fileName);
@@ -116,6 +121,8 @@ private:
 	MY_MATERIAL*	m_pMaterials;				// マテリアル構造体.
 	DWORD			m_NumAttr;					// 属性数.
 	DWORD			m_AttrID[300];				// 属性ID ※300属性まで.
+
+	float			m_ShadowDepth;				// 自身にかける影の濃さ.
 
 	std::function<void()>	m_ShadowRenderFunc;
 
