@@ -92,11 +92,14 @@ void CRotLookAtCenter::DegreeHorizontalMove( const float& movePower )
 {
 	// ‰¡•ûŒü‚É‘«‚µ‡‚í‚¹‚é.
 	m_vDegree.x += movePower;
+	// ˆÈ‰º‚Ìˆ—‚ð‚µ‚½‚¢‚ªAˆ—‚ðs‚¤‚ÆíŽÔ‚Ì‰ñ“]‚Ì‹““®‚ª‚¨‚©‚µ‚­‚È‚é.
+#if 0
 	// ‹K’è’l‚ð’´‚¦‚È‚¢‚æ‚¤’²®.
 	if( m_vDegree.x > static_cast<float>(D3DXToRadian(RADIAN_THRESHOLD_X_MAX)) )
 		m_vDegree.x = static_cast<float>(D3DXToRadian(RADIAN_THRESHOLD_X_MIN));
 	if( m_vDegree.x < static_cast<float>(D3DXToRadian(RADIAN_THRESHOLD_X_MIN)) ) 
 		m_vDegree.x = static_cast<float>(D3DXToRadian(RADIAN_THRESHOLD_X_MAX));
+#endif
 }
 
 //-------------------------------.
