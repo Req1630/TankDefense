@@ -101,9 +101,6 @@ void CTitle::Update()
 	CCollisionRender::PushSphere( &s2 );
 	CCollisionRender::PushSphere( &sphere );
 
-	CDebugText::PushText( "vec X : ", m_effect2.GetTotalInstanceCount() );
-	CDebugText::PushText( "vec Y : ", m_effect1.GetTotalInstanceCount() );
-	CDebugText::PushText( "vec Z : ", vec.z );
 	//if( CKeyInput::IsMomentPress('G') == true ){
 	//	SetSceneChange();
 	//}

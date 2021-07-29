@@ -83,7 +83,13 @@ void CPlayer::Update( const float & deltaTime )
 // 描画関数.
 void CPlayer::Render()
 {
+	/* ↓↓↓↓ 一応描画する直前に座標系を設定してください ↓↓↓↓ */
+	m_pStaticMesh->SetRotation( m_Tranceform.Rotation );
+	m_pStaticMesh->SetPosition( m_Tranceform.Position );
+//	m_pStaticMesh->SetTranceform( m_Tranceform );	// ←のようにもできる.
+
 	// モデルの描画.
+	m_pStaticMesh->SetShadowDepth( 0.1f );	// ←の関数で自分自身にかける影の濃さを設定できる.
 	m_pStaticMesh->Render();
 	m_pWeapon->Render();
 }
@@ -154,8 +160,6 @@ void CPlayer::Move()
 
 	// 武器の移動.
 	m_pWeapon->Move( BonePos, m_CameraRot );
-	// モデルの移動.
-	m_pStaticMesh->SetPosition( m_Tranceform.Position );
 	
 	// 移動している場合
 	if ( m_MoveVec != D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) ){
@@ -173,9 +177,6 @@ void CPlayer::Move()
 		else if ( m_Tranceform.Rotation.y - m_pWeapon->GetRotation().y <= DxToRadian( -ROT_REST_DANG ) )
 			m_Tranceform.Rotation.y += m_pLookCamera->GetMoveSpeed();
 	}
-
-	// モデルの回転.
-	m_pStaticMesh->SetRotation( m_Tranceform.Rotation );
 }
 
 // カメラの更新.
