@@ -76,6 +76,9 @@ public:  //------ 関数 -------.
 	// 左方向の回転速度.
 	void SetLeftMoveSpeed( const float& speed ){ m_LeftMoveSpeed = speed; }
 
+	// 回転速度の取得.
+	inline float GetMoveSpeed() { return DEFAULT_MOVE_SPEED; }
+
 private: //------ 変数 -------.
 	D3DXVECTOR2		m_vDegree;			// カメラの角度.
 	float			m_Length;			// カメラと注視点の長さ.

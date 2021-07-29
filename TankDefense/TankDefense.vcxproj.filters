@@ -60,8 +60,6 @@
     <ClCompile Include="SourceCode\Object\Collider\Sphere\Sphere.cpp" />
     <ClCompile Include="SourceCode\Object\Fade\Fade.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Actor.cpp" />
-    <ClCompile Include="SourceCode\Object\GameObject\Actor\Bullet\CBullet.cpp" />
-    <ClCompile Include="SourceCode\Object\GameObject\Actor\Player\CPlayer.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\GameObject.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Widget\Widget.cpp" />
     <ClCompile Include="SourceCode\Object\LightBase\LightBase.cpp" />
@@ -126,6 +124,12 @@
     <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\PlayerEditor\PlayerEditor.cpp" />
     <ClCompile Include="SourceCode\Edit\ActorEditor\EachActorEditor\EnemyEditor\EnemyEditor.cpp" />
     <ClCompile Include="SourceCode\Common\RenderingTextuer\CascadedShadowMap\CascadedShadowMap.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Player\Player.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Weapon\Weapon.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Weapon\Missile\Missile.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Weapon\MachineGun\MachineGun.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Weapon\DefaultWepon\DefaultWepon.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Bullet\Bullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -179,8 +183,6 @@
     <ClInclude Include="SourceCode\Object\Collider\Sphere\Sphere.h" />
     <ClInclude Include="SourceCode\Object\Fade\Fade.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Actor.h" />
-    <ClInclude Include="SourceCode\Object\GameObject\Actor\Bullet\CBullet.h" />
-    <ClInclude Include="SourceCode\Object\GameObject\Actor\Player\CPlayer.h" />
     <ClInclude Include="SourceCode\Object\GameObject\GameObject.h" />
     <ClInclude Include="SourceCode\Object\GameObject\GameObjectList.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Widget\Widget.h" />
@@ -257,6 +259,12 @@
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Player\PlayerParameter.h" />
     <ClInclude Include="SourceCode\Edit\ActorEditor\EachActorEditor\EnemyEditor\EnemyEditor.h" />
     <ClInclude Include="SourceCode\Common\RenderingTextuer\CascadedShadowMap\CascadedShadowMap.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Player\Player.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Weapon\Weapon.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Weapon\Missile\Missile.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Weapon\MachineGun\MachineGun.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Weapon\DefaultWepon\DefaultWepon.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Bullet\Bullet.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

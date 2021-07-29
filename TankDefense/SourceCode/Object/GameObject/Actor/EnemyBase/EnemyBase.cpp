@@ -2,7 +2,7 @@
 #include "..\..\..\..\Resource\MeshResource\MeshResource.h"
 #include "..\..\..\..\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.h"
 #include "..\..\..\..\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h"
-#include "..\Player\CPlayer.h"
+#include "..\Player\Player.h"
 
 CEnemyBase::CEnemyBase()
 	: m_pSkinMesh				( nullptr )

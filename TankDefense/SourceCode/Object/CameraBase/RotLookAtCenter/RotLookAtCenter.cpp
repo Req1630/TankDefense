@@ -40,6 +40,7 @@ bool CRotLookAtCenter::LoadParameter( const bool& isLoad )
 // 更新.
 void CRotLookAtCenter::Update( const float& deltaTime )
 {
+#if 0
 	if ( CKeyInput::IsHold( VK_LCONTROL ) == false ) return;
 
 	// 前進.
@@ -62,6 +63,7 @@ void CRotLookAtCenter::Update( const float& deltaTime )
 		m_Tranceform.Position.y -= 0.1f;
 
 //	m_Tranceform.Position = { 10.0f, 10.0f, 10.0f };
+#endif	// #if 0.
 }
 
 //-------------------------------.
