@@ -26,7 +26,7 @@ public:
 	// ベクトルの取得.
 	virtual void SetVector( const D3DXVECTOR3& vec ) {}
 	// 目的の座標へ回転.
-	bool TargetRotation( const D3DXVECTOR3& targetVec, const float& rotSpeed, const float& ToleranceRadian );
+	bool TargetRotation( const D3DXVECTOR3& targetVec, const float& rotSpeed, const float& ToleranceRadian, const float& MoveSpeed );
 
 	// 当たり判定関数.
 	virtual void Collision( CActor* pActor ) = 0;
@@ -48,6 +48,11 @@ public:
 	template<> CBox*		GetCollision(){ return m_pCollisions->GetCollision<CBox>(); }
 	// 当たり判定の取得(レイ).
 	template<> CRay*		GetCollision(){ return m_pCollisions->GetCollision<CRay>(); }
+
+	// 実験でキャラが存在しているのか関数.
+	virtual void SetDelete( const std::function<void( bool& )>& ) {}
+	// 実験でプレイヤーが拘束されているか関数.
+	virtual void SetIsRestraint(const std::function<void(bool&)>&) {}
 
 protected:
 	std::unique_ptr<CCollisions>	m_pCollisions;	// 複数のコリジョンを所持しているクラス.

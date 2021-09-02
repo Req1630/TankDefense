@@ -28,7 +28,10 @@ CPlayer::CPlayer()
 	, m_pMachineGun		( nullptr )
 	, m_MoveVec			()
 	, m_Status			()
+	, m_IsDelete		( false )
+	, m_IsRestraint		( false )
 {
+	m_ObjectTag = EObjectTag::Player;	// プレイヤーかどうか判断するため.
 	Init();
 }
 
@@ -59,12 +62,19 @@ bool CPlayer::Init()
 	m_Status.Hp		= 100.0f;
 	m_Status.Speed	= 0.2f;
 
+	InitCollision();
+
 	return true;
 }
 
 // 更新関数.
 void CPlayer::Update( const float & deltaTime )
 {
+	// プレイヤーが敵と接触して浮かないようにする処理.
+	m_Tranceform.Position.y = 0.0f;
+
+	if ( m_IsRestraint == true ) return;	// 拘束されていたら操作不能.
+
 	Controller();					// 操作.
 	CameraController();				// カメラの操作.
 	AttackController();				// 攻撃操作.
@@ -102,11 +112,15 @@ void CPlayer::Collision( CActor* pActor )
 // 当たり判定の初期化.
 void CPlayer::InitCollision()
 {
+	m_pCollisions = std::make_unique<CCollisions>();
+	m_pCollisions->InitCollision( ECollNo::Sphere );
+	m_pCollisions->GetCollision<CSphere>()->SetRadius( 1.5f );
 }
 
 // 当たり判定の座標や、半径などの更新.
 void CPlayer::UpdateCollision()
 {
+	m_pCollisions->GetCollision<CSphere>()->SetPosition( D3DXVECTOR3( m_Tranceform.Position.x, m_Tranceform.Position.y, m_Tranceform.Position.z ) );	
 }
 
 // 操作関数.
@@ -194,4 +208,18 @@ void CPlayer::CameraUpdate()
 
 	// カメラの回転値の更新.
 	m_CameraRot = D3DXVECTOR3( 0.0f, m_pLookCamera->GetRadianX(), 0.0f );
+}
+
+// 実験でプレイヤーを消す関数.
+void CPlayer::SetDelete( const std::function<void( bool& )>& proc )
+{
+	m_IsDelete = false;
+	proc( m_IsDelete );
+}
+
+// 実験でプレイヤーが拘束されているか関数.
+void CPlayer::SetIsRestraint( const std::function<void( bool& )>& proc )
+{
+	m_IsRestraint = false;
+	proc( m_IsRestraint );
 }

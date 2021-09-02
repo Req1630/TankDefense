@@ -130,6 +130,12 @@
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Weapon\MachineGun\MachineGun.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Weapon\DefaultWepon\DefaultWepon.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Bullet\Bullet.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\ActorManager\GameActorManager.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\SpecialEnemy_2\SpecialEnemy_2.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\EnemyBase\SpecialEnemy_1\SpecialEnemy_1.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Explosion\Explosion.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Restraint\Restraint.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\Bullet\EnemyBullet\EnemyBullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -265,6 +271,12 @@
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Weapon\MachineGun\MachineGun.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Weapon\DefaultWepon\DefaultWepon.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Bullet\Bullet.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\ActorManager\GameActorManager.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\SpecialEnemy_2\SpecialEnemy_2.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\EnemyBase\SpecialEnemy_1\SpecialEnemy_1.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Explosion\Explosion.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Restraint\Restraint.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\Bullet\EnemyBullet\EnemyBullet.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

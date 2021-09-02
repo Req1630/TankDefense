@@ -7,7 +7,8 @@
 #include "..\..\..\Object\CameraBase\RotLookAtCenter\RotLookAtCenter.h"
 #include "..\..\..\Common\Mesh\RayMesh\RayMesh.h"
 
-class CPlayer;
+//class CPlayer;
+class CGameActorManager;
 
 /**********************************
 *	タイトルシーンクラス.
@@ -29,12 +30,8 @@ public:
 
 private:
 	float m_DeltaTime;
-	CDX9SkinMesh*	m_pSkinMesh;
 	CDX9StaticMesh*	m_pStaticMesh;
-	CSprite*	m_Sprite;
-	CEffectManager m_effect1;
-	CEffectManager m_effect2;
-	CPlayer*	m_pPlayer;
+	std::unique_ptr<CGameActorManager>	m_pGameObjManager;	// ゲームオブジェクト管理クラス.
 };
 
 #endif	// #ifndef TITLE_H.

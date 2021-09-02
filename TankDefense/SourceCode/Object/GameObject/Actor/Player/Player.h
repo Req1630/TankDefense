@@ -66,6 +66,11 @@ private:
 	void Move();
 	// カメラの更新.
 	void CameraUpdate();
+
+	// 実験でキャラが存在しているのか関数.
+	virtual void SetDelete( const std::function<void( bool& )>& ) override;
+	// 実験でプレイヤーが拘束されているか関数.
+	virtual void SetIsRestraint( const std::function<void( bool& )>& ) override;
 	
 protected:
 	CDX9StaticMesh*						m_pStaticMesh;		// プレイヤーの車体モデル.
@@ -79,6 +84,8 @@ protected:
 	D3DXVECTOR3							m_MoveVec;			// 移動ベクトル.
 
 	SStatus								m_Status;			// ステータス.
+	bool								m_IsDelete;			// プレイヤーを消すかどうか.
+	bool								m_IsRestraint;		// 拘束をされたかどうか.
 };
 
 #endif	// #ifndef PLAYER_H.

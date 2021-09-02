@@ -75,7 +75,7 @@ private:
 	// 階乗を計算する.
 	float Factorial( int a );
 
-private:
+protected:
 	CDX9StaticMesh*				m_pStaticMesh;		// 弾のモデル.
 
 	CWeapon::SStatus			m_Status;			// ステータス.

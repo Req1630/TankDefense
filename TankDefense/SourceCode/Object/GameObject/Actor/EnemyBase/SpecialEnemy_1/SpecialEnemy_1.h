@@ -1,15 +1,16 @@
-#ifndef ENEMY_H
-#define ENEMY_H
+#ifndef SPECIALENEMY_1_H
+#define SPECIALENEMY_1_H
 
 #include "..\EnemyBase.h"
 
-class CEnemyBullet;
+class CExplosion;
 
-class CEnemy : public CEnemyBase
+class CSpecialEnemy_1 : public CEnemyBase
 {
+
 public:
-	CEnemy();
-	virtual ~CEnemy();
+	CSpecialEnemy_1();
+	virtual ~CSpecialEnemy_1();
 
 	// 初期化関数.
 	virtual bool Init() override;
@@ -28,8 +29,6 @@ public:
 	virtual bool Spawn( const D3DXVECTOR3& spawnPos ) override;
 	// 相手座標の設定.
 	virtual void SetTargetPos( CActor& actor ) override;
-	// エネミー座標の設定.
-	void SetEnemyPos(CActor& actor);
 
 private:
 	// スポーン中.
@@ -45,23 +44,17 @@ private:
 	void Attack();
 	// プレイヤーとの当たり判定.
 	void PlayerCollsion( CActor* pActor );
-	// 特殊な敵1との当たり判定.
-	void SpecialEnemy_1Collsion( CActor* pActor );
-	// 特殊な敵2との当たり判定.
-	void SpecialEnemy_2Collsion( CActor* pActor );
-	// プレイヤーと雑魚敵の弾の当たり判定.
-	void EnemyBulletCollsion( CActor* pActor );
-
-	// 索敵範囲.
-	void SearchRange();
+	// プレイヤーと爆発の当たり判定.
+	void ExplosionCollsion( CActor* pActor );
+	// 雑魚敵と爆発の当たり判定.
+	void ExplosionEnemyCollsion( CActor* pActor );
+	// 特殊な敵2と爆発の当たり判定.
+	void ExplosionSEnemy2Collsion( CActor* pActor );
 
 private:
 	CEnemyBase*		m_pEnemyBase;		// 敵ベースクラス.
-	std::shared_ptr<CEnemyBullet>	m_pEnemyBullet;	// 雑魚敵の弾クラス.
-
-	bool			m_HasAimPlayer;		// プレイヤーを狙うかどうか.
-	bool			m_OldHasAimPlayer;	// 前回プレイヤーを狙っていたか.
+	std::shared_ptr<CExplosion>		m_pExplosion;	// 爆発クラス.
 
 };
 
-#endif // !ENEMY_H
+#endif // !SPECIALENEMY_1_H

@@ -1,15 +1,19 @@
-#ifndef ENEMY_H
-#define ENEMY_H
+#ifndef SPECIALENEMY_2_H
+#define SPECIALENEMY_2_H
 
 #include "..\EnemyBase.h"
+#include <time.h>
+#include <random>
+#include <vector>
 
-class CEnemyBullet;
+class CRestraint;
 
-class CEnemy : public CEnemyBase
+class CSpecialEnemy_2 : public CEnemyBase
 {
+
 public:
-	CEnemy();
-	virtual ~CEnemy();
+	CSpecialEnemy_2();
+	virtual ~CSpecialEnemy_2();
 
 	// 初期化関数.
 	virtual bool Init() override;
@@ -28,8 +32,6 @@ public:
 	virtual bool Spawn( const D3DXVECTOR3& spawnPos ) override;
 	// 相手座標の設定.
 	virtual void SetTargetPos( CActor& actor ) override;
-	// エネミー座標の設定.
-	void SetEnemyPos(CActor& actor);
 
 private:
 	// スポーン中.
@@ -46,22 +48,18 @@ private:
 	// プレイヤーとの当たり判定.
 	void PlayerCollsion( CActor* pActor );
 	// 特殊な敵1との当たり判定.
-	void SpecialEnemy_1Collsion( CActor* pActor );
-	// 特殊な敵2との当たり判定.
-	void SpecialEnemy_2Collsion( CActor* pActor );
-	// プレイヤーと雑魚敵の弾の当たり判定.
-	void EnemyBulletCollsion( CActor* pActor );
-
-	// 索敵範囲.
-	void SearchRange();
+	void SpecialEnemy1Collsion( CActor* pActor );
+	// 拘束攻撃の当たり判定.
+	void RestraintCollsion( CActor* pActor );
 
 private:
 	CEnemyBase*		m_pEnemyBase;		// 敵ベースクラス.
-	std::shared_ptr<CEnemyBullet>	m_pEnemyBullet;	// 雑魚敵の弾クラス.
+	std::shared_ptr<CRestraint>		m_pRestraint;	// 拘束クラス.
+	CSprite*		m_pSprite;			// スプライトクラス
 
-	bool			m_HasAimPlayer;		// プレイヤーを狙うかどうか.
-	bool			m_OldHasAimPlayer;	// 前回プレイヤーを狙っていたか.
+	int				m_ConfuCnt;			// 混乱カウント.
+	bool			m_IsConfu;			// 混乱状態になっているかどうか.
 
 };
 
-#endif // !ENEMY_H
+#endif // !SPECIALENEMY_2_H

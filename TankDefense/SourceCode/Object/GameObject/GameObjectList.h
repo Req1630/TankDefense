@@ -13,6 +13,9 @@ enum class enObjectTagList : unsigned int
 
 	Player,			// ƒvƒŒƒCƒ„[.
 	Enemy,			// G‹›“G.
+	SpecialEnemy_1,	// “Áê‚È“G1.
+	SpecialEnemy_2, // “Áê‚È“G2.
+	Boss,			// ƒ{ƒX.
 
 	Max,
 
