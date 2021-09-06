@@ -48,17 +48,18 @@ private:
 	// スレッドの解放.
 	void ThreadRelease();
 private:
-	HWND										m_hWnd;					// ウィンドウハンドル.
-	std::shared_ptr<CSceneBase>					m_pScene;				// シーンクラス.
-	std::unique_ptr<CLoadRender>				m_pLoadRender;			// 読み込みの描画.
-	std::unique_ptr<CRenderingTexterManager>	m_pRenderingTexManager;	// レンダリングテクスチャクラス.
-	std::function<void()>						m_RenderFunction;		// レンダリング関数.
-	EScene										m_NowScene;				// 現在のシーン.
-	EScene										m_NextScene;			// 次のシーン.
-	bool										m_IsThreadLoadEnd;		// スレッドロードが終了したか.
-	bool										m_IsLoadEnd;			// ロードが終了したか.
-	bool										m_IsOldLoadEnd;			// ロードが終了したか.
-	bool										m_OnceStep;				// 一回だけ動作.
+	HWND										m_hWnd;						// ウィンドウハンドル.
+	std::shared_ptr<CSceneBase>					m_pScene;					// シーンクラス.
+	std::unique_ptr<CLoadRender>				m_pLoadRender;				// 読み込みの描画.
+	std::unique_ptr<CRenderingTexterManager>	m_pRenderingTexManager;		// レンダリングテクスチャクラス.
+	std::function<void()>						m_ModelRenderFunction;		// モデル描画関数.
+	std::function<void()>						m_Sprite3DRenderFunction;	// スプライト3D関数.
+	EScene										m_NowScene;					// 現在のシーン.
+	EScene										m_NextScene;				// 次のシーン.
+	bool										m_IsThreadLoadEnd;			// スレッドロードが終了したか.
+	bool										m_IsLoadEnd;				// ロードが終了したか.
+	bool										m_IsOldLoadEnd;				// ロードが終了したか.
+	bool										m_OnceStep;					// 一回だけ動作.
 	std::thread	m_Thread;			// スレッド.
 	std::mutex	m_Mutex;			
 	bool		m_isThreadJoined;

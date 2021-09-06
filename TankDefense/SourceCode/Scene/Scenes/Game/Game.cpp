@@ -48,3 +48,11 @@ void CGame::ModelRender()
 void CGame::SpriteRender()
 {
 }
+
+//============================.
+// スプライト3D描画関数.
+//============================.
+void CGame::Sprite3DRender()
+{
+}
+

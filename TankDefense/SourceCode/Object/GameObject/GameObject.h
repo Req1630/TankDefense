@@ -27,6 +27,8 @@ public:
 	virtual void Update( const float& deltaTime ) = 0;
 	// 描画関数.
 	virtual void Render() = 0;
+	// Sprite3D描画関数.
+	virtual void Sprite3DRender(){}
 
 	// ゲームオブジェクトタグの取得.
 	inline EObjectTag GetObjectTag(){ return m_ObjectTag; }

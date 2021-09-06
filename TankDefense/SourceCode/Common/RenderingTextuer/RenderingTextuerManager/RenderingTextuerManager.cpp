@@ -74,14 +74,19 @@ void CRenderingTexterManager::Release()
 }
 
 // •`‰æŠÖ”.
-void CRenderingTexterManager::Render( std::function<void()>& modelRender )
+void CRenderingTexterManager::Render( 
+	std::function<void()>& modelRender, 
+	std::function<void()>& sprite3DRender )
 {
+	// ‰e‚Ìî•ñ‚ğ‘‚«‚Ş.
 	m_pShadowMap->Update();
 	modelRender();			// ƒ‚ƒfƒ‹‚Ì•`‰æ.
 	m_pShadowMap->SetEndRender();
 
+	// ‘‚«‚ñ‚¾‰e‚Ìî•ñ‚ğg—p‚µ‚Ä3Dƒ‚ƒfƒ‹‚ğ•`‰æ.
 	m_pGBuffer->SetBuffer();
-	modelRender();	// ƒ‚ƒfƒ‹‚Ì•`‰æ.
+	modelRender();		// ƒ‚ƒfƒ‹‚Ì•`‰æ.
+	sprite3DRender();	// ƒXƒvƒ‰ƒCƒg3D‚Ì•`‰æ.
 
 	// ‚±‚±‚©‚ç”w–Ê‚ğ•`‰æ‚³‚¹‚È‚¢.
 	SetRasterizerState( ERS_STATE::Back );

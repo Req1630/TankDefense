@@ -45,6 +45,9 @@ void CTitle::Update()
 {
 	m_DeltaTime = GetDeltaTime();
 	m_pGameObjManager->Update();
+	if( CKeyInput::IsPress('K') ){
+		SetEditSceneChange();
+	}
 }
 
 //============================.
@@ -60,6 +63,13 @@ void CTitle::ModelRender()
 // 画像描画関数.
 //============================.
 void CTitle::SpriteRender()
+{
+}
+
+//============================.
+// スプライト3D描画関数.
+//============================.
+void CTitle::Sprite3DRender()
 {
 }
 

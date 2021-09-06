@@ -27,6 +27,8 @@ public:
 	virtual void ModelRender() override;
 	// 画像描画関数.
 	virtual void SpriteRender() override;
+	// スプライト3D描画関数.
+	virtual void Sprite3DRender() override;
 
 private:
 	float m_DeltaTime;

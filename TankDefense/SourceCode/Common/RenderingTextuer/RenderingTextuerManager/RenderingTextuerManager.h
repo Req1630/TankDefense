@@ -37,7 +37,9 @@ public:
 	virtual void Release() override;
 
 	// 描画関数.
-	void Render( std::function<void()>& func );
+	void Render( 
+		std::function<void()>& mdoelRender, 
+		std::function<void()>& sprite3DRender );
 
 	// サイズ変更.
 	HRESULT ResizeTexture();

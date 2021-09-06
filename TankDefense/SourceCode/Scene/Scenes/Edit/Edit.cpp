@@ -112,3 +112,10 @@ void CEdit::SpriteRender()
 	// ImGuiデモウィンドウ表示.
 	ImGui::ShowDemoWindow();
 }
+
+//============================.
+// スプライト3D描画関数.
+//============================.
+void CEdit::Sprite3DRender()
+{
+}

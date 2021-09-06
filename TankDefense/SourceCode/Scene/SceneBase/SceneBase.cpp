@@ -15,3 +15,10 @@ void CSceneBase::ChangeScene()
 {
 	if( m_IsSceneChange == true && CFade::IsFadeEnd() ) m_pSceneManager->ChangeNextScene();
 }
+
+// エディットシーンの変更の設定.
+void CSceneBase::SetEditSceneChange()
+{
+	SetSceneChange();
+	m_pSceneManager->ChangeEditScene();
+}

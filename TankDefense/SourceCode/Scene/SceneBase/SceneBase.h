@@ -38,13 +38,19 @@ public:
 	virtual void ModelRender() = 0;
 	// 画像描画関数.
 	virtual void SpriteRender() = 0;
+	// スプライト3D描画関数.
+	virtual void Sprite3DRender() = 0;
 
 	// シーンの変更.
 	void ChangeScene();
+
 protected:
 	// シーンの変更の設定.
 	//	シーンを変更する前に呼ぶ.
 	void SetSceneChange();
+
+	// エディットシーンの変更の設定.
+	void SetEditSceneChange();
 
 
 protected:

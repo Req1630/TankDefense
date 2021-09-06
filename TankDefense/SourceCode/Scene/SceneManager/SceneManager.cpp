@@ -13,7 +13,8 @@ CSceneManager::CSceneManager()
 	, m_pScene					( nullptr )
 	, m_pLoadRender				( nullptr )
 	, m_pRenderingTexManager	( nullptr )
-	, m_RenderFunction			( nullptr )
+	, m_ModelRenderFunction		( nullptr )
+	, m_Sprite3DRenderFunction	( nullptr )
 	, m_NowScene				( EScene::Start )
 	, m_NextScene				( EScene::Start )
 	, m_IsThreadLoadEnd			( false )
@@ -24,11 +25,15 @@ CSceneManager::CSceneManager()
 {
 	m_pLoadRender = std::make_unique<CLoadRender>();
 	m_pRenderingTexManager = std::make_unique<CRenderingTexterManager>();
-	m_RenderFunction = [&]()
+	m_ModelRenderFunction = [&]()
 	{ 
 		m_pScene->ModelRender();
 		CLightManager::PositionRender();		// ƒ‰ƒCƒg‚ÌˆÊ’u•`‰æ.
 		CCollisionRender::Render();				// “–‚½‚è”»’è‚Ì•`‰æ.
+	};
+	m_Sprite3DRenderFunction = [&]()
+	{
+		m_pScene->Sprite3DRender();
 	};
 }
 
@@ -172,7 +177,7 @@ void CSceneManager::SceneUpdate( const float& deltaTime )
 	CCameraManager::Update( deltaTime );
 	CLightManager::Update( deltaTime );
 
-	m_pRenderingTexManager->Render( m_RenderFunction );
+	m_pRenderingTexManager->Render( m_ModelRenderFunction, m_Sprite3DRenderFunction );
 	m_pScene->SpriteRender();
 }
 
