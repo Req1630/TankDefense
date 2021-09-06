@@ -1,7 +1,7 @@
 #include "EnemyBullet.h"
-#include "..\..\..\..\..\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h"
-#include "..\..\..\..\..\Resource\MeshResource\MeshResource.h"
-#include "..\..\..\..\..\Utility\Input\Input.h"
+#include "..\..\..\..\..\..\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h"
+#include "..\..\..\..\..\..\Resource\MeshResource\MeshResource.h"
+#include "..\..\..\..\..\..\Utility\Input\Input.h"
 
 CEnemyBullet::CEnemyBullet()
 	: m_TargetPosition	( 0.0f, 0.0f, 0.0f )
@@ -23,7 +23,7 @@ bool CEnemyBullet::Init()
 	return true;
 }
 
-void CEnemyBullet::Update( const float & deltaTime )
+void CEnemyBullet::Update( const float& deltaTime )
 {
 	float speed = 0.2f;
 	float add_Scale = 0.05f;
@@ -48,7 +48,7 @@ void CEnemyBullet::Render()
 	}
 }
 
-void CEnemyBullet::Collision( CActor * pActor )
+void CEnemyBullet::Collision( CActor* pActor )
 {
 }
 
@@ -77,12 +77,12 @@ void CEnemyBullet::SetBulletPos( D3DXVECTOR3 Pos, D3DXVECTOR3 MoveVec )
 {
 	m_MoveVec = MoveVec;
 	m_Tranceform.Position = Pos - ( m_MoveVec * 2.0f );
-	m_Tranceform.Position.y += 4.0f;
+	m_Tranceform.Position.y += 1.5f;
 	m_pStaticMesh->SetPosition( m_Tranceform.Position );
 }
 
 // 相手座標の設定関数.
-void CEnemyBullet::SetTargetPos( CActor & actor )
+void CEnemyBullet::SetTargetPos( CActor& actor )
 {
 	// エネミーじゃなければ終了.
 	if ( actor.GetObjectTag() != EObjectTag::Enemy ) return;

@@ -11,7 +11,7 @@
 /************************************************
 *	マシンガンクラス.
 **/
-class CMachineGun
+class CMachineGun final
 	: public CWeapon
 {
 public:
@@ -19,8 +19,11 @@ public:
 	~CMachineGun();
 
 	// 初期化関数.
-	virtual bool Init();
+	virtual bool Init() override;
 
+protected:
+	// 作成関数.
+	virtual void Create() override;
 };
 
 #endif	// #ifndef MACHINEGUN_H.

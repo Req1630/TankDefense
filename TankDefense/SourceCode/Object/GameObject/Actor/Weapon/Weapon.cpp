@@ -1,15 +1,16 @@
 #include "Weapon.h"
-#include "..\..\..\..\Common\Mesh\DX9StaticMesh\DX9StaticMesh.h"
+#include "..\..\..\..\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.h"
 #include "..\..\..\..\Resource\MeshResource\MeshResource.h"
-#include "..\..\..\..\Object\GameObject\Actor\Bullet\Bullet.h"
+#include "..\..\..\..\Object\GameObject\Actor\Weapon\Bullet\BulletManager\BulletManager.h"
 
 CWeapon::CWeapon()
-	: m_pStaticMesh	( nullptr )
-	, m_pBullet		()
-	, m_Type		( EType::DefaultWepon )
-	, m_ListSize	()
-	, m_Status		()
-	, m_ShotCnt		()
+	: m_pBulletMng			()
+	, m_ShotCnt				()
+	, m_pSkinMesh_Body		( nullptr )
+	, m_pSkinMesh_Weapon	( nullptr )
+	, m_Type				( EType::DefaultWepon )
+	, m_Status				()
+	, m_BoneName			()
 {
 }
 
@@ -20,16 +21,7 @@ CWeapon::~CWeapon()
 // èâä˙âªä÷êî.
 bool CWeapon::Init()
 {
-	// ïKóvÇ»îzóÒêîÇãÅÇﬂÇÈ.
-	m_ListSize = m_Status.BulletsNum - m_Status.BulletsNum / static_cast<int>( DISP_TIME / m_Status.Interval ) + 1;
-
-	// íeêîï™îzóÒÇópà”.
-	m_pBullet.resize( m_ListSize );
-
-	// íeÇÃê›íË.
-	for ( int i = 0; i < m_ListSize; i++ ){
-		m_pBullet[i] = std::make_unique<CBullet>();
-	}
+	InitCollision();
 	return true;
 }
 
@@ -38,26 +30,24 @@ void CWeapon::Update( const float& deltaTime )
 {
 	// íeÇÃçXêV.
 	if ( m_ShotCnt < m_Status.Interval ) m_ShotCnt += deltaTime;
-	for ( int i = 0; i < m_ListSize; i++ ){
-		m_pBullet[i]->Update( deltaTime );
-	}
+	DebugUpdate();
 	UpdateCollision();
 }
 
 // ï`âÊä÷êî.
 void CWeapon::Render()
 {
-	// ÉÇÉfÉãÇÃï`âÊ.
-	m_pStaticMesh->Render();
+	if ( m_pSkinMesh_Body	== nullptr ) return;
+	if ( m_pSkinMesh_Weapon == nullptr ) return;
 
-	// íeÇÃï`âÊ.
-	for ( int i = 0; i < m_ListSize; i++ ){
-		m_pBullet[i]->Render();
-	}
+	// ÉÇÉfÉãÇÃï`âÊ.
+	m_pSkinMesh_Body->SetTranceform( m_Tranceform );
+	m_pSkinMesh_Body->Render();
+	m_pSkinMesh_Weapon->Render();
 }
 
 // ìñÇΩÇËîªíËä÷êî.
-void CWeapon::Collision( CActor * pActor )
+void CWeapon::Collision( CActor* pActor )
 {
 }
 
@@ -71,49 +61,71 @@ void CWeapon::UpdateCollision()
 {
 }
 
-void CWeapon::Shot( D3DXVECTOR3 MoveVec )
+// íeÇÃî≠éÀä÷êî.
+//	Å¶íeÇ™ñ≥Ç≠Ç»Ç¡ÇΩèÍçá"false"Çï‘Ç∑.
+bool CWeapon::Shot( D3DXVECTOR3 MoveVec )
 {
-	int cnt = 0;
+	D3DXVECTOR3 ShotPos = m_Tranceform.Position;
+	m_pSkinMesh_Weapon->GetPosFromBone( m_ShotName.c_str(), &ShotPos );
+
 	// íeä‘äuï™ä‘äuÇ™ãÛÇ¢ÇƒÇ¢ÇΩÇÁ.
 	if ( m_ShotCnt >= m_Status.Interval ){
-		for ( int i = 0; i < m_ListSize; i++ ){
-			if ( m_pBullet[i]->GetDisp() == false ){
-				m_ShotCnt = 0.0f;
+		m_ShotCnt = 0.0f;
 
-				// ÉXÉeÅ[É^ÉXÇÃê›íË.
-				m_pBullet[i]->SetStatus( m_Status );
+		//ìØéûÇ…î≠éÀÇ∑ÇÈíeÇÃêî.
+		int ShotNum = 1;
+		if ( m_Type == EType::Missile ) ShotNum = 8;
 
-				// íeÇÃî≠éÀ.
-				if ( m_Type == EType::Missile )
-					m_pBullet[i]->HomingShot( m_Tranceform.Position, D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
-				else
-					m_pBullet[i]->NormalShot( m_Tranceform.Position, MoveVec );
+		for ( int i = 0; i < ShotNum; i++ ){
+			// íeÇÃî≠éÀ.
+			if ( m_Type == EType::Missile )
+				m_pBulletMng->HomingShot( m_BulletName, EObjectTag::PlayerBullet, m_Status, ShotPos, D3DXVECTOR3( 0.0f, 0.0f, 0.0f ), m_Tranceform.Rotation );
+			else
+				m_pBulletMng->NormalShot( m_BulletName, EObjectTag::PlayerBullet, m_Status, ShotPos, m_Tranceform.Rotation, MoveVec );
 
-				// íeêîÇå∏ÇÁÇ∑.
-				if ( m_Type != EType::DefaultWepon ){
-					m_Status.BulletsNum--;
-					if ( m_Status.BulletsNum <= 0 ){
-						/*
-						//	ïêäÌÇéÂñCÇ…ñﬂÇ∑èàóùÇì¸ÇÍÇÈ.
-						*/
-					}
-				}
-				cnt++;
+			// íeêîÇå∏ÇÁÇ∑.
+			if ( m_Type != EType::DefaultWepon ){
+				m_Status.BulletsNum--;
 
-				if( m_Type != EType::Missile || cnt >= 8 ) break;
+				// ïêäÌÇÃïœçXÇÃÇ®ímÇÁÇπ.
+				if ( m_Status.BulletsNum <= 0 ) return false;
 			}
 		}
 	}
+	return true;
 }
 
-// à⁄ìÆ.
-void CWeapon::Move( D3DXVECTOR3 Pos, D3DXVECTOR3 Rot )
+// à⁄ìÆä÷êî.
+void CWeapon::Move( D3DXVECTOR3 BodyPos, D3DXVECTOR3 Rot )
 {
-	// ÉÇÉfÉãÇÃà⁄ìÆ.
-	m_pStaticMesh->SetPosition( Pos );
-	m_Tranceform.Position = Pos;
-
-	// ÉÇÉfÉãÇâÒì]Ç≥ÇπÇÈ.
-	m_pStaticMesh->SetRotation( Rot );
+	// à⁄ìÆÅAâÒì].
+	m_Tranceform.Position = BodyPos;
 	m_Tranceform.Rotation = Rot;
+
+	// ç¿ïWÇÃê›íË.
+	D3DXVECTOR3 BonePos = m_Tranceform.Position;
+	m_pSkinMesh_Body->GetPosFromBone( m_BoneName.c_str(), &BonePos );
+
+	// ÉÇÉfÉãÇ…îΩâfÇ≥ÇπÇÈ.
+	if ( m_pSkinMesh_Body == nullptr ) return;
+	m_pSkinMesh_Body->SetPosition( BodyPos );
+	m_pSkinMesh_Body->SetRotation( Rot );
+	if ( m_pSkinMesh_Weapon == nullptr ) return;
+	m_pSkinMesh_Weapon->SetPosition( BonePos );
+	m_pSkinMesh_Weapon->SetRotation( Rot );
+}
+
+// ÉfÉoÉbÉNÇÃçXêVä÷êî.
+void CWeapon::DebugUpdate()
+{
+	CDebugText::PushText( "Bullet", "------------------" );
+	CDebugText::PushText( "Bullet", "----  Bullet  ----" );
+	CDebugText::PushText( "Bullet", "------------------" );
+	CDebugText::PushText( "Bullet", "Type             : ", m_Type );
+	CDebugText::PushText( "Bullet", "BulletsNum       : ", m_Status.BulletsNum );
+	CDebugText::PushText( "Bullet", "Attack           : ", m_Status.Attack );
+	CDebugText::PushText( "Bullet", "Speed            : ", m_Status.Speed );
+	CDebugText::PushText( "Bullet", "Interval         : ", m_Status.Interval );
+	CDebugText::PushText( "Bullet", "ShotCnt          : ", m_ShotCnt );
+	CDebugText::PushText( "Bullet", "------------------" );
 }

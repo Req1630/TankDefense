@@ -14,8 +14,8 @@ CSpecialEnemy_2::CSpecialEnemy_2()
 	, m_IsConfu			( false )
 
 {
-	m_pRestraint = std::make_shared<CRestraint>();
-	m_ObjectTag = EObjectTag::SpecialEnemy_2;
+	m_pRestraint	= std::make_shared<CRestraint>();
+	m_ObjectTag		= EObjectTag::SpecialEnemy_2;
 	Init();
 }
 
@@ -54,16 +54,10 @@ void CSpecialEnemy_2::Update( const float& deltaTime )
 	if ( CKeyInput::IsMomentPress( 'Y' ) == true ) m_IsDelete = false;
 	// 死亡.
 	if ( CKeyInput::IsMomentPress( 'H' ) == true ) m_IsDelete = true;
+	// 実験で拘束攻撃を消す.
+	if ( CKeyInput::IsMomentPress( VK_LSHIFT ) == true ) m_pRestraint->SetIsRestraint( false );
 
-	//CDebugText::PushText( "SpecialEnemy_2", "---------------------------------------------" );
-	//CDebugText::PushText( "SpecialEnemy_2", "--------------- SpecialEnemy_2 --------------" );
-	//CDebugText::PushText( "SpecialEnemy_2", "---------------------------------------------" );
-	//CDebugText::PushText( "SpecialEnemy_2", "Pos : ", m_Tranceform.Position.x, ", ", m_Tranceform.Position.y, ", ", m_Tranceform.Position.z );
-	//CDebugText::PushText( "SpecialEnemy_2", "Rot : ", m_Tranceform.Rotation.x, ", ", m_Tranceform.Rotation.y, ", ", m_Tranceform.Rotation.z );
-	//CDebugText::PushText( "SpecialEnemy_2", "'Y' IsDelete = false, 'H' IsDelete = true" );
-	//CDebugText::PushText( "SpecialEnemy_2", "IsDelete : ", m_IsDelete == true ? "true" : "false" );
-	//CDebugText::PushText( "SpecialEnemy_2", "m_IsConfu : ", m_IsConfu == true ? "true" : "false" );
-	//CDebugText::PushText( "SpecialEnemy_2", "m_IsRestraint : ", m_pRestraint->GetIsRestraint() == true ? "true" : "false" );
+	DebugUpdate();			// デバック更新.
 
 	UpdateCollision();	// 当たり判定の更新.
 }
@@ -74,12 +68,17 @@ void CSpecialEnemy_2::Render()
 	// 画面の外なら終了.
 	if ( IsDisplayOut() == true ) return;
 
-	m_pSkinMesh->SetPosition( m_Tranceform.Position );
-	m_pSkinMesh->SetRotation( m_Tranceform.Rotation );
-	m_pSkinMesh->SetScale( m_Tranceform.Scale );
+	m_pSkinMesh->SetTranceform( m_Tranceform );
+
 	if ( m_IsDelete == false ) m_pSkinMesh->Render();
 	m_pRestraint->Render();
 
+	
+}
+
+// Sprite3D描画関数.
+void CSpecialEnemy_2::Sprite3DRender()
+{
 	// 混乱画像の3D描画.
 	if ( m_IsConfu == true ){
 		SSpriteRenderState ConfuSprite = m_pSprite->GetRenderState();
@@ -157,7 +156,7 @@ void CSpecialEnemy_2::Move()
 	// 混乱状態.
 	else {
 		SetRandMoveVector( m_RandPos );
-		if ( m_IsRand == false ) {
+		if ( m_IsRandMove == false ) {
 			Rand_Pos();
 		}
 		else {
@@ -170,7 +169,7 @@ void CSpecialEnemy_2::Move()
 		m_ConfuCnt++;								// 混乱カウント加算.
 		if ( m_ConfuCnt < 10.0*FPS ) return;		// 10秒経ったら解除する.
 		m_IsConfu = false;							// 混乱状態を解除する.
-		m_IsRand = false;							// ランダム座標を変える.
+		m_IsRandMove = false;							// ランダム座標を変える.
 		m_NowMoveState = Enemy::EMoveState::Wait;	// 待機状態にする.
 		m_ConfuCnt = 0;								// 混乱カウントの初期化.
 	}
@@ -232,8 +231,10 @@ void CSpecialEnemy_2::PlayerCollsion( CActor* pActor )
 	D3DXVec3Normalize( &vecPushOut, &Distance );// Ｐ0 - Ｐ1の正規化ﾍﾞｸﾄﾙ 
 
 	// ﾍﾞｸﾄﾙに長さをかけて刺さった分お互いを押し戻す
-	Pos[0] -= vecPushOut * inDistance / 12;
-	Pos[1] -= -vecPushOut * inDistance / 12;
+	Pos[0].x -= vecPushOut.x * inDistance / 8;
+	Pos[0].z -= vecPushOut.z * inDistance / 8;
+	Pos[1].x -= -vecPushOut.x * inDistance / 8;
+	Pos[1].z -= -vecPushOut.z * inDistance / 8;
 
 	//m_Tranceform.Position = Pos[0];
 	pActor->SetPosition( Pos[1] );
@@ -260,8 +261,10 @@ void CSpecialEnemy_2::SpecialEnemy1Collsion( CActor * pActor )
 	D3DXVec3Normalize( &vecPushOut, &Distance );// Ｐ0 - Ｐ1の正規化ﾍﾞｸﾄﾙ 
 
 	// ﾍﾞｸﾄﾙに長さをかけて刺さった分お互いを押し戻す
-	Pos[0] -= vecPushOut * inDistance / 12;
-	Pos[1] -= -vecPushOut * inDistance / 12;
+	Pos[0].x -= vecPushOut.x * inDistance / 8;
+	Pos[0].z -= vecPushOut.z * inDistance / 8;
+	Pos[1].x -= -vecPushOut.x * inDistance / 8;
+	Pos[1].z -= -vecPushOut.z * inDistance / 8;
 
 	//m_Tranceform.Position = Pos[0];
 	pActor->SetPosition( Pos[1] );
@@ -290,4 +293,21 @@ void CSpecialEnemy_2::RestraintCollsion( CActor * pActor )
 	{
 		isRestraint = true;
 	});
+}
+
+// デバック更新関数.
+void CSpecialEnemy_2::DebugUpdate()
+{
+#ifdef _DEBUG
+	CDebugText::PushText("SpecialEnemy_2", "---------------------------------------------");
+	CDebugText::PushText("SpecialEnemy_2", "--------------- SpecialEnemy_2 --------------");
+	CDebugText::PushText("SpecialEnemy_2", "---------------------------------------------");
+	CDebugText::PushText("SpecialEnemy_2", "Pos : ", m_Tranceform.Position.x, ", ", m_Tranceform.Position.y, ", ", m_Tranceform.Position.z);
+	CDebugText::PushText("SpecialEnemy_2", "Rot : ", m_Tranceform.Rotation.x, ", ", m_Tranceform.Rotation.y, ", ", m_Tranceform.Rotation.z);
+	CDebugText::PushText("SpecialEnemy_2", "'Y' IsDelete = false, 'H' IsDelete = true");
+	CDebugText::PushText("SpecialEnemy_2", "IsDelete : ", m_IsDelete == true ? "true" : "false");
+	CDebugText::PushText("SpecialEnemy_2", "m_IsConfu : ", m_IsConfu == true ? "true" : "false");
+	CDebugText::PushText("SpecialEnemy_2", "m_IsRestraint : ", m_pRestraint->GetIsRestraint() == true ? "true" : "false");
+	// こりじょんの位置も出す.
+#endif
 }

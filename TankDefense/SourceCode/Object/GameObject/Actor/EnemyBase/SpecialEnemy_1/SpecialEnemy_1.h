@@ -18,6 +18,8 @@ public:
 	virtual void Update( const float& deltaTime ) override;
 	// 描画関数.
 	virtual void Render() override;
+	// Sprite3D描画関数.
+	virtual void Sprite3DRender() override;
 	// 当たり判定関数.
 	virtual void Collision( CActor* pActor ) override;
 	// 当たり判定の初期化.
@@ -50,6 +52,9 @@ private:
 	void ExplosionEnemyCollsion( CActor* pActor );
 	// 特殊な敵2と爆発の当たり判定.
 	void ExplosionSEnemy2Collsion( CActor* pActor );
+
+	// デバック更新関数.
+	void DebugUpdate();
 
 private:
 	CEnemyBase*		m_pEnemyBase;		// 敵ベースクラス.

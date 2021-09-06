@@ -11,7 +11,7 @@
 /************************************************
 *	ミサイルクラス.
 **/
-class CMissile
+class CMissile final
 	: public CWeapon
 {
 public:
@@ -19,8 +19,11 @@ public:
 	~CMissile();
 
 	// 初期化関数.
-	virtual bool Init();
+	virtual bool Init() override;
 
+protected:
+	// 作成関数.
+	virtual void Create() override;
 };
 
 #endif	// #ifndef MISSILE_H.

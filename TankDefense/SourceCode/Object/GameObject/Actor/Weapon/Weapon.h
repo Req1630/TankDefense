@@ -7,9 +7,10 @@
 #define WEAPON_H
 
 #include "..\Actor.h"
+#include "ShotStatus.h"
 
-class CDX9StaticMesh;
-class CBullet;
+class CDX9SkinMesh;
+class CBulletManager;
 
 /************************************************
 *	武器ベースクラス.
@@ -19,7 +20,7 @@ class CWeapon
 {
 public:
 	// 武器の種類.
-	enum enType
+	enum enType : unsigned char
 	{
 		DefaultWepon,
 		MachineGun,
@@ -27,58 +28,54 @@ public:
 		Beam
 	} typedef EType;
 
-	// ステータス.
-	struct stStatus
-	{
-		int	  BulletsNum;	// 弾数.
-		float Attack;		// 攻撃力.
-		float Speed;		// 速度.
-		float Interval;		// 間隔(秒).
-
-		stStatus()
-			: BulletsNum	( 0		)
-			, Attack		( 0.0f	)
-			, Speed			( 0.0f	)
-			, Interval		( 0.0f	)
-		{}
-	} typedef SStatus;
-
 public:
 	CWeapon();
 	virtual ~CWeapon();
 
 	// 初期化関数.
-	virtual bool Init();
+	virtual bool Init() override;
 	// 更新関数.
-	virtual void Update( const float& deltaTime );
+	virtual void Update( const float& deltaTime ) override;
 	// 描画関数.
-	virtual void Render();
+	virtual void Render() override;
 
 	// 当たり判定関数.
-	virtual void Collision( CActor* pActor );
+	virtual void Collision( CActor* pActor ) override;
 
 	// 当たり判定の初期化.
-	virtual void InitCollision();
+	virtual void InitCollision() override;
 	// 当たり判定の座標や、半径などの更新.
 	//	Update関数の最後に呼ぶ.
-	virtual void UpdateCollision();
+	virtual void UpdateCollision() override;
 
-	// 弾の発射.
-	void Shot( D3DXVECTOR3 MoveVec );
+	// 弾の発射関数.
+	virtual bool Shot( D3DXVECTOR3 MoveVec ) final;
 
-	// 移動.
-	void Move( D3DXVECTOR3 Pos, D3DXVECTOR3 Rot );
+	// 移動関数.
+	virtual void Move( D3DXVECTOR3 BodyPos, D3DXVECTOR3 Rot ) final;
+
+	// マネージャーの設定.
+	void SetBulletMng( const std::shared_ptr<CBulletManager> pBulletMng ) { m_pBulletMng = pBulletMng; }
 
 protected:
-	CDX9StaticMesh*							m_pStaticMesh;	// 武器モデル.
+	// デバックの更新関数.
+	void DebugUpdate();
 
-	std::vector<std::unique_ptr<CBullet>>	m_pBullet;		// 弾.
-	EType									m_Type;			// 武器のタイプ.
-	int										m_ListSize;		// 配列のサイズ.
+	// 作成関数.
+	virtual void Create() = 0;
 
-	SStatus									m_Status;		// ステータス.
-	float									m_ShotCnt;		// 弾間隔用カウント.
+protected:
+	CDX9SkinMesh*					m_pSkinMesh_Body;	// 車体モデル.
+	CDX9SkinMesh*					m_pSkinMesh_Weapon;	// 武器モデル.
+	EType							m_Type;				// 武器のタイプ.
+	SStatus							m_Status;			// ステータス.
+	std::string						m_BoneName;			// ボーン名前.
+	std::string						m_BulletName;		// 弾のモデルの名前.
+	std::string						m_ShotName;			// 弾の発射場所のボーンの名前.
 
+private:
+	std::shared_ptr<CBulletManager>	m_pBulletMng;		// 弾.
+	float							m_ShotCnt;			// 弾間隔用カウント.
 };
 
 #endif	// #ifndef WEAPON_H.

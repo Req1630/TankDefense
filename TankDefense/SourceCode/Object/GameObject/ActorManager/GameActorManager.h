@@ -8,9 +8,12 @@
 
 class CGameObject;		// ゲームオブジェクトクラス.
 class CPlayer;			// プレイヤークラス.
+class CBulletManager;	// 弾マネージャークラス.
 class CEnemy;			// 雑魚敵クラス.
 class CSpecialEnemy_1;	// 特殊な敵1クラス.
 class CSpecialEnemy_2;	// 特殊な敵2クラス.
+class CBoss;			// ボスクラス.
+class CDropItemManager;	// ドロップアイテムマネージャークラス.
 
 class CGameActorManager
 {
@@ -24,6 +27,8 @@ public:
 	void Update();
 	// 描画関数.
 	void Render();
+	// Sprite3D描画関数.
+	void Sprite3DRender();
 	// スプライトの描画.
 	void SpriteRender();
 	// オブジェクト座標リストの取得.
@@ -36,9 +41,12 @@ private:
 private:
 	float								m_DeltaTime;
 	std::shared_ptr<CPlayer>			m_pPlayer;			// プレイヤー.
+	std::shared_ptr<CBulletManager>		m_pBulletMng;		// 弾マネージャー.
 	std::shared_ptr<CEnemy>				m_pEnemy;			// 雑魚敵.
 	std::shared_ptr<CSpecialEnemy_1>	m_pSpecialEnemy_1;	// 特殊な敵1(爆発する敵).
 	std::shared_ptr<CSpecialEnemy_2>	m_pSpecialEnemy_2;	// 特殊な敵2(拘束する敵).
+	std::shared_ptr<CBoss>				m_pBoss;			// ボス.
+	std::shared_ptr<CDropItemManager>	m_pDropItemMng;		// ドロップアイテムマネージャー.
 
 	std::vector<std::pair<EObjectTag, std::pair<D3DXVECTOR3, float>>>	m_ObjPositionList;	// 各オブジェクトの座標リスト.
 	int		m_ObjPosListCount;		// オブジェクトの座標リストの数.

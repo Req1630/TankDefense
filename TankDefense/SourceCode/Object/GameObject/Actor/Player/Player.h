@@ -8,17 +8,19 @@
 
 #include "..\Actor.h"
 
-class CDX9StaticMesh;
+class CDX9SkinMesh;
 class CRotLookAtCenter;
+class CBulletManager;
 class CWeapon;
 class CDefaultWepon;
 class CMachineGun;
 class CMissile;
+class CBeam;
 
 /************************************************
 *	プレイヤークラス.
 **/
-class CPlayer
+class CPlayer final
 	: public CActor
 {
 public:
@@ -36,25 +38,32 @@ public:
 
 public:
 	CPlayer();
+	CPlayer( const std::shared_ptr<CBulletManager> pBulletMng );
 	~CPlayer();
 
 	// 初期化関数.
-	virtual bool Init();
+	virtual bool Init() override;
 	// 更新関数.
-	virtual void Update( const float& deltaTime );
+	virtual void Update( const float& deltaTime ) override;
 	// 描画関数.
-	virtual void Render();
+	virtual void Render() override;
 
 	// 当たり判定関数.
-	virtual void Collision( CActor* pActor );
+	virtual void Collision( CActor* pActor ) override;
 
 	// 当たり判定の初期化.
-	virtual void InitCollision();
+	virtual void InitCollision() override;
 	// 当たり判定の座標や、半径などの更新.
 	//	Update関数の最後に呼ぶ.
-	virtual void UpdateCollision();
+	virtual void UpdateCollision() override;
+
+	// 武器の変更関数.
+	void ChangeWeapon( const std::shared_ptr<CWeapon> pWeapon );
 
 private:
+	// 作成関数.
+	void Create();
+
 	// 操作関数.
 	void Controller();
 	// カメラの操作関数.
@@ -64,28 +73,26 @@ private:
 
 	// 移動関数.
 	void Move();
-	// カメラの更新.
+	// カメラの更新関数.
 	void CameraUpdate();
-
-	// 実験でキャラが存在しているのか関数.
-	virtual void SetDelete( const std::function<void( bool& )>& ) override;
-	// 実験でプレイヤーが拘束されているか関数.
-	virtual void SetIsRestraint( const std::function<void( bool& )>& ) override;
 	
+	// デバックの更新関数.
+	void DebugUpdate();
+
 protected:
-	CDX9StaticMesh*						m_pStaticMesh;		// プレイヤーの車体モデル.
+	CDX9SkinMesh*						m_pSkinMesh;		// プレイヤーの車体モデル.
 	std::unique_ptr<CRotLookAtCenter>	m_pLookCamera;		// カメラ.
+	std::shared_ptr<CBulletManager>		m_pBulletMng;		// 弾マネージャー.
 	std::shared_ptr<CWeapon>			m_pWeapon;			// 武器.
 	std::shared_ptr<CDefaultWepon>		m_pDefaultWepon;	// 主砲.
-	std::shared_ptr<CMachineGun>		m_pMachineGun;		// マシンガン.
-	std::shared_ptr<CMissile>			m_pMissile;			// ミサイル.
 
 	D3DXVECTOR3							m_CameraRot;		// カメラの回転.
 	D3DXVECTOR3							m_MoveVec;			// 移動ベクトル.
+	D3DXVECTOR3							m_DireVec;			// 向きベクトル.
+
+	D3DXVECTOR3							m_AlignmentPos;		// 照準の位置.
 
 	SStatus								m_Status;			// ステータス.
-	bool								m_IsDelete;			// プレイヤーを消すかどうか.
-	bool								m_IsRestraint;		// 拘束をされたかどうか.
 };
 
 #endif	// #ifndef PLAYER_H.

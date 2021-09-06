@@ -6,8 +6,8 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#include "..\Actor.h"
-#include "..\Weapon\Weapon.h"
+#include "..\..\Actor.h"
+#include "..\..\Weapon\ShotStatus.h"
 
 class CDX9StaticMesh;
 
@@ -35,34 +35,37 @@ public:
 	~CBullet();
 
 	// 初期化関数.
-	virtual bool Init();
+	virtual bool Init() override;
 	// 更新関数.
-	virtual void Update( const float& deltaTime );
+	virtual void Update( const float& deltaTime ) override;
 	// 描画関数.
-	virtual void Render();
+	virtual void Render() override;
 
 	// 当たり判定関数.
-	virtual void Collision( CActor* pActor );
+	virtual void Collision( CActor* pActor ) override;
 
 	// 当たり判定の初期化.
-	virtual void InitCollision();
+	virtual void InitCollision() override;
 	// 当たり判定の座標や、半径などの更新.
 	//	Update関数の最後に呼ぶ.
-	virtual void UpdateCollision();
+	virtual void UpdateCollision() override;
 
 	// 特定の向きに飛ぶ弾の発射.
-	void NormalShot( D3DXVECTOR3 Pos, D3DXVECTOR3 MoveVec );
+	void NormalShot( std::string StaticMeshName, EObjectTag ObjTag, D3DXVECTOR3 Pos, D3DXVECTOR3 Rot, D3DXVECTOR3 MoveVec );
 
 	// 追尾する弾の発射.
-	void HomingShot( D3DXVECTOR3 StartPos, D3DXVECTOR3 EndPos );
+	void HomingShot( std::string StaticMeshName, EObjectTag ObjTag, D3DXVECTOR3 StartPos, D3DXVECTOR3 EndPos, D3DXVECTOR3 Rot );
 
 	// 表示中か取得.
 	bool GetDisp() const { return m_Disp; }
 
 	// ステータスを設定.
-	void SetStatus( CWeapon::SStatus status ) { m_Status = status; }
+	void SetStatus( const SStatus& status ) { m_Status = status; }
 
-private:
+protected:
+	// 作成関数.
+	void Create();
+
 	// ベジェ曲線関数.
 	D3DXVECTOR3	Evaluate( std::vector<D3DXVECTOR3> ControlPoints, float t );
 
@@ -78,7 +81,7 @@ private:
 protected:
 	CDX9StaticMesh*				m_pStaticMesh;		// 弾のモデル.
 
-	CWeapon::SStatus			m_Status;			// ステータス.
+	SStatus						m_Status;			// ステータス.
 	EType						m_Type;				// 弾のタイプ.
 	D3DXVECTOR3					m_MoveVec;			// 移動ベクトル.
 

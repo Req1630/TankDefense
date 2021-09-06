@@ -26,7 +26,7 @@ CEnemyBase::CEnemyBase()
 	, m_IsFirght				( false )
 	, m_IsExplosion				( false )
 	, m_IsDelete				( false )
-	, m_IsRand					( false )
+	, m_IsRandMove				( false )
 {
 }
 
@@ -264,11 +264,11 @@ void CEnemyBase::Rand_Pos()
 	//乱数の範囲を決めるコード.
 	std::uniform_int_distribution<> rand_Pos( -30, 30 );
 
-	m_RandPos.x = static_cast<float>(rand_Pos( mt_x ));
-	m_RandPos.z = static_cast<float>(rand_Pos( mt_z ));
+	m_RandPos.x = rand_Pos( mt_x );
+	m_RandPos.z = rand_Pos( mt_z );
 
 	m_OldRandPos = m_RandPos;
-	m_IsRand = true;
+	m_IsRandMove = true;
 }
 
 // ランダム移動関数.
@@ -284,7 +284,7 @@ void CEnemyBase::RandVectorMove( const float & moveSpeed )
 	m_Tranceform.Position.z -= m_MoveVec3.z * moveSpeed;
 
 	if ( RandPosLength <= 0.1f ) {
-		m_IsRand = false;
+		m_IsRandMove = false;
 		m_NowMoveState = Enemy::EMoveState::Wait;	// 待機状態へ遷移.
 	}
 }

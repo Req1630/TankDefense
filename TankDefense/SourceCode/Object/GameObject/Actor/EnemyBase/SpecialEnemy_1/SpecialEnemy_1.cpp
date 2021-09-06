@@ -10,8 +10,8 @@ CSpecialEnemy_1::CSpecialEnemy_1()
 	, m_pExplosion		( nullptr )
 
 {
-	m_pExplosion = std::make_shared<CExplosion>();
-	m_ObjectTag = EObjectTag::SpecialEnemy_1;
+	m_pExplosion	= std::make_shared<CExplosion>();
+	m_ObjectTag		= EObjectTag::SpecialEnemy_1;
 	Init();
 }
 
@@ -24,11 +24,11 @@ bool CSpecialEnemy_1::Init()
 {
 	if ( m_pExplosion->Init() == false ) return false;	// 爆発の初期化.
 
-	m_pSkinMesh = CMeshResorce::GetSkin( "c_s" );
+	m_pSkinMesh = CMeshResorce::GetSkin( "enemy_bomb_s" );
 	m_pSkinMesh->SetAnimSpeed( GetDeltaTime<double>() );
 	m_pSkinMesh->SetPosition( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
 	
-	Spawn( D3DXVECTOR3( 0.0f, -2.5f ,-20.0f ) );
+	Spawn( D3DXVECTOR3( 0.0f, 0.0f ,-20.0f ) );
 	m_IsDelete = false;
 
 	InitCollision();	// 当たり判定の初期化.
@@ -39,6 +39,7 @@ bool CSpecialEnemy_1::Init()
 // 更新関数.
 void CSpecialEnemy_1::Update( const float& deltaTime )
 {
+
 	m_DeltaTime = deltaTime;
 
 	CurrentStateUpdate();	// 現在の状態更新.
@@ -48,14 +49,7 @@ void CSpecialEnemy_1::Update( const float& deltaTime )
 	// 死亡.
 	if ( CKeyInput::IsMomentPress( 'G' ) == true ) m_IsDelete = true;
 
-	//CDebugText::PushText( "SpecialEnemy_1", "---------------------------------------------" );
-	//CDebugText::PushText( "SpecialEnemy_1", "--------------- SpecialEnemy_1 --------------" );
-	//CDebugText::PushText( "SpecialEnemy_1", "---------------------------------------------" );
-	//CDebugText::PushText( "SpecialEnemy_1", "Pos : ", m_Tranceform.Position.x, ", ", m_Tranceform.Position.y, ", ", m_Tranceform.Position.z );
-	//CDebugText::PushText( "SpecialEnemy_1", "Rot : ", m_Tranceform.Rotation.x, ", ", m_Tranceform.Rotation.y, ", ", m_Tranceform.Rotation.z );
-	//CDebugText::PushText( "SpecialEnemy_1", "'T' IsDelete = false, 'G' IsDelete = true" );
-	//CDebugText::PushText( "SpecialEnemy_1", "IsDelete : ", m_IsDelete == true ? "true" : "false" );
-	//CDebugText::PushText( "SpecialEnemy_1", "m_IsExplosion : ", m_pExplosion->GetIsExplosion() == true ? "true" : "false" );
+	DebugUpdate();			// デバック更新.
 
 	UpdateCollision();	// 当たり判定の更新.
 }
@@ -66,10 +60,14 @@ void CSpecialEnemy_1::Render()
 	// 画面の外なら終了.
 	if ( IsDisplayOut() == true ) return;
 
-	m_pSkinMesh->SetPosition( m_Tranceform.Position );
-	m_pSkinMesh->SetRotation( m_Tranceform.Rotation );
-	m_pSkinMesh->SetScale( m_Tranceform.Scale );
+	m_pSkinMesh->SetTranceform( m_Tranceform );
 	if ( m_IsDelete == false ) m_pSkinMesh->Render();
+	
+}
+
+// Sprite3D描画関数.
+void CSpecialEnemy_1::Sprite3DRender()
+{
 	m_pExplosion->Render();
 }
 
@@ -183,9 +181,11 @@ void CSpecialEnemy_1::PlayerCollsion( CActor* pActor )
 	D3DXVECTOR3 vecPushOut;//押し出すvector
 	D3DXVec3Normalize( &vecPushOut, &Distance );//Ｐ0 - Ｐ1の正規化ﾍﾞｸﾄﾙ 
 
-	//ﾍﾞｸﾄﾙに長さをかけて刺さった分お互いを押し戻す
-	Pos[0] -= vecPushOut * inDistance / 12;
-	Pos[1] -= -vecPushOut * inDistance / 12;
+	// ﾍﾞｸﾄﾙに長さをかけて刺さった分お互いを押し戻す
+	Pos[0].x -= vecPushOut.x * inDistance / 8;
+	Pos[0].z -= vecPushOut.z * inDistance / 8;
+	Pos[1].x -= -vecPushOut.x * inDistance / 8;
+	Pos[1].z -= -vecPushOut.z * inDistance / 8;
 
 	//m_Tranceform.Position = Pos[0];
 	pActor->SetPosition( Pos[1] );
@@ -255,4 +255,19 @@ void CSpecialEnemy_1::ExplosionSEnemy2Collsion( CActor * pActor )
 	{
 		isDead = true;
 	});
+}
+
+// デバック更新関数.
+void CSpecialEnemy_1::DebugUpdate()
+{
+#ifdef _DEBUG
+	CDebugText::PushText("SpecialEnemy_1", "---------------------------------------------");
+	CDebugText::PushText("SpecialEnemy_1", "--------------- SpecialEnemy_1 --------------");
+	CDebugText::PushText("SpecialEnemy_1", "---------------------------------------------");
+	CDebugText::PushText("SpecialEnemy_1", "Pos : ", m_Tranceform.Position.x, ", ", m_Tranceform.Position.y, ", ", m_Tranceform.Position.z);
+	CDebugText::PushText("SpecialEnemy_1", "Rot : ", m_Tranceform.Rotation.x, ", ", m_Tranceform.Rotation.y, ", ", m_Tranceform.Rotation.z);
+	CDebugText::PushText("SpecialEnemy_1", "'T' IsDelete = false, 'G' IsDelete = true");
+	CDebugText::PushText("SpecialEnemy_1", "IsDelete : ", m_IsDelete == true ? "true" : "false");
+	CDebugText::PushText("SpecialEnemy_1", "m_IsExplosion : ", m_pExplosion->GetIsExplosion() == true ? "true" : "false");
+#endif
 }

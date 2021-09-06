@@ -128,6 +128,6 @@ protected:
 	bool				m_IsFirght;					// ‹¯‚İó‘Ô‚©.
 	bool				m_IsExplosion;				// ”š”­‚·‚é‚©.
 	bool				m_IsDelete;					// Á‹‚·‚é‚©‚Ç‚¤‚©.
-	bool				m_IsRand;					// ƒ‰ƒ“ƒ_ƒ€ˆÚ“®‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©.
+	bool				m_IsRandMove;				// ƒ‰ƒ“ƒ_ƒ€ˆÚ“®‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©.
 };
 #endif // !ENEMYBASE_H

@@ -3,7 +3,7 @@
 #include "..\..\..\..\..\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.h"
 #include "..\..\..\..\..\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h"
 #include "..\..\..\..\..\Utility\Input\Input.h"
-#include "..\..\Bullet\EnemyBullet\EnemyBullet.h"
+#include "..\..\Weapon\Bullet\EnemyBullet\EnemyBullet.h"
 
 CEnemy::CEnemy()
 	: m_pEnemyBase		()
@@ -12,8 +12,8 @@ CEnemy::CEnemy()
 	, m_OldHasAimPlayer	( false )
 
 {
-	m_pEnemyBullet = std::make_shared<CEnemyBullet>();
-	m_ObjectTag = EObjectTag::Enemy;
+	m_pEnemyBullet	= std::make_shared<CEnemyBullet>();
+	m_ObjectTag		= EObjectTag::Enemy;
 	Init();
 }
 
@@ -26,11 +26,11 @@ bool CEnemy::Init()
 {
 	if ( m_pEnemyBullet->Init() == false ) return false;	// ŽG‹›“G‚Ì’e‚Ì‰Šú‰».
 
-	m_pSkinMesh = CMeshResorce::GetSkin( "b_s" );
+	m_pSkinMesh = CMeshResorce::GetSkin( "enemy_normal_s" );
 	m_pSkinMesh->SetAnimSpeed( GetDeltaTime<double>() );
 	m_pSkinMesh->SetPosition( D3DXVECTOR3( 0.0f, 0.0f, 0.0f ) );
 	
-	Spawn( D3DXVECTOR3( 0.0f, -2.5f ,5.0f ) );
+	Spawn( D3DXVECTOR3( 0.0f, 0.0f ,5.0f ) );
 	m_IsDelete = false;
 
 	InitCollision();	// “–‚½‚è”»’è‚Ì‰Šú‰».
@@ -44,6 +44,7 @@ void CEnemy::Update( const float& deltaTime )
 	m_DeltaTime = deltaTime;
 
 	CurrentStateUpdate();	// Œ»Ý‚Ìó‘ÔXV.
+
 	// ƒXƒ|[ƒ“.
 	if ( CKeyInput::IsMomentPress( 'R' ) == true ) m_IsDelete = false;
 	// Ž€–S.
@@ -51,15 +52,7 @@ void CEnemy::Update( const float& deltaTime )
 	// ‹¯‚Ý.
 	if ( CKeyInput::IsMomentPress( 'T' ) == true ) m_IsFirght = true;
 
-	//CDebugText::PushText( "Enemy", "---------------------------------------------" );
-	//CDebugText::PushText( "Enemy", "-------------------- Enemy ------------------" );
-	//CDebugText::PushText( "Enemy", "---------------------------------------------" );
-	//CDebugText::PushText( "Enemy", "Pos : ", m_Tranceform.Position.x, ", ", m_Tranceform.Position.y, ", ", m_Tranceform.Position.z );
-	//CDebugText::PushText( "Enemy", "Rot : ", m_Tranceform.Rotation.x, ", ", m_Tranceform.Rotation.y, ", ", m_Tranceform.Rotation.z );
-	//CDebugText::PushText( "Enemy", "'R' IsDelete = false, 'F' IsDelete = true" );
-	//CDebugText::PushText( "Enemy", "IsDelete : ", m_IsDelete == true ? "true" : "false" );
-	//CDebugText::PushText( "Enemy", "m_HasAimPlayer : ", m_HasAimPlayer == true ? "true" : "false" );
-	//CDebugText::PushText( "Enemy", "m_ShotFlg : ", m_pEnemyBullet->GetShotflg() == true ? "true" : "false" );
+	DebugUpdate();			// ƒfƒoƒbƒNXV.
 
 	UpdateCollision();	// “–‚½‚è”»’è‚ÌXV.
 }
@@ -70,9 +63,8 @@ void CEnemy::Render()
 	// ‰æ–Ê‚ÌŠO‚È‚çI—¹.
 	if ( IsDisplayOut() == true ) return;
 
-	m_pSkinMesh->SetPosition( m_Tranceform.Position );
-	m_pSkinMesh->SetRotation( m_Tranceform.Rotation );
-	m_pSkinMesh->SetScale( m_Tranceform.Scale );
+	m_pSkinMesh->SetTranceform( m_Tranceform );
+
 	if ( m_IsDelete == false ) m_pSkinMesh->Render();
 	m_pEnemyBullet->Render();
 }
@@ -103,7 +95,7 @@ void CEnemy::InitCollision()
 //	UpdateŠÖ”‚ÌÅŒã‚ÉŒÄ‚Ô.
 void CEnemy::UpdateCollision()
 {
-	m_pCollisions->GetCollision<CSphere>()->SetPosition( D3DXVECTOR3( m_Tranceform.Position.x, m_Tranceform.Position.y + 4.0f, m_Tranceform.Position.z ) );
+	m_pCollisions->GetCollision<CSphere>()->SetPosition( D3DXVECTOR3( m_Tranceform.Position.x, m_Tranceform.Position.y, m_Tranceform.Position.z ) );
 }
 
 // ƒXƒ|[ƒ“.
@@ -151,7 +143,7 @@ void CEnemy::Move()
 	}
 	// ƒvƒŒƒCƒ„[‚ðŒ©Ž¸‚Á‚½.
 	else {
-		if ( m_IsRand == false ) {
+		if ( m_IsRandMove == false ) {
 			Rand_Pos();		// ƒ‰ƒ“ƒ_ƒ€‚ÉÀ•W‚ðŒˆ‚ß‚é.
 		}
 		else {
@@ -223,8 +215,10 @@ void CEnemy::PlayerCollsion( CActor* pActor )
 	D3DXVec3Normalize( &vecPushOut, &Distance );// ‚o0 - ‚o1‚Ì³‹K‰»ÍÞ¸ÄÙ 
 
 	// ÍÞ¸ÄÙ‚É’·‚³‚ð‚©‚¯‚ÄŽh‚³‚Á‚½•ª‚¨ŒÝ‚¢‚ð‰Ÿ‚µ–ß‚·
-	Pos[0] -= vecPushOut * inDistance / 12;
-	Pos[1] -= -vecPushOut * inDistance / 12;
+	Pos[0].x -= vecPushOut.x * inDistance / 8;
+	Pos[0].z -= vecPushOut.z * inDistance / 8;
+	Pos[1].x -= -vecPushOut.x * inDistance / 8;
+	Pos[1].z -= -vecPushOut.z * inDistance / 8;
 
 	//m_Tranceform.Position = Pos[0];
 	pActor->SetPosition( Pos[1] );
@@ -251,8 +245,10 @@ void CEnemy::SpecialEnemy_1Collsion( CActor * pActor )
 	D3DXVec3Normalize( &vecPushOut, &Distance );// ‚o0 - ‚o1‚Ì³‹K‰»ÍÞ¸ÄÙ 
 
 	// ÍÞ¸ÄÙ‚É’·‚³‚ð‚©‚¯‚ÄŽh‚³‚Á‚½•ª‚¨ŒÝ‚¢‚ð‰Ÿ‚µ–ß‚·
-	Pos[0] -= vecPushOut * inDistance / 12;
-	Pos[1] -= -vecPushOut * inDistance / 12;
+	Pos[0].x -= vecPushOut.x * inDistance / 8;
+	Pos[0].z -= vecPushOut.z * inDistance / 8;
+	Pos[1].x -= -vecPushOut.x * inDistance / 8;
+	Pos[1].z -= -vecPushOut.z * inDistance / 8;
 
 	//m_Tranceform.Position = Pos[0];
 	pActor->SetPosition( Pos[1] );
@@ -279,8 +275,10 @@ void CEnemy::SpecialEnemy_2Collsion( CActor * pActor )
 	D3DXVec3Normalize( &vecPushOut, &Distance );// ‚o0 - ‚o1‚Ì³‹K‰»ÍÞ¸ÄÙ 
 
 	// ÍÞ¸ÄÙ‚É’·‚³‚ð‚©‚¯‚ÄŽh‚³‚Á‚½•ª‚¨ŒÝ‚¢‚ð‰Ÿ‚µ–ß‚·
-	Pos[0] -= vecPushOut * inDistance / 12;
-	Pos[1] -= -vecPushOut * inDistance / 12;
+	Pos[0].x -= vecPushOut.x * inDistance / 8;
+	Pos[0].z -= vecPushOut.z * inDistance / 8;
+	Pos[1].x -= -vecPushOut.x * inDistance / 8;
+	Pos[1].z -= -vecPushOut.z * inDistance / 8;
 
 	//m_Tranceform.Position = Pos[0];
 	pActor->SetPosition( Pos[1] );
@@ -327,7 +325,7 @@ void CEnemy::SearchRange()
 	if ( PlayerLength <= 30.0f ) {
 		// õ“G”ÍˆÍ“à‚ÉƒvƒŒƒCƒ„[‚ª‹‚éê‡.
 		m_HasAimPlayer = true;
-		m_IsRand = false;
+		m_IsRandMove = false;
 		SetMoveVector( m_TargetPosition );
 	}
 	else {
@@ -337,4 +335,22 @@ void CEnemy::SearchRange()
 	}
 	if ( m_OldHasAimPlayer == m_HasAimPlayer ) return;
 	m_NowMoveState = Enemy::EMoveState::Wait;
+}
+
+// ƒfƒoƒbƒNXVŠÖ”.
+void CEnemy::DebugUpdate()
+{
+#ifdef _DEBUG
+	const D3DXVECTOR3 Pos = m_Tranceform.Position;
+	const D3DXVECTOR3 Rot = m_Tranceform.Rotation;
+	CDebugText::PushText("Enemy", "---------------------------------------------");
+	CDebugText::PushText("Enemy", "-------------------- Enemy ------------------");
+	CDebugText::PushText("Enemy", "---------------------------------------------");
+	CDebugText::PushText("Enemy", "Pos : ", Pos.x, ", ", Pos.y, ", ", Pos.z);
+	CDebugText::PushText("Enemy", "Rot : ", Rot.x, ", ", Rot.y, ", ", Rot.z);
+	CDebugText::PushText("Enemy", "'R' IsDelete = false, 'F' IsDelete = true");
+	CDebugText::PushText("Enemy", "IsDelete : ", m_IsDelete == true ? "true" : "false");
+	CDebugText::PushText("Enemy", "m_HasAimPlayer : ", m_HasAimPlayer == true ? "true" : "false");
+	CDebugText::PushText("Enemy", "m_ShotFlg : ", m_pEnemyBullet->GetShotflg() == true ? "true" : "false");
+#endif
 }

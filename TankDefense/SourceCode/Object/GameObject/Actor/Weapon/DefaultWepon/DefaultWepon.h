@@ -11,7 +11,7 @@
 /************************************************
 *	å–CƒNƒ‰ƒX.
 **/
-class CDefaultWepon
+class CDefaultWepon final
 	: public CWeapon
 {
 public:
@@ -19,8 +19,11 @@ public:
 	~CDefaultWepon();
 
 	// ‰Šú‰»ŠÖ”.
-	virtual bool Init();
+	virtual bool Init() override;
 
+protected:
+	// ì¬ŠÖ”.
+	virtual void Create() override;
 };
 
 #endif // #ifndef DEFAULTWEPON_H.

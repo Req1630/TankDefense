@@ -55,6 +55,9 @@ private:
 	// 索敵範囲.
 	void SearchRange();
 
+	// デバック更新関数.
+	void DebugUpdate();
+
 private:
 	CEnemyBase*		m_pEnemyBase;		// 敵ベースクラス.
 	std::shared_ptr<CEnemyBullet>	m_pEnemyBullet;	// 雑魚敵の弾クラス.

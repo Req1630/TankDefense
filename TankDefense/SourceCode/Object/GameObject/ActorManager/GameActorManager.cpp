@@ -1,19 +1,28 @@
 #include "GameActorManager.h"
 #include "..\Actor\Player\Player.h"
+#include "..\Actor\Weapon\Bullet\BulletManager\BulletManager.h"
 #include "..\Actor\EnemyBase\Enemy\Enemy.h"
 #include "..\Actor\EnemyBase\SpecialEnemy_1\SpecialEnemy_1.h"
 #include "..\Actor\EnemyBase\SpecialEnemy_2\SpecialEnemy_2.h"
+#include "..\Actor\Boss\Boss.h"
+#include "..\Actor\DropItem\DropItemManager\DropItemManager.h"
 
 CGameActorManager::CGameActorManager()
 	: m_pPlayer				( nullptr )
+	, m_pBulletMng			( nullptr )
 	, m_pEnemy				( nullptr )
 	, m_pSpecialEnemy_1		( nullptr )
 	, m_pSpecialEnemy_2		( nullptr )
+	, m_pBoss				( nullptr )
+	, m_pDropItemMng		( nullptr )
 {
-	m_pPlayer		  = std::make_shared<CPlayer>();
-	m_pEnemy		  = std::make_shared<CEnemy>();
-	m_pSpecialEnemy_1 = std::make_shared<CSpecialEnemy_1>();
-	m_pSpecialEnemy_2 = std::make_shared<CSpecialEnemy_2>();
+	m_pBulletMng		= std::make_shared<CBulletManager>();
+	m_pPlayer			= std::make_shared<CPlayer>( m_pBulletMng );
+	m_pEnemy			= std::make_shared<CEnemy>();
+	m_pSpecialEnemy_1	= std::make_shared<CSpecialEnemy_1>();
+	m_pSpecialEnemy_2	= std::make_shared<CSpecialEnemy_2>();
+	m_pBoss				= std::make_shared<CBoss>();
+	m_pDropItemMng		= std::make_shared<CDropItemManager>( m_pPlayer );
 }
 
 CGameActorManager::~CGameActorManager()
@@ -23,10 +32,13 @@ CGameActorManager::~CGameActorManager()
 // ‰Šú‰»ŠÖ”.
 bool CGameActorManager::Init()
 {
-	if ( m_pPlayer->Init()		   == false ) return false;	// ƒvƒŒƒCƒ„[‚Ì‰Šú‰».
-	if ( m_pEnemy->Init()		   == false ) return false;	// ŽG‹›“G‚Ì‰Šú‰».
-	if ( m_pSpecialEnemy_1->Init() == false ) return false;	// “ÁŽê‚È“G1‚Ì‰Šú‰».
-	if ( m_pSpecialEnemy_2->Init() == false ) return false;	// “ÁŽê‚È“G2‚Ì‰Šú‰».
+	if ( m_pBulletMng->Init()		== false ) return false;	// ’e‚Ì‰Šú‰».
+	if ( m_pPlayer->Init()			== false ) return false;	// ƒvƒŒƒCƒ„[‚Ì‰Šú‰».
+	if ( m_pEnemy->Init()			== false ) return false;	// ŽG‹›“G‚Ì‰Šú‰».
+	if ( m_pSpecialEnemy_1->Init()	== false ) return false;	// “ÁŽê‚È“G1‚Ì‰Šú‰».
+	if ( m_pSpecialEnemy_2->Init()	== false ) return false;	// “ÁŽê‚È“G2‚Ì‰Šú‰».
+	if ( m_pBoss->Init()			== false ) return false;	// ƒ{ƒX‚Ì‰Šú‰».
+	if ( m_pDropItemMng->Init()		== false ) return false;	// ƒhƒƒbƒvƒAƒCƒeƒ€‚Ì‰Šú‰».
 
 	return true;
 }
@@ -66,10 +78,24 @@ void CGameActorManager::Update()
 	m_pSpecialEnemy_2->Collision( m_pPlayer.get() );
 	m_pSpecialEnemy_2->Collision( m_pSpecialEnemy_1.get() );
 
+	// ƒ{ƒX‚ÌXV.
+	m_pBoss->SetTargetPos( *m_pPlayer.get() );					// ƒvƒŒƒCƒ„[‚ÌÀ•W‚ðŽæ“¾.
+	m_pBoss->Update( m_DeltaTime );								// XV.
+	// “–‚½‚è”»’è.
+	m_pBoss->Collision( m_pPlayer.get() );
+	m_pBoss->Collision( m_pEnemy.get() );
+	m_pBoss->Collision( m_pSpecialEnemy_1.get() );
+	m_pBoss->Collision( m_pSpecialEnemy_2.get() );
+
+	// ’e‚ÌXV.
+	m_pBulletMng->Update( m_DeltaTime );		// XV.
 
 	SetPositionList( m_pPlayer.get() );			// ƒvƒŒƒCƒ„[À•W‚ðÝ’è.
 	m_ObjPositionList.shrink_to_fit();
 
+	// ƒhƒƒbƒvƒAƒCƒeƒ€‚ÌXV.
+	m_pDropItemMng->Update( m_DeltaTime );
+	m_pDropItemMng->Collision( m_pPlayer.get() );
 }
 
 // •`‰æŠÖ”.
@@ -78,8 +104,24 @@ void CGameActorManager::Render()
 	m_pPlayer->Render();			// ƒvƒŒƒCƒ„[‚Ì•`‰æ.
 	m_pEnemy->Render();				// ŽG‹›“G‚Ì•`‰æ.
 	m_pSpecialEnemy_1->Render();	// “ÁŽê‚È“G1‚Ì•`‰æ.
+	m_pBoss->Render();				// ƒ{ƒX‚Ì•`‰æ.
 	m_pSpecialEnemy_2->Render();	// “ÁŽê‚È“G2‚Ì•`‰æ.
+	m_pBulletMng->Render();			// ’e‚Ì•`‰æ.
 
+	m_pDropItemMng->Render();		// ƒhƒƒbƒvƒAƒCƒeƒ€‚Ì•`‰æ.
+}
+
+// Sprite3D•`‰æŠÖ”.
+void CGameActorManager::Sprite3DRender()
+{
+	m_pPlayer->Sprite3DRender();			// ƒvƒŒƒCƒ„[‚Ì•`‰æ.
+	m_pEnemy->Sprite3DRender();				// ŽG‹›“G‚Ì•`‰æ.
+	m_pSpecialEnemy_1->Sprite3DRender();	// “ÁŽê‚È“G1‚Ì•`‰æ.
+	m_pBoss->Sprite3DRender();				// ƒ{ƒX‚Ì•`‰æ.
+	m_pSpecialEnemy_2->Sprite3DRender();	// “ÁŽê‚È“G2‚Ì•`‰æ.
+	m_pBulletMng->Sprite3DRender();			// ’e‚Ì•`‰æ.
+
+	m_pDropItemMng->Sprite3DRender();
 }
 
 // ƒXƒvƒ‰ƒCƒg‚Ì•`‰æ.

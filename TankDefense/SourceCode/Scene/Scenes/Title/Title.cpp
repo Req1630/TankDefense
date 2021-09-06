@@ -71,5 +71,6 @@ void CTitle::SpriteRender()
 //============================.
 void CTitle::Sprite3DRender()
 {
+	m_pGameObjManager->Sprite3DRender();
 }
 

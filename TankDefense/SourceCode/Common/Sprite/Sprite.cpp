@@ -248,9 +248,9 @@ void CSprite::Render3D( const bool& isBillboard, SSpriteRenderState* pRenderStat
 	m_pContext11->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
 
 	// •`‰æ.
-	SetBlend( true );
+	SetCoverage( true );
 	m_pContext11->Draw( 4, 0 );
-	SetBlend( false );
+	SetCoverage( false );
 	m_pDestTexture = nullptr;
 	m_pMaskTexture = nullptr;
 

@@ -1,8 +1,8 @@
 #include "Bullet.h"
 #include <random>
-#include "..\..\..\..\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h"
-#include "..\..\..\..\Resource\MeshResource\MeshResource.h"
-#include "..\..\..\..\Utility\Input\Input.h"
+#include "..\..\..\..\..\Common\Mesh\Dx9StaticMesh\Dx9StaticMesh.h"
+#include "..\..\..\..\..\Resource\MeshResource\MeshResource.h"
+#include "..\..\..\..\..\Utility\Input\Input.h"
 
 CBullet::CBullet()
 	: m_pStaticMesh		( nullptr )
@@ -16,6 +16,7 @@ CBullet::CBullet()
 	, m_DispTimeCnt		()
 	, m_Disp			()
 {
+	Create();
 	Init();
 }
 
@@ -26,12 +27,13 @@ CBullet::~CBullet()
 // 初期化関数.
 bool CBullet::Init()
 {
-	// スタティックメッシュの取得.
-	m_pStaticMesh = CMeshResorce::GetStatic( "Sphere" );
+	// 初期化.
+	m_Type			= EType::Normal;
+	m_MoveVec		= { 0.0f, 0.0f, 0.0f };
+	m_DispTimeCnt	= 0.0f;
+	m_Disp			= false;
 
-	// ベジェ曲線の設定.
-	m_ControlPoints.resize( 3 );
-
+	InitCollision();
 	return true;
 }
 
@@ -67,31 +69,41 @@ void CBullet::Render()
 {
 	if ( m_Disp == true ){
 		// モデルの移動.
-		m_pStaticMesh->SetPosition( m_Tranceform.Position );
+		m_pStaticMesh->SetTranceform( m_Tranceform );
 		// 弾の描画.
 		m_pStaticMesh->Render();
 	}
 }
 
 // 当たり判定関数.
-void CBullet::Collision( CActor * pActor )
+void CBullet::Collision( CActor* pActor )
 {
 }
 
 // 当たり判定の初期化.
 void CBullet::InitCollision()
 {
+	m_pCollisions = std::make_unique<CCollisions>();
+	m_pCollisions->InitCollision( ECollNo::Sphere );
+	m_pCollisions->GetCollision<CSphere>()->SetRadius( 1.5f );
 }
 
 // 当たり判定の座標や、半径などの更新.
 void CBullet::UpdateCollision()
 {
+	m_pCollisions->GetCollision<CSphere>()->SetPosition( m_Tranceform.Position );
 }
 
 // 特定の方向に飛ぶ弾の発射.
-void CBullet::NormalShot( D3DXVECTOR3 Pos, D3DXVECTOR3 MoveVec )
+void CBullet::NormalShot( std::string StaticMeshName, EObjectTag ObjTag, D3DXVECTOR3 Pos, D3DXVECTOR3 Rot, D3DXVECTOR3 MoveVec )
 {
+	// スタティックメッシュの取得.
+	m_pStaticMesh			= CMeshResorce::GetStatic( StaticMeshName );
+
+	m_ObjectTag				= ObjTag;			// タグを設定.
+
 	m_Tranceform.Position	= Pos;				// 座標設定.
+	m_Tranceform.Rotation	= Rot;				// 回転の設定.
 	m_MoveVec				= MoveVec;			// ベクトル設定.
 	m_Type					= EType::Normal;	// 弾タイプの設定.
 	m_DispTimeCnt			= DISP_TIME;		// 生存時間の設定.
@@ -100,9 +112,15 @@ void CBullet::NormalShot( D3DXVECTOR3 Pos, D3DXVECTOR3 MoveVec )
 }
 
 // 追尾する弾の発射.
-void CBullet::HomingShot( D3DXVECTOR3 StartPos, D3DXVECTOR3 EndPos )
+void CBullet::HomingShot( std::string StaticMeshName, EObjectTag ObjTag, D3DXVECTOR3 StartPos, D3DXVECTOR3 EndPos, D3DXVECTOR3 Rot )
 {
+	// スタティックメッシュの取得.
+	m_pStaticMesh			= CMeshResorce::GetStatic( StaticMeshName );
+
+	m_ObjectTag				= ObjTag;			// タグを設定.
+
 	m_Tranceform.Position	= StartPos;			// 座標設定.
+	m_Tranceform.Rotation	= Rot;				// 回転の設定.
 	m_Type					= EType::Homing;	// 弾タイプの設定.
 	m_DispTimeCnt			= DISP_TIME;		// 生存時間の設定.
 	
@@ -138,6 +156,13 @@ void CBullet::HomingShot( D3DXVECTOR3 StartPos, D3DXVECTOR3 EndPos )
 	m_ControlPoints[2]		= EndPos;		// ベジェ曲線の終了座標.
 
 	m_Disp = true;							// 表示.
+}
+
+// 作成関数.
+void CBullet::Create()
+{
+	// ベジェ曲線の設定.
+	m_ControlPoints.resize( 3 );
 }
 
 // ベジェ曲線関数.
