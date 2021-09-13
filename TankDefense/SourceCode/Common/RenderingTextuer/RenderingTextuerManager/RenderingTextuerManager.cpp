@@ -87,6 +87,7 @@ void CRenderingTexterManager::Render(
 	m_pGBuffer->SetBuffer();
 	modelRender();		// ƒ‚ƒfƒ‹‚Ì•`‰æ.
 	sprite3DRender();	// ƒXƒvƒ‰ƒCƒg3D‚Ì•`‰æ.
+	m_pShadowMap->ClearSRV();
 
 	// ‚±‚±‚©‚ç”w–Ê‚ð•`‰æ‚³‚¹‚È‚¢.
 	SetRasterizerState( ERS_STATE::Back );
@@ -115,6 +116,10 @@ void CRenderingTexterManager::Render(
 		m_pOutLine->Render( m_pGBuffer->GetSRVCount(), srvList );
 		pLastSRV = m_pOutLine->GetShaderResourceViewList()[0];
 	}
+
+	UINT stride = sizeof(VERTEX);
+	UINT offset = 0;
+	m_pContext11->IASetVertexBuffers( 0, 1, &m_pVertexBuffer, &stride, &offset );
 
 	SynthesizeTexture( pLastSRV );
 	pLastSRV = m_pShaderResourceViewList[0];
@@ -213,7 +218,7 @@ void CRenderingTexterManager::SynthesizeTexture( ID3D11ShaderResourceView* pSRV 
 	m_pContext11->Draw( 4, 0 );
 
 	std::vector<ID3D11ShaderResourceView*> resetSrvList(m_pBloom->GetSRVCount());
-	m_pContext11->PSSetShaderResources( 1, m_pBloom->GetSRVCount(), &resetSrvList[0] );
+	m_pContext11->PSSetShaderResources( 2, m_pBloom->GetSRVCount(), &resetSrvList[0] );
 	
 }
 

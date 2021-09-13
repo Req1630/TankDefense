@@ -160,6 +160,16 @@ bool CCascadedShadowMap::Render( const bool& isSkin, const D3DXMATRIX& mW, std::
 	return true;
 }
 
+
+//------------------------------------.
+// 設定したシェーダーリソースビューの初期化.
+//------------------------------------.
+void CCascadedShadowMap::ClearSRV()
+{
+	std::vector<ID3D11ShaderResourceView*> resetSrvList(CASCADED_NUM);
+	m_pContext11->PSSetShaderResources( 2, CASCADED_NUM, &resetSrvList[0] );
+}
+
 //------------------------------------.
 // バッファの設定.
 //------------------------------------.

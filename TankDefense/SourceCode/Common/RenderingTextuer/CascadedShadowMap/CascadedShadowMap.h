@@ -57,6 +57,9 @@ public:
 	// 描画が終了した.
 	inline void SetEndRender(){ m_IsEndRender = true; }
 
+	// 設定したシェーダーリソースビューの初期化.
+	void ClearSRV();
+
 	// バッファの設定.
 	virtual void SetBuffer() override;
 	// シェーダーリソースビューの数を取得.

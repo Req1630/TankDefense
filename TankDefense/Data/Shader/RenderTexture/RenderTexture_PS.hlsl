@@ -34,6 +34,7 @@ float4 PS_Main( VS_OUTPUT input ) : SV_Target
 	float4 t = g_Back.Sample(g_SamLinear, input.Tex);
 	if( t.a > 0.0f ) color.rgb = t.rgb;
 	
+	// ÉgÅ[Éì.
 	color.rgb = ACESFilm(color.rgb);
 	
 	return color;
