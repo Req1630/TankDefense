@@ -50,28 +50,36 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	////////////////////////////////////////////////.
 	// ライティングの計算.
 	////////////////////////////////////////////////.
-	float3 n = normColor.xyz;
+	float3 n = normalize(bumpNormal.xyz);
 	float3 v = normalize(g_vCamPos.xyz - input.PosW.xyz);
 	float3 l = normalize(input.LightDir);
 	
-	float3 r = 2.0f * n * dot(n, l) - l;
+	float3 NDotL = saturate(dot(n, l));
+	float3 NDotV = saturate(dot(n, v));
+	
+	float3 r = 2.0f * n * NDotL - l;
 	float3 ambient	= (g_vAmbient.rgb*0.5f) * (texColor.rgb*0.5f);
 	float3 diffuse	= saturate(dot(l, n)) + g_vDiffuse.rgb;
 	float3 specular	= pow(saturate(dot(r, v)), 2.0f ) + g_vSpecular.rgb;
 	finalColor.rgb	*= saturate(ambient+diffuse+specular);
-	
+	/*
+	// リムライト.
+	float rimPow = 5.0f;
+	float3 rimColor	= float3(1.0f,0.0f,0.0f) * pow(1.0f-NDotV), rimPow);
+	finalColor.rgb	*= saturate(ambient+diffuse+specular)+rimColor;
+	*/
 	
 	////////////////////////////////////////////////.
 	// ハーフランバート.
 	////////////////////////////////////////////////.
-	float lightIntensity = saturate(dot(bumpNormal, input.LightDir)) * g_vIntensity.x;
+	float lightIntensity = NDotL * g_vIntensity.x;
 	lightIntensity = lightIntensity * 0.5f + 0.5f;
 	lightIntensity = lightIntensity * lightIntensity;
 	finalColor.rgb	*= lightIntensity;
-	
+
 	// 法線をテクスチャ用に変換.
 	// -1 ~ 1 を 0 ~ 1 に変換.
-	bumpNormal = normalize(bumpNormal)*0.5+0.5f;
+	bumpNormal = n*0.5+0.5f;
 	// 深度値を取得.
 	float z = input.Pos.z/input.Pos.w;
 	

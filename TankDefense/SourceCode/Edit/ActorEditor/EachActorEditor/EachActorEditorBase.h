@@ -15,7 +15,11 @@ protected:
 	// ドラッグ情報.
 	struct stDragPrameter
 	{
+		// 型の種類.
+		enum enType { None, FLOAT, INT, MAX, } typedef EType;
+
 		std::string	Label;	// 項目名.
+		int			Type;	// 型.
 		float		Speed;	// 変化速度.
 		float		Min;	// 最小値.
 		float		Max;	// 最大値.
@@ -59,6 +63,10 @@ protected:
 	void DragVector3( D3DXVECTOR3* v, const SDragPrameter& p );
 	// ドラッグFloatの表示.
 	void DragFloat( float* v, const SDragPrameter& p );
+	// ドラッグIntの表示.
+	void DragInt( float* v, const SDragPrameter& p );
+	// ドラッグDoubleの表示.
+	void DragDouble( float* v, const SDragPrameter& p );
 
 	// パラメータを表示.
 	void EditParameterDraw( const int& maxIndex );
@@ -115,6 +123,28 @@ void CEachActorEditorBase<T>::DragFloat( float* v, const SDragPrameter& p )
 }
 
 //------------------------------.
+// ドラッグIntの表示.
+//------------------------------.
+template<typename T>
+void CEachActorEditorBase<T>::DragInt( float* v, const SDragPrameter& p )
+{
+	ImGui::DragInt( p.Label.c_str(), (int*)v, p.Speed, (int)p.Min, (int)p.Max, p.Format.c_str() );
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( p.Msg.c_str() );
+}
+
+//------------------------------.
+// ドラッグDoubleの表示.
+//------------------------------.
+template<typename T>
+void CEachActorEditorBase<T>::DragDouble( float* v, const SDragPrameter& p )
+{
+	ImGui::DragFloat( p.Label.c_str(), v, p.Speed, p.Min, p.Max, p.Format.c_str() );
+	ImGui::SameLine();
+	CImGuiManager::HelpMarker( p.Msg.c_str() );
+}
+
+//------------------------------.
 // パラメータを表示.
 //------------------------------.
 template<typename T>
@@ -122,7 +152,17 @@ void CEachActorEditorBase<T>::EditParameterDraw( const int& maxIndex )
 {
 	ImGui::PushItemWidth( 120.0f );
 	for( int i = 0; i < maxIndex; i++ ){
-		DragFloat( &m_Prameter[i], m_DragParamList[i] );
+		switch( m_DragParamList[i].Type )
+		{
+		case SDragPrameter::FLOAT:
+			DragFloat( &m_Prameter[i], m_DragParamList[i] );
+			 break;
+		case SDragPrameter::INT:
+			DragInt( &m_Prameter[i], m_DragParamList[i] );
+			break;
+		default:
+			break;
+		}
 	}
 	ImGui::PopItemWidth();
 }
@@ -146,6 +186,7 @@ bool CEachActorEditorBase<T>::ReadingDragParameter( const char* fileName )
 		tempParam.Max	= std::stof(list[i]);	i++;
 		tempParam.Msg	= list[i];				i++;
 		tempParam.Speed	= std::stof(list[i]);	i++;
+		tempParam.Type	= std::stoi(list[i]);	i++;
 
 		// 仮改行文字を検索し、改行文字に置換.
 		size_t pos = tempParam.Msg.find("@");
