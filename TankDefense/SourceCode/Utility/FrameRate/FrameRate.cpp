@@ -12,6 +12,7 @@ namespace
 };
 
 double CFrameRate::m_FrameTime = 0.0f;
+D3DXVECTOR4 CFrameRate::m_Time = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 CFrameRate::CFrameRate()
 	: CFrameRate	( DEFAULT_FRAME_RATE )
@@ -60,6 +61,11 @@ bool CFrameRate::Wait()
 	if( m_FrameTime > MAX_FRAME_TIME ) m_FrameTime = MAX_FRAME_TIME;
 
 	m_StartTime = m_NowTime;
+
+	m_Time.y += static_cast<float>(m_FrameTime);
+	m_Time.x = m_Time.y/20.0f;
+	m_Time.z = m_Time.y*2.0f;
+	m_Time.w = m_Time.y*3.0f;
 
 	return false;
 }

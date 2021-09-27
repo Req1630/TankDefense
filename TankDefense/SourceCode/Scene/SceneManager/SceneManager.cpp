@@ -71,6 +71,7 @@ void CSceneManager::Update( const float& deltaTime, const bool& isResourceLoadEn
 		if( m_IsThreadLoadEnd == true && CFade::IsFadeEnd() == true ){
 			CFade::KeepRender();
 			CFade::SetFadeIn( true );	// フェードイン.
+			CFrameRate::ClearElapsedTime();
 		}
 		// スレッドのロードが終わって、フェード処理がOutの場合,
 		//	ロード終了フラグを立てて、シーンの更新を行う.

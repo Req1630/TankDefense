@@ -126,6 +126,12 @@ void CMain::Update()
 	CDebugText::PushText( "Index", "'Left Ctrl' + 'F7' : Debug Render" );
 	CDebugText::PushText( "Index", "'Left Ctrl' + 'F8' : FPS Render" );
 	CDebugText::PushText( "Index", CDebugText::SEPARATOR );
+	const D3DXVECTOR4 time = GetElapsedTime();
+	CDebugText::PushTextF( "Index", "time.x : %f, time.y : %f",
+						time.x, time.y );
+	CDebugText::PushTextF( "Index", "time.z : %f, time.w : %f",
+						time.z, time.w );
+	CDebugText::PushText( "Index", CDebugText::SEPARATOR );
 
 	CInput::Update( deltaTime );
 
