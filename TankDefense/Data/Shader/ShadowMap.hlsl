@@ -18,22 +18,22 @@ struct VS_OUTPUT
 // 頂点入力用(スタティックメッシュ).
 struct VS_INPUT
 {
-	float3 Pos : POSITION;
-	float3 Norm : NORMAL;
-	float2 Tex : TEXCOORD;
-	float3 Tangent : TANGENT;
-	float3 Binorm : BINORMAL;
+	float3 Pos		: POSITION;
+	float3 Norm		: NORMAL;
+	float2 Tex		: TEXCOORD;
+	float3 Tangent	: TANGENT;
+	float3 Binorm	: BINORMAL;
 };
 // 頂点入力用(スキンメッシュ).
 struct VSSkinIn
 {
-	float3 Pos : POSITION; //位置.  
-	float3 Norm : NORMAL; //頂点法線.
-	float2 Tex : TEXCOORD; //テクスチャー座標.
-	float3 Tangent : TANGENT;
-	float3 Binorm : BINORMAL;
-	uint4 Bones : BONE_INDEX; //ボーンのインデックス.
-	float4 Weights : BONE_WEIGHT; //ボーンの重み.
+	float3 Pos		: POSITION; //位置.  
+	float3 Norm		: NORMAL; //頂点法線.
+	float2 Tex		: TEXCOORD; //テクスチャー座標.
+	float3 Tangent	: TANGENT;
+	float3 Binorm	: BINORMAL;
+	uint4 Bones		: BONE_INDEX; //ボーンのインデックス.
+	float4 Weights	: BONE_WEIGHT; //ボーンの重み.
 };
 // スキニング後の頂点・法線が入る.
 struct Skin
@@ -77,42 +77,42 @@ Skin SkinVert(VSSkinIn Input)
 {
 	Skin Output = (Skin) 0;
 
-	float4 Pos = float4(Input.Pos, 1);
-	float4 Norm = float4(Input.Norm, 0);
-	float4 Tangent = float4(Input.Tangent, 0);
-	float4 Binorm = float4(Input.Binorm, 0);
+	float4 Pos		= float4(Input.Pos, 1);
+	float4 Norm		= float4(Input.Norm, 0);
+	float4 Tangent	= float4(Input.Tangent, 0);
+	float4 Binorm	= float4(Input.Binorm, 0);
 	//ボーン0.
-	uint iBone = Input.Bones.x;
-	float fWeight = Input.Weights.x;
-	matrix m = FetchBoneMatrix(iBone);
-	Output.Pos += fWeight * mul(Pos, m);
-	Output.Norm += fWeight * mul(Norm, m);
-	Output.Tangent += fWeight * mul(Tangent, m);
-	Output.Binorm += fWeight * mul(Binorm, m);
+	uint iBone		= Input.Bones.x;
+	float fWeight	= Input.Weights.x;
+	matrix m		= FetchBoneMatrix(iBone);
+	Output.Pos		+= fWeight * mul(Pos, m);
+	Output.Norm		+= fWeight * mul(Norm, m);
+	Output.Tangent	+= fWeight * mul(Tangent, m);
+	Output.Binorm	+= fWeight * mul(Binorm, m);
 	//ボーン1.
-	iBone = Input.Bones.y;
-	fWeight = Input.Weights.y;
-	m = FetchBoneMatrix(iBone);
-	Output.Pos += fWeight * mul(Pos, m);
-	Output.Norm += fWeight * mul(Norm, m);
-	Output.Tangent += fWeight * mul(Tangent, m);
-	Output.Binorm += fWeight * mul(Binorm, m);
+	iBone			= Input.Bones.y;
+	fWeight			= Input.Weights.y;
+	m				= FetchBoneMatrix(iBone);
+	Output.Pos		+= fWeight * mul(Pos, m);
+	Output.Norm		+= fWeight * mul(Norm, m);
+	Output.Tangent	+= fWeight * mul(Tangent, m);
+	Output.Binorm	+= fWeight * mul(Binorm, m);
 	//ボーン2.
-	iBone = Input.Bones.z;
-	fWeight = Input.Weights.z;
-	m = FetchBoneMatrix(iBone);
-	Output.Pos += fWeight * mul(Pos, m);
-	Output.Norm += fWeight * mul(Norm, m);
-	Output.Tangent += fWeight * mul(Tangent, m);
-	Output.Binorm += fWeight * mul(Binorm, m);
+	iBone			= Input.Bones.z;
+	fWeight			= Input.Weights.z;
+	m				= FetchBoneMatrix(iBone);
+	Output.Pos		+= fWeight * mul(Pos, m);
+	Output.Norm		+= fWeight * mul(Norm, m);
+	Output.Tangent	+= fWeight * mul(Tangent, m);
+	Output.Binorm	+= fWeight * mul(Binorm, m);
 	//ボーン3.
-	iBone = Input.Bones.w;
-	fWeight = Input.Weights.w;
-	m = FetchBoneMatrix(iBone);
-	Output.Pos += fWeight * mul(Pos, m);
-	Output.Norm += fWeight * mul(Norm, m);
-	Output.Tangent += fWeight * mul(Tangent, m);
-	Output.Binorm += fWeight * mul(Binorm, m);
+	iBone			= Input.Bones.w;
+	fWeight			= Input.Weights.w;
+	m				= FetchBoneMatrix(iBone);
+	Output.Pos		+= fWeight * mul(Pos, m);
+	Output.Norm		+= fWeight * mul(Norm, m);
+	Output.Tangent	+= fWeight * mul(Tangent, m);
+	Output.Binorm	+= fWeight * mul(Binorm, m);
 
 	return Output;
 }
@@ -132,5 +132,6 @@ VS_OUTPUT VS_SkinMain(VSSkinIn input)
 // ピクセルシェーダー.
 float4 PS_Main(VS_OUTPUT input) : SV_Target
 {
-	return input.Pos.z / input.Pos.w;
+	float z = input.Pos.z / input.Pos.w;
+	return float4( z, 0.0f, 0.0f, 1.0f );
 }

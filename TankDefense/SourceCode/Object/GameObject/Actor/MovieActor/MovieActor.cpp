@@ -34,7 +34,7 @@ void CMovieActor<T>::Update( const float& deltaTime )
 	ConfirmAcive();
 
 	if( m_IsAcive == false ) return;
-	T::Update( deltaTime );
+	T::MovieUpdate( deltaTime );
 }
 
 //-----------------------------.

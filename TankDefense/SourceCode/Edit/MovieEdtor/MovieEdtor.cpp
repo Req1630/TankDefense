@@ -42,6 +42,7 @@ bool CMovieEditor::Init()
 	m_MovieEndSecTime = data.MovieTime;
 	m_pCameraEdit->SetMovieCameraState( data.CameraList );
 	m_pWidgetEditor->SetWidgetStateList( data.WidgetList );
+	m_pActorEdit->SetActorStateList( data.ActorList );
 
 	return true;
 }
@@ -114,7 +115,7 @@ void CMovieEditor::ModelRender()
 {
 	m_pStageRender->Render();
 	if( m_IsMoviePlaying == true ){
-		
+		m_pMovie->ModelRender();
 	} else {
 		m_pActorEdit->ModelRender();
 	}
@@ -161,6 +162,7 @@ void CMovieEditor::PlayDraw()
 		m_pMovie->SetPlayTime( m_MovieEndSecTime );
 		m_pMovie->SetCameraQueue( m_pCameraEdit->GetMovieCameraState() );
 		m_pMovie->SetWidgetStateList( m_pWidgetEditor->GetWidgetStateList() );
+		m_pMovie->SetActorList( m_pActorEdit->GetActorStateList() );
 		m_pMovie->Play();
 	}
 }
@@ -229,7 +231,8 @@ void CMovieEditor::ParameterWriting( const char* filePath )
 	{ 
 		m_MovieEndSecTime,
 		m_pCameraEdit->GetMovieCameraState(),
-		m_pWidgetEditor->GetWidgetStateList() 
+		m_pWidgetEditor->GetWidgetStateList(),
+		m_pActorEdit->GetActorStateList()
 	};
 
 	SetParameterWritingMsg( m_pMovieDataLoader->DataWriting( m_NowSelectMovie, movieData ));
@@ -246,6 +249,7 @@ void CMovieEditor::ParameterLoading( const char* filePath )
 	m_MovieEndSecTime = data.MovieTime;
 	m_pCameraEdit->SetMovieCameraState( data.CameraList );
 	m_pWidgetEditor->SetWidgetStateList( data.WidgetList );
+	m_pActorEdit->SetActorStateList( data.ActorList );
 
 	SetParameterLoadingMsg( true );
 }

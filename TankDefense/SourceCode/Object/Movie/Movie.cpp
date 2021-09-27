@@ -6,6 +6,7 @@
 CMovie::CMovie()
 	: m_pMovieDataLoader	( std::make_unique<CMovieDataLoader>() )
 	, m_pCamera				( std::make_unique<CMovieCamera>() )
+	, m_pActorManager		( std::make_unique<CMovieActorManager>() )
 	, m_CameraStateQueue	()
 	, m_CameraStateList		()
 	, m_pWidgetList			()
@@ -29,6 +30,7 @@ bool CMovie::Init( const EMovieNo& no )
 	m_PlayTime = data.MovieTime;
 	SetCameraQueue( data.CameraList );
 	SetWidgetStateList( data.WidgetList );
+	m_pActorManager->SetMovieActorState( data.ActorList );
 
 	return true;
 }
@@ -52,6 +54,7 @@ void CMovie::Update()
 	if( m_PlayTime <= 0.0f ) return;
 
 	m_pCamera->Update( deltaTime );
+	m_pActorManager->Update();
 
 	// カメラの再生が終了したら次のカメラ情報を設定して再生する.
 	if( m_pCamera->IsPlaying() == false ){
@@ -68,6 +71,14 @@ void CMovie::Update()
 	for( auto& w : m_pWidgetList ) w->Update( deltaTime );
 
 	m_PlayTime -= deltaTime;
+}
+
+//--------------------------.
+// モデルの描画.
+//--------------------------.
+void CMovie::ModelRender()
+{
+	m_pActorManager->ModelRender();
 }
 
 //--------------------------.
@@ -119,6 +130,14 @@ void CMovie::SetWidgetStateList( const std::vector<SMovieWidget>& stateList )
 		m_pWidgetList[i]->SetMovieWidgetState( stateList[i] );
 		m_pWidgetList[i]->Init();
 	}
+}
+
+//--------------------------.
+// アクターリストの設定.
+//--------------------------.
+void CMovie::SetActorList( const SMovieActorStateList& stateList )
+{
+	m_pActorManager->SetMovieActorState( stateList );
 }
 
 //--------------------------.

@@ -47,20 +47,10 @@ void CMovieActorEditor::Update()
 	if( m_pEditPlayer->IsPut() == true ){
 		SActorEditState& state = m_ActorEditStateList[m_NowSelectIndex];
 		const STranceform t = m_pEditPlayer->GetPutTranceform();
-		switch( m_NowSelectActorState )
-		{
-		case ESelectStateFlag_StartPos:
-			state.MovieState.StartPosition = t.Position;
-			break;
-		case ESelectStateFlag_EndPos:
-			state.MovieState.EndPosition = t.Position;
-			break;
-		case ESelectStateFlag_Rot:
-			break;
-		default:
-			break;
-		}
-		m_NowSelectActorState = ESelectStateFlag_None;
+		state.MovieState.StartPosition	= t.Position;
+//		state.MovieState.EndPosition	= t.Position;
+		state.MovieState.StartRotation	= t.Rotation;
+		m_NowSelectActorState = ESelectStateFlag_AllOff;
 		OnImGuiGamepad();
 	}
 
@@ -74,6 +64,7 @@ void CMovieActorEditor::Update()
 bool CMovieActorEditor::ImGuiRender()
 {
 	ActorNodeDraw();
+	ImGui::SameLine();
 	PushActorNodeDraw();
 	ImGui::Separator();
 	ActorParameterDraw();
@@ -91,6 +82,47 @@ void CMovieActorEditor::ModelRender()
 
 	AllActorRender();
 	NowSelectActorRender();
+}
+
+//---------------------------.
+// エディタ用プレイヤーの設定.
+//---------------------------.
+void CMovieActorEditor::SetEditPlayer( CEditPlayer* pPlayer )
+{ 
+	m_pEditPlayer = pPlayer;
+
+	if( m_pEditPlayer == nullptr ) return;
+
+	if( m_ActorEditStateList.empty() == true ) return;
+	m_NowSelectIndex = 0;
+
+	SMovieActor& state = m_ActorEditStateList[m_NowSelectIndex].MovieState;
+	m_pEditPlayer->SetPosition( state.StartPosition );
+	m_pEditPlayer->SetRotation( state.StartRotation );
+	m_pEditPlayer->Update();
+}
+
+// アクターリストの取得.
+SMovieActorStateList CMovieActorEditor::GetActorStateList()
+{
+	SMovieActorStateList stateList;
+
+	for( auto s : m_ActorEditStateList ){
+		switch( s.ActorNo )
+		{
+		case EActorNo_Enemy:
+			stateList.EnemyList.emplace_back( s.MovieState );
+			break;
+		}
+	}
+
+	return stateList;
+}
+
+// アクターリストの設定.
+void CMovieActorEditor::SetActorStateList( const SMovieActorStateList stateList )
+{
+	CreateMovieActorList( stateList.EnemyList, m_pEnemyList, EActorNo_Enemy );
 }
 
 //---------------------------.
@@ -124,27 +156,18 @@ void CMovieActorEditor::NowSelectActorRender()
 	CDX9SkinMesh* pSkinMesh = GetSkinMesh( state.ActorNo, state.ListIndex );
 
 	if( pSkinMesh == nullptr ) return;
-	for( int i = 0; i < 2; i++ ){
-		bool isWire = false;
-		STranceform t = m_pEditPlayer->GetPutTranceform();
-		t.Rotation = state.MovieState.StartRotation;
-		if( i == 0 ){
-			// 選択されていればワイヤー表示する.
-			isWire = bit::IsBitFlag( m_NowSelectActorState, ESelectStateFlag_StartPos );
-			if( isWire == false ) t.Position = state.MovieState.StartPosition;
-		} else {
-			// 選択されていればワイヤー表示する.
-			isWire = bit::IsBitFlag( m_NowSelectActorState, ESelectStateFlag_EndPos );
-			if( isWire == false ) t.Position = state.MovieState.EndPosition;
-		}
 
-		pSkinMesh->SetTranceform( t );
-		pSkinMesh->SetRasterizerState( isWire ? ERS_STATE::Wire : ERS_STATE::None );
-		pSkinMesh->SetColor( { m_SelectActorRedColor, 0.7f, 0.7f, 1.0f } );
-		pSkinMesh->SetAnimSpeed( m_DeltaTime*0.5f );	// 二体分描画するので速度を半分にする.
-		pSkinMesh->Render( &state.AC );
-		pSkinMesh->SetRasterizerState( ERS_STATE::None );
-	}
+	const STranceform t = m_pEditPlayer->GetPutTranceform();
+//	t.Position = state.MovieState.EndPosition;
+//	t.Rotation = state.MovieState.StartRotation;
+
+	pSkinMesh->SetTranceform( t );
+	pSkinMesh->SetRasterizerState( ERS_STATE::Wire );
+	pSkinMesh->SetColor( { m_SelectActorRedColor, 0.7f, 0.7f, 1.0f } );
+	pSkinMesh->SetAnimSpeed( m_DeltaTime*0.5f );	// 二体分描画するので速度を半分にする.
+	pSkinMesh->Render( &state.AC );
+	pSkinMesh->SetRasterizerState( ERS_STATE::None );
+	
 	m_SelectActorRedColor -= SELECT_ACTOR_COLOR_DOWN_SPEED;
 	if( m_SelectActorRedColor < 1.0f ) m_SelectActorRedColor = SELECT_ACTOR_RED_COLOR;
 }
@@ -169,7 +192,14 @@ void CMovieActorEditor::ActorNodeDraw()
 			const bool isSelected = ( i == m_NowSelectIndex );
 			noName = ActorNoToString(actorMesh.ActorNo) + "_" + std::to_string(actorMesh.ListIndex);
 
-			if( ImGui::Selectable( noName.c_str(), isSelected ) ) m_NowSelectIndex = i;
+			if( ImGui::Selectable( noName.c_str(), isSelected ) ){
+				m_NowSelectIndex = i;
+
+				SMovieActor& state = m_ActorEditStateList[m_NowSelectIndex].MovieState;
+				m_pEditPlayer->SetPosition( state.StartPosition );
+				m_pEditPlayer->SetRotation( state.StartRotation );
+				m_pEditPlayer->Update();
+			}
 			if( isSelected ) ImGui::SetItemDefaultFocus();
 
 			i++;
@@ -210,6 +240,10 @@ void CMovieActorEditor::PushActorNodeDraw()
 
 			m_IsPushNodeOpen = false;	// ツリーノードを閉じる.
 			m_NowSelectIndex = m_ActorEditStateList.size()-1;
+
+			m_pEditPlayer->SetPosition( { 0.0f, 0.0f, 0.0f } );
+			m_pEditPlayer->SetRotation( { 0.0f, 0.0f, 0.0f } );
+			m_pEditPlayer->Update();
 		}
 
 		ImGui::TreePop();
@@ -227,35 +261,22 @@ void CMovieActorEditor::ActorParameterDraw()
 	SMovieActor& state = m_ActorEditStateList[m_NowSelectIndex].MovieState;
 
 	ImGui::DragFloat( u8"開始時間", &state.AciveStartTime, 0.1f, 0.0f, 180.0f );
-	ImGui::BeginGroup();
-	if( ImGui::Button( u8"開始位置を設定" )){
+
+	if( ImGui::Button( u8"オブジェクトを配置" )){
 		OffImGuiGamepad();
-		bit::OnBitFlag( &m_NowSelectActorState, ESelectStateFlag_StartPos );
+		bit::OnBitFlag( &m_NowSelectActorState, ESelectStateFlag_AllOn );
 		m_pEditPlayer->SetPosition( state.StartPosition );
+		m_pEditPlayer->SetRotation( state.StartRotation );
 	}
-	PositionDraw( u8"  Positon", state.StartPosition );
-	ImGui::EndGroup(); 
-	ImGui::SameLine();
-	ImGui::SeparatorEx( ImGuiSeparatorFlags_Vertical );
-	ImGui::SameLine();
-
-	ImGui::BeginGroup();
-	if( ImGui::Button( u8"終了位置を設定" )){
-		OffImGuiGamepad();
-		bit::OnBitFlag( &m_NowSelectActorState, ESelectStateFlag_EndPos );
-		m_pEditPlayer->SetPosition( state.EndPosition );
+	if( bit::IsBitFlag( m_NowSelectActorState, ESelectStateFlag_AllOn ) ){
+		const STranceform t = m_pEditPlayer->GetPutTranceform();
+		state.StartPosition = t.Position;
+		state.StartRotation = t.Rotation;
 	}
-	PositionDraw( u8"  Positon", state.EndPosition );
-	ImGui::EndGroup();
-
-	//ImGui::BeginGroup();
-	//ImGui::PushStyleColor( ImGuiCol_Button,			ImVec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
-	//ImGui::PushStyleColor( ImGuiCol_ButtonHovered,	ImVec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
-	//ImGui::PushStyleColor( ImGuiCol_ButtonActive,	ImVec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
-	//ImGui::Button( u8"" );
-	//ImGui::PopStyleColor( 3 );
+	PositionDraw( u8"  Position", state.StartPosition );
+	ImGui::SameLine();
 	PositionDraw( u8"  Rotation", state.StartRotation );
-	//ImGui::EndGroup();
+
 }
 
 //---------------------------.

@@ -55,6 +55,12 @@ public:
 	virtual void SetIsRestraint(const std::function<void(bool&)>&) {}
 
 protected:
+	// ムービー用動作関数.
+	//	ムービで使用したいアクターにオーバーライドさせ、
+	//	任意の動きを記述する(例：敵のスポーン後ランダムに移動するプログラムなど).
+	virtual void MovieUpdate( const float& deltaTime ){}
+
+protected:
 	std::unique_ptr<CCollisions>	m_pCollisions;	// 複数のコリジョンを所持しているクラス.
 };
 

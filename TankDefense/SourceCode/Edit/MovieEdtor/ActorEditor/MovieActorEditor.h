@@ -3,6 +3,7 @@
 
 #include "..\..\..\Common\Mesh\Dx9SkinMesh\Dx9SkinMesh.h"
 #include "..\..\..\Object\GameObject\Actor\MovieActor\MovieActor.h"
+#include "..\..\..\Object\GameObject\Actor\MovieActor\MovieActorManager\MovieActorManager.h"
 #include "..\..\..\Object\GameObject\Actor\EnemyBase\Enemy\Enemy.h"
 
 #include <vector>
@@ -24,6 +25,9 @@ class CMovieActorEditor
 		ESelectStateFlag_StartPos	= 1 << 0,
 		ESelectStateFlag_EndPos		= 1 << 1,
 		ESelectStateFlag_Rot		= 1 << 2,
+
+		ESelectStateFlag_AllOn		= 0xff,
+		ESelectStateFlag_AllOff		= 0,
 
 	} typedef ESelectStateFlag;
 
@@ -70,7 +74,12 @@ public:
 	void ModelRender();
 
 	// エディタ用プレイヤーの設定.
-	inline void SetEditPlayer( CEditPlayer* pPlayer ){ m_pEditPlayer = pPlayer; }
+	void SetEditPlayer( CEditPlayer* pPlayer );
+
+	// アクターリストの取得.
+	SMovieActorStateList GetActorStateList();
+	// アクターリストの設定.
+	void SetActorStateList( const SMovieActorStateList stateList );
 
 private:
 	// 全部のアクターの描画.
@@ -101,16 +110,54 @@ private:
 	// ImGuiでゲームパッド操作を無効にする.
 	void OffImGuiGamepad();
 
+	// アクターリストの作成.
+	template<class T> 
+	void CreateMovieActorList( 
+		const std::vector<SMovieActor>&		stateList,
+		std::vector<std::unique_ptr<T>>&	actorList,
+		const EActorNo& actorNo )
+	{
+		const int stateSize		= stateList.size();
+		const int createSize	= stateSize - actorList.size();
+
+		if( createSize > 0 ){
+			// 作成数が正の整数なら追加していく.
+			for( int i = 0; i < createSize; i++ ){
+				actorList.emplace_back( std::make_unique<T>() );
+			}
+		} else if( createSize < 0 ){
+			// 作成数が負の整数なら消していく.
+			for( int i = 0; i < abs(createSize); i++ ){
+				actorList.pop_back();
+			}
+		}
+
+		for( int i = 0; i < stateSize; i++ ){
+			actorList[i]->Init();
+			actorList[i]->SetMovieState( stateList[i] );
+
+			// 各値を設定して追加.
+			SActorEditState state;
+			state.ActorNo	= actorNo;
+			state.ListIndex	= GetListSize(actorNo)-1;
+			state.MovieState = stateList[i];
+			CDX9SkinMesh* pSkinMesh = GetSkinMesh( state.ActorNo, state.ListIndex );
+			state.AC.SetAnimController( pSkinMesh->GetAnimationController() );
+
+			m_ActorEditStateList.emplace_back( state );
+		}
+	}
+
 private:
-	CEditPlayer*										m_pEditPlayer;
-	std::vector<std::unique_ptr<CMovieActor<CEnemy>>>	m_pEnemyList;
-	std::vector<SActorEditState>						m_ActorEditStateList;
-	float												m_DeltaTime;
-	float												m_SelectActorRedColor;
-	int													m_NowSelectIndex;
-	char												m_NowSelectActorState;
-	bool												m_IsPushNodeOpen;
-	bool												m_IsImGuiGamepad;
+	CEditPlayer*								m_pEditPlayer;
+	std::vector<std::unique_ptr<CMovieEnemy>>	m_pEnemyList;
+	std::vector<SActorEditState>				m_ActorEditStateList;
+	float										m_DeltaTime;
+	float										m_SelectActorRedColor;
+	int											m_NowSelectIndex;
+	char										m_NowSelectActorState;
+	bool										m_IsPushNodeOpen;
+	bool										m_IsImGuiGamepad;
 };
 
 #endif	// #ifndef MOVIE_ACTOR_EDITOR_H.

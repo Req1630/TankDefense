@@ -92,17 +92,18 @@ private:
 	D3DXMATRIX CreateCropMatrix( SBBox& box );
 
 private:
-	ID3D11VertexShader*		m_pSkinVertexShader;	// 頂点シェーダー.
-	ID3D11Buffer*			m_pConstantBufferFrame;	// コンスタントバッファ.
-	std::vector<D3DXMATRIX>	m_ShadowMatrix;			// シャドウ用行列(カスケード分用意).
-	std::vector<float>		m_SplitPos;				// カスケードの区切り座標.
-	D3DXMATRIX				m_ProjMatrix;			// プロジェクション.
-	D3DXMATRIX				m_ViewMatrix;			// ビュー.
-	float					m_MaxClipDistance;		// 最大クリッピング距離.
-	float					m_MinClipDistance;		// 最小クリッピング距離.
-	float					m_AspectWindow;			// ウィンドウのアスペクト比.
-	float					m_FovCamera;			// カメラの比率.
-	bool					m_IsEndRender;			// 影情報の描画が終了したか.
+	ID3D11VertexShader*						m_pSkinVertexShader;	// 頂点シェーダー.
+	ID3D11Buffer*							m_pConstantBufferFrame;	// コンスタントバッファ.
+	std::vector<ID3D11DepthStencilView*>	m_pDepthStencilViewList;// デプスステンシルビューリスト.
+	std::vector<D3DXMATRIX>					m_ShadowMatrix;			// シャドウ用行列(カスケード分用意).
+	std::vector<float>						m_SplitPos;				// カスケードの区切り座標.
+	D3DXMATRIX								m_ProjMatrix;			// プロジェクション.
+	D3DXMATRIX								m_ViewMatrix;			// ビュー.
+	float									m_MaxClipDistance;		// 最大クリッピング距離.
+	float									m_MinClipDistance;		// 最小クリッピング距離.
+	float									m_AspectWindow;			// ウィンドウのアスペクト比.
+	float									m_FovCamera;			// カメラの比率.
+	bool									m_IsEndRender;			// 影情報の描画が終了したか.
 
 private:
 	// コピー・ムーブコンストラクタ, 代入演算子の削除.

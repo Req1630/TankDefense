@@ -144,6 +144,8 @@
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Weapon\Bullet\BulletManager\BulletManager.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Weapon\Bullet\EnemyBullet\EnemyBullet.cpp" />
     <ClCompile Include="SourceCode\Object\GameObject\Actor\Weapon\Bullet\Bullet.cpp" />
+    <ClCompile Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActorManager\MovieActorManager.cpp" />
+    <ClCompile Include="SourceCode\Object\Movie\LoadActorData\LoadActorData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Library\ImGui\imconfig.h" />
@@ -294,6 +296,8 @@
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Weapon\Bullet\EnemyBullet\EnemyBullet.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Weapon\Bullet\Bullet.h" />
     <ClInclude Include="SourceCode\Object\GameObject\Actor\Weapon\ShotStatus.h" />
+    <ClInclude Include="SourceCode\Object\GameObject\Actor\MovieActor\MovieActorManager\MovieActorManager.h" />
+    <ClInclude Include="SourceCode\Object\Movie\LoadActorData\LoadActorData.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

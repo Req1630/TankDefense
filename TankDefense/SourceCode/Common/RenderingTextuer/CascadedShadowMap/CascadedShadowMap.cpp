@@ -21,6 +21,7 @@ namespace
 CCascadedShadowMap::CCascadedShadowMap()
 	: m_pSkinVertexShader		( nullptr )
 	, m_pConstantBufferFrame	( nullptr )
+	, m_pDepthStencilViewList	()
 	, m_ShadowMatrix			( CASCADED_NUM )
 	, m_SplitPos				( CASCADED_NUM )
 	, m_ProjMatrix				()
@@ -37,6 +38,7 @@ CCascadedShadowMap::~CCascadedShadowMap()
 {
 	SAFE_RELEASE(m_pSkinVertexShader);
 	SAFE_RELEASE(m_pConstantBufferFrame);
+	for( auto& d : m_pDepthStencilViewList ) SAFE_RELEASE(d);
 }
 
 //------------------------------------.
@@ -70,7 +72,7 @@ HRESULT CCascadedShadowMap::Init( ID3D11DeviceContext* pContext11 )
 // 更新.
 //------------------------------------.
 void CCascadedShadowMap::Update()
-{
+{ 
 	m_IsEndRender = false;
 
 	D3DXVECTOR3 pos = CLightManager::GetPosition();
@@ -120,10 +122,11 @@ void CCascadedShadowMap::Update()
 	}
 
 	this->SetBuffer();
-	m_pContext11->PSSetShader( m_pPixelShader, nullptr, 0 );	// ピクセルシェーダ.
+	m_pContext11->PSSetShader( nullptr, nullptr, 0 );	// ピクセルシェーダ.
 
 	m_pContext11->VSSetConstantBuffers( 0, 1, &m_pConstantBufferFrame );	// 頂点シェーダ.
 	m_pContext11->PSSetConstantBuffers( 0, 1, &m_pConstantBufferFrame );	// ピクセルシェーダー.
+
 }
 
 //------------------------------------.
@@ -138,9 +141,7 @@ bool CCascadedShadowMap::Render( const bool& isSkin, const D3DXMATRIX& mW, std::
 
 	for( int i = 0; i < CASCADED_NUM; i++ ){
 		// レンダーターゲットの設定.
-		m_pContext11->OMSetRenderTargets( 1, &m_pRenderTargetViewList[i], CDirectX11::GetDepthSV() );
-		// デプスステンシルバッファ.
-		m_pContext11->ClearDepthStencilView( CDirectX11::GetDepthSV(), D3D11_CLEAR_DEPTH, 1.0f, 0 );
+		m_pContext11->OMSetRenderTargets( 0, nullptr, m_pDepthStencilViewList[i] );
 
 		// シェーダーのコンスタントバッファに各種データを渡す.
 		D3D11_MAPPED_SUBRESOURCE pData;
@@ -154,7 +155,6 @@ bool CCascadedShadowMap::Render( const bool& isSkin, const D3DXMATRIX& mW, std::
 			memcpy_s( pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb) );
 			m_pContext11->Unmap( m_pConstantBufferFrame, 0 );
 		}
-
 		func();
 	}
 	return true;
@@ -175,9 +175,9 @@ void CCascadedShadowMap::ClearSRV()
 //------------------------------------.
 void CCascadedShadowMap::SetBuffer()
 {
-	// G-Bufferテクスチャのクリア.
-	for( auto& rtv : m_pRenderTargetViewList ){
-		m_pContext11->ClearRenderTargetView( rtv, CLEAR_BACK_COLOR );
+	// デプスステンシルバッファ.
+	for( auto& dsv : m_pDepthStencilViewList ){
+		m_pContext11->ClearDepthStencilView( dsv, D3D11_CLEAR_DEPTH, 1.0f, 0 );
 	}
 }
 
@@ -187,28 +187,50 @@ void CCascadedShadowMap::SetBuffer()
 HRESULT CCascadedShadowMap::InitBufferTex()
 {
 	D3D11_TEXTURE2D_DESC texDesc;
-	texDesc.Width				= m_WndWidth;								// 幅.
-	texDesc.Height				= m_WndHeight;								// 高さ.
+	texDesc.Width				= m_WndWidth;						// 幅.
+	texDesc.Height				= m_WndHeight;						// 高さ.
 	texDesc.MipLevels			= 1;								// ミップマップレベル:1.
 	texDesc.ArraySize			= 1;								// 配列数:1.
-	texDesc.Format				= DXGI_FORMAT_R32_FLOAT;			// 32ビットフォーマット.
+	texDesc.Format				= DXGI_FORMAT_R16_TYPELESS;			// 32ビットフォーマット.
 	texDesc.SampleDesc.Count	= 1;								// マルチサンプルの数.
 	texDesc.SampleDesc.Quality	= 0;								// マルチサンプルのクオリティ.
 	texDesc.Usage				= D3D11_USAGE_DEFAULT;				// 使用方法:デフォルト.
-	texDesc.BindFlags			= D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;	// レンダーターゲット、シェーダーリソース.
+	texDesc.BindFlags			= D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;	// レンダーターゲット、シェーダーリソース.
 	texDesc.CPUAccessFlags		= 0;								// CPUからはアクセスしない.
 	texDesc.MiscFlags			= 0;								// その他の設定なし.
 
-	m_pRenderTargetViewList.resize( CASCADED_NUM );
+	m_pDepthStencilViewList.resize( CASCADED_NUM );
 	m_pShaderResourceViewList.resize( CASCADED_NUM );
 	m_pTexture2DList.resize( CASCADED_NUM );
 
 	for( int i = 0; i < CASCADED_NUM; i++ ){
-		if( FAILED( CreateBufferTex(
-			texDesc,
-			&m_pRenderTargetViewList[i],
-			&m_pShaderResourceViewList[i],
-			&m_pTexture2DList[i] ))) return E_FAIL;
+		// そのテクスチャに対してデプスステンシル(DSTex)を作成.
+		if( FAILED( m_pDevice11->CreateTexture2D( &texDesc, nullptr, &m_pTexture2DList[i] )) ){
+			ERROR_MESSAGE( "テクスチャデスク作成失敗" );
+			return E_FAIL;
+		}
+		// レンダーターゲットビューの設定
+		D3D11_DEPTH_STENCIL_VIEW_DESC rtvDesc = {};
+		rtvDesc.Format				= DXGI_FORMAT_D16_UNORM;
+		rtvDesc.ViewDimension		= D3D11_DSV_DIMENSION_TEXTURE2D;
+		rtvDesc.Texture2D.MipSlice	= 0;
+		// RenderTargetView作成.
+		if( FAILED( m_pDevice11->CreateDepthStencilView( m_pTexture2DList[i], &rtvDesc, &m_pDepthStencilViewList[i] ) )){
+			ERROR_MESSAGE( "レンダーターゲットビュー作成失敗" );
+			return E_FAIL;
+		}
+
+		// シェーダリソースビューの設定
+		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+		srvDesc.Format						= DXGI_FORMAT_R16_UNORM;
+		srvDesc.ViewDimension				= D3D11_SRV_DIMENSION_TEXTURE2D;
+		srvDesc.Texture2D.MipLevels			= 1;
+		srvDesc.Texture2D.MostDetailedMip	= 0;
+		// テクスチャ作成時と同じフォーマット
+		if( FAILED( m_pDevice11->CreateShaderResourceView( m_pTexture2DList[i], &srvDesc, &m_pShaderResourceViewList[i] ) )){
+			ERROR_MESSAGE( "デプスステンシル作成失敗" );
+			return E_FAIL;
+		}
 	}
 	return S_OK;
 }

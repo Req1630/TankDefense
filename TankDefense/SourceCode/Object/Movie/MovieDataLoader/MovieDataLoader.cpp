@@ -16,6 +16,10 @@ namespace
 	// ウィジェット情報の開始文字、終了文字.
 	constexpr char WIDGET_STATE_START[]	= "WidgetState Start {";
 	constexpr char WIDGET_STATE_END[]	= "} WidgetState End";
+
+	// アクター情報の開始文字、終了文字.
+	constexpr char ACTOR_STATE_START[]	= "ActorState Start {";
+	constexpr char ACTOR_STATE_END[]	= "} ActorState End";
 };
 
 CMovieDataLoader::CMovieDataLoader()
@@ -50,6 +54,7 @@ bool CMovieDataLoader::DataLoading( const char* filePath, SMovieData* pMovieData
 
 	std::vector<std::string>	cameraDataList;
 	std::vector<std::string>	widgetDataList;
+	std::vector<std::string>	actorDataList;
 
 	bool isTimeLoad = false;
 
@@ -77,6 +82,15 @@ bool CMovieDataLoader::DataLoading( const char* filePath, SMovieData* pMovieData
 			ELoadedFlag_Widget,
 			WIDGET_STATE_START,
 			WIDGET_STATE_END );
+
+		// アクター情報の読み込み.
+		LoadingEachData<CActorDataConverter>( 
+			s,
+			actorDataList, 
+			pMovieData->ActorList,
+			ELoadedFlag_Actor,
+			ACTOR_STATE_START,
+			ACTOR_STATE_END );
 	}
 
 	m_EachLoadEndFlag, ELoadedFlag_None;
@@ -96,8 +110,9 @@ bool CMovieDataLoader::DataWriting( const EMovieNo& movieNo, const SMovieData& m
 
 	if( fileStream.is_open() == false ) return false;
 
-	const std::vector<std::string> cameraDataList = CCameraDataConverter::ToString( movieData.CameraList );
-	const std::vector<std::string> widgetDataList = CWidgetDataConverter::ToString( movieData.WidgetList );
+	const std::vector<std::string> cameraDataList	= CCameraDataConverter::ToString( movieData.CameraList );
+	const std::vector<std::string> widgetDataList	= CWidgetDataConverter::ToString( movieData.WidgetList );
+	const std::vector<std::string> actorDataList	= CActorDataConverter::ToString( movieData.ActorList );
 
 	// 時間の書き込み.
 	WritingTimeData( fileStream, movieData.MovieTime );
@@ -107,6 +122,9 @@ bool CMovieDataLoader::DataWriting( const EMovieNo& movieNo, const SMovieData& m
 
 	// ウィジェット情報の書き込み.
 	WritingEachData( fileStream, widgetDataList, WIDGET_STATE_START, WIDGET_STATE_END );
+
+	// アクター情報の書き込み.
+	WritingEachData( fileStream, actorDataList, ACTOR_STATE_START, ACTOR_STATE_END );
 
 	// ファイルを閉じる.
 	fileStream.close();

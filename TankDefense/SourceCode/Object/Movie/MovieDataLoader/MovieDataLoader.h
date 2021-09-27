@@ -3,6 +3,7 @@
 
 #include "..\LoadCameraData\LoadCameraData.h"
 #include "..\LoadWidgetData\LoadWidgetData.h"
+#include "..\LoadActorData\LoadActorData.h"
 
 #include <unordered_map>
 
@@ -25,6 +26,7 @@ struct stMovieData
 	float						MovieTime;
 	std::vector<SMovieCamera>	CameraList;
 	std::vector<SMovieWidget>	WidgetList;
+	SMovieActorStateList		ActorList;
 } typedef SMovieData;
 
 /************************************
@@ -39,6 +41,7 @@ class CMovieDataLoader
 
 		ELoadedFlag_Camera	= 1 << 0,	// カメラ.
 		ELoadedFlag_Widget	= 1 << 1,	// ウィジェット.
+		ELoadedFlag_Actor	= 1 << 2,	// アクター.
 
 	} typedef ELoadedFlag;
 
