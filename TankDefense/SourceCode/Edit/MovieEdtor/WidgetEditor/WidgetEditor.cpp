@@ -313,6 +313,9 @@ void CWidgetEditor::AnimationParameterDraw()
 	if( animState.IsUVScrollX  == true ){
 		ImGui::Indent();
 		ImGui::DragFloat( u8"スクロール速度##1", &animState.UVScrollSpeed.x, 0.0001f, -20.0f, 20.0f, "%.4f" );
+		if( ImGui::Button( u8"値をリセット##1" ) ){
+			m_pWidgetList[m_NowSelectIndex]->ResetUV();
+		}
 		ImGui::Unindent();
 	}
 
@@ -320,6 +323,9 @@ void CWidgetEditor::AnimationParameterDraw()
 	if( animState.IsUVScrollY  == true ){
 		ImGui::Indent();
 		ImGui::DragFloat( u8"スクロール速度##2", &animState.UVScrollSpeed.y, 0.0001f, -20.0f, 20.0f, "%.4f" );
+		if( ImGui::Button( u8"値をリセット##2" ) ){
+			m_pWidgetList[m_NowSelectIndex]->ResetUV();
+		}
 		ImGui::Unindent();
 	}
 

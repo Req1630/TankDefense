@@ -1,11 +1,51 @@
 //---------------------
-#Time,0
+#Time,2.5
 //---------------------
 
 CameraState Start {
+	//---------------------
+	// CameraState No.1
+	#ActiveTime,0
+	// StartState
+	#Position,-67.7269, 34.4476, -21.9464
+	#Look Position,-52.8107, 23.3786, -20.3624
+	// EndState
+	#Position,-61.3408, 34.4476, -51.055
+	#Look Position,-50.0222, 24.3888, -41.2117
+	#PosMoveTime,1.2
+	#LookPosMoveTime,1.4
+	// shakeState No.0
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
+	// shakeState No.1
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
+	// shakeState No.2
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
+	// shakeState No.3
+	#Amplitube,0,	#Frequency,0,	#Time,0,	#Base Position,0, 0, 0, 	#IsAttenuation,false, 	#IsPlaying,false
+	//---------------------
+
 } CameraState End
 
 WidgetState Start {
+	//---------------------
+	// WidgetState No.1
+	#SpriteName,MissileName
+	#AciveStartTime,0
+	#Position,157.5,170
+	//AnimationState
+	#IsUVScrollX,false
+	#IsUVScrollY,false
+	#UVScrollSpeedX,0
+	#UVScrollSpeedY,0
+	#IsAnimation,false
+	#FrameCountSpeed,0
+	//FadeState
+	#FadeFlag,3
+	#FadeSpeed,0.7
+	#AlphaMax,1
+	#AlphaMin,0
+	//---------------------
+
 } WidgetState End
 
 ActorState Start {
@@ -14,9 +54,9 @@ ActorState Start {
 	#TagName,Enemy
 	#ActiveStartTime,1.6
 	// StartPosition
-	#Position,-28.066, 3.8, -0.755635
+	#Position,-15.7807, 11.6, -27.4177
 	// StartRotationn
-	#Position,0, 1.1, 0
+	#Position,0, 0.9, 0
 	//---------------------
 
 } ActorState End

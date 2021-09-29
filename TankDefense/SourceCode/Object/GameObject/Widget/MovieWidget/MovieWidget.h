@@ -119,6 +119,9 @@ public:
 	// リセット.
 	void Reset();
 
+	// UV値の初期化.
+	void ResetUV();
+
 private:
 	// フェードの開始.
 	void StartFade();

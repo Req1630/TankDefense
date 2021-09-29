@@ -21,6 +21,12 @@ template<typename T>
 bool CMovieActor<T>::Init()
 {
 	if( T::Init() == false ) return false;
+	T::m_Tranceform.Position = m_MovieState.StartPosition;
+	T::m_Tranceform.Rotation = m_MovieState.StartRotation;
+
+	m_IsAcive = false;
+	m_NowTime = 0.0f;
+
 	return true;
 }
 

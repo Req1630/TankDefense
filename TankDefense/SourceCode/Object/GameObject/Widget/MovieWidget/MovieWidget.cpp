@@ -115,6 +115,14 @@ void CMovieWidget::Reset()
 }
 
 //--------------------------------.
+// UV値の初期化.
+//--------------------------------.
+void CMovieWidget::ResetUV()
+{
+	m_pRenderState->AnimState.UV = { 0.0f, 0.0f };
+}
+
+//--------------------------------.
 // フェードの開始.
 //--------------------------------.
 void CMovieWidget::StartFade()

@@ -51,8 +51,8 @@ private:
 		}
 
 		for( int i = 0; i < stateSize; i++ ){
-			actorList[i]->Init();
 			actorList[i]->SetMovieState( stateList[i] );
+			actorList[i]->Init();
 		}
 	}
 	// アクターリストの更新.
