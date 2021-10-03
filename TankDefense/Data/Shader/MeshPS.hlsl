@@ -13,6 +13,15 @@ struct PS_OUTPUT
 // 影の計算.
 float OutShadowColor( float4 pos, int index, float shadowPow );
 
+
+static const float DITHER_PATTERN[4][4] = 
+	{
+		{ 0.00f, 0.32f, 0.08f, 0.40f, },
+		{ 0.48f, 0.16f, 0.56f, 0.24f, },
+		{ 0.12f, 0.44f, 0.04f, 0.36f, },
+		{ 0.60f, 0.28f, 0.52f, 0.20f, },
+	};
+
 //-------------------------------------------------
 //	ピクセルシェーダ.
 //-------------------------------------------------
@@ -23,6 +32,18 @@ PS_OUTPUT PS_Main( VS_OUTPUT input )
 	float4 finalColor	= texColor;	// 最終色.
 	finalColor.rgb	*= g_vColor.xyz;
 	finalColor.a	*= g_vColor.a;
+	
+	////////////////////////////////////////////////.
+	// ディザ抜き計算.
+	////////////////////////////////////////////////.
+	/*	
+	// 現在輪郭線を描画しているため,
+	//	ディザ抜きを行うと真っ黒になるのでコメントアウト.
+	const int	pt_x	= (int)fmod(input.Pos.x, 4.0f);
+	const int	pt_y	= (int)fmod(input.Pos.y, 4.0f);
+	const float	dither	= DITHER_PATTERN[pt_y][pt_x];
+	clip( finalColor.a - dither );
+	*/
 	
 	////////////////////////////////////////////////.
 	// 影の計算.

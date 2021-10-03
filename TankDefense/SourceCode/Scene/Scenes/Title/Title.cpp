@@ -55,6 +55,12 @@ void CTitle::Update()
 //============================.
 void CTitle::ModelRender()
 {
+	static float alpha = 1.0f;
+
+	if( CKeyInput::IsPress('O') ) alpha += 0.001f;
+	if( CKeyInput::IsPress('L') ) alpha -= 0.001f;
+
+	m_pStaticMesh->SetAlpha( alpha );
 	m_pStaticMesh->Render();
 	m_pGameObjManager->Render();
 }

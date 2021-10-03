@@ -7,6 +7,7 @@
 Texture2D		g_Texture		: register(t0);
 Texture2D		g_NormTexture	: register(t1);
 Texture2D		g_ShadowTexture[SHADOW_CASCADED_NUM]	: register(t2);
+Texture2D		g_DitherTexture	: register(t7);
 // ƒTƒ“ƒvƒ‰.
 SamplerState	g_SamLinear			: register(s0);
 SamplerComparisonState	g_ShadowSamLinear	: register(s1);

@@ -9,7 +9,7 @@ namespace
 {
 	constexpr char	SHADER_NAME[]			= "Data\\Shader\\MeshPS.hlsl";	// ピクセルシェーダー名.
 	constexpr char	PS_SHADER_ENTRY_NAME[]	= "PS_Main";	// ピクセルシェーダーエントリー名.
-
+	constexpr char	DITHER_TEXTURE_NAME[]	= "Data\\Mesh\\common\\dither_map.png";
 	const D3DXMATRIX SHADOW_BIAS = 
 	{
 		0.5f,  0.0f, 0.0f, 0.0f,
@@ -21,6 +21,10 @@ namespace
 
 CGBufferRender::CGBufferRender()
 	: m_pConstantBufferFrame	( nullptr )
+	, m_pConstantBufferShadow	( nullptr )
+	, m_pShadowMapSampler		( nullptr )
+	, m_pShadowMap				( nullptr )
+	, m_pDitherTexture			( nullptr )
 {
 	m_pShadowMap = CCascadedShadowMap::GetInstance();
 }
@@ -28,6 +32,11 @@ CGBufferRender::CGBufferRender()
 CGBufferRender::~CGBufferRender()
 {
 	SAFE_RELEASE( m_pConstantBufferFrame );
+	SAFE_RELEASE( m_pShadowMapSampler );
+	SAFE_RELEASE( m_pConstantBufferShadow );
+	SAFE_RELEASE( m_pDitherTexture );
+
+	m_pShadowMap = nullptr;
 }
 
 //------------------------------------.
@@ -39,6 +48,7 @@ HRESULT CGBufferRender::Init( ID3D11DeviceContext* pContext11 )
 	if( FAILED( InitBufferTex() ))				return E_FAIL;
 	if( FAILED( InitShadowSampler() ))			return E_FAIL;
 	if( FAILED( InitPixelShader( SHADER_NAME, PS_SHADER_ENTRY_NAME ) )) return E_FAIL;
+	if( FAILED( CreateDitherTexture() ))		return E_FAIL;
 	if( FAILED( shader::CreateConstantBuffer( 
 		m_pDevice11,
 		&m_pConstantBufferFrame,
@@ -105,6 +115,7 @@ void CGBufferRender::Update()
 {
 	m_pContext11->PSSetShader( m_pPixelShader, nullptr, 0 );	// ピクセルシェーダ.
 	m_pContext11->PSSetShaderResources( 2, m_pShadowMap->CASCADED_NUM, &m_pShadowMap->GetShaderResourceViewList()[0] );
+	m_pContext11->PSSetShaderResources( 7, 1, &m_pDitherTexture );
 	m_pContext11->PSSetSamplers( 1, 1, &m_pShadowMapSampler );
 
 	UpdateFrame();
@@ -208,6 +219,26 @@ HRESULT CGBufferRender::InitShadowSampler()
 	if( FAILED( m_pDevice11->CreateSamplerState(
 		&samDesc, &m_pShadowMapSampler ))){
 		ERROR_MESSAGE( "サンプラー作成失敗" );
+		return E_FAIL;
+	}
+	return S_OK;
+}
+
+//---------------------------------------.
+// ディザーテクスチャ作成.
+//---------------------------------------.
+HRESULT CGBufferRender::CreateDitherTexture()
+{
+	if( FAILED( D3DX11CreateShaderResourceViewFromFile(
+		m_pDevice11,	// リソースを使用するデバイスのポインタ.
+		DITHER_TEXTURE_NAME,	// テクスチャパス名.
+		nullptr,
+		nullptr,
+		&m_pDitherTexture,	// (out)テクスチャ.
+		nullptr ))){
+		std::string err = DITHER_TEXTURE_NAME;
+		err += " : テクスチャ読み込み : 失敗";
+		ERROR_MESSAGE( err );
 		return E_FAIL;
 	}
 	return S_OK;

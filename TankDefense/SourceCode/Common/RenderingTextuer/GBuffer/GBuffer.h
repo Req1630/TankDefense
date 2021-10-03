@@ -52,11 +52,15 @@ private:
 	// シャドウ用サンプラーの作成.
 	HRESULT InitShadowSampler();
 
+	// ディザーテクスチャ作成.
+	HRESULT CreateDitherTexture();
+
 private:
-	ID3D11Buffer*		m_pConstantBufferFrame;		// コンスタントバッファ.
-	ID3D11Buffer*		m_pConstantBufferShadow;	// コンスタントバッファ.
-	ID3D11SamplerState*	m_pShadowMapSampler;		// シャドウマップ用サンプラー.
-	CCascadedShadowMap*	m_pShadowMap;				// シングルトン(外部から取得).
+	ID3D11Buffer*				m_pConstantBufferFrame;		// コンスタントバッファ.
+	ID3D11Buffer*				m_pConstantBufferShadow;	// コンスタントバッファ.
+	ID3D11SamplerState*			m_pShadowMapSampler;		// シャドウマップ用サンプラー.
+	CCascadedShadowMap*			m_pShadowMap;				// シングルトン(外部から取得).
+	ID3D11ShaderResourceView*	m_pDitherTexture;			// 通常テクスチャ.
 };
 
 #endif	// #ifndef G_BUFFER_RENDER_H.

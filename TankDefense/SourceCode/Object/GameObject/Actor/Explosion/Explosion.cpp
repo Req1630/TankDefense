@@ -20,7 +20,7 @@ CExplosion::~CExplosion()
 bool CExplosion::Init()
 {
 	m_pStaticMesh = CMeshResorce::GetStatic( "Explosion" );
-	m_pStaticMesh->SetAlpha( 0.5f );
+	m_pStaticMesh->SetAlpha( 0.2f );
 	m_ExplosionCnt = 0;
 	m_IsExplosion = false;
 
