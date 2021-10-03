@@ -1,122 +1,122 @@
-[2021/9/29 11:50] >> App launch
+[2021/10/3 17:36] >> App launch
 
-[11:50:56] >> ウィンドウ作成 : 成功
-[11:50:56] >> DIrectX9デバイス作成 : 成功
-[11:50:56] >> DirectX11デバイス作成 : 成功
-[11:50:56] >> 画像描画クラス作成 : 成功
-[11:50:56] >> 画像描画クラス作成 : 成功
-[11:50:56] >> 画像描画クラス作成 : 成功
-[11:50:57] >> ------ エフェクト読み込み開始 -------
-[11:50:57] >> Data\Effect\barrier_effect\barrier_effect.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\barrier_effect\barrier_effect_9.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\b_attackeffkt\b_attackeffkt.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\c_dead_effect\c_deadEffect.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\Explosion\Explosion.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\hiteffekt\hiteffekt.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\item effect\item_effect_ability.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\item effect\item_effect_attack.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\item effect\item_effect_cure.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\item effect\item_effect_speed.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\itemGet\item_get_ability.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\itemGet\item_get_attack.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\itemGet\item_get_cure.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\itemGet\item_get_speed.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\key\key.efk 読み込み : 成功
-[11:50:57] >> Data\Effect\sand_smoke effect\sandSmoke.efk 読み込み : 成功
-[11:50:58] >> Data\Effect\slash_base\slash_effect.efk 読み込み : 成功
-[11:50:58] >> Data\Effect\slash_effect\slash_effect_1.efk 読み込み : 成功
-[11:50:58] >> Data\Effect\slash_effect\slash_effect_2.efk 読み込み : 成功
-[11:50:58] >> Data\Effect\slash_effect\slash_effect_3.efk 読み込み : 成功
-[11:50:58] >> Data\Effect\spawn effect\spawnEffect.efk 読み込み : 成功
-[11:50:58] >> Data\Effect\test\uvtest.efk 読み込み : 成功
-[11:50:58] >> Data\Effect\ultemate attack effeck\ultemateAttackEffeck.efk 読み込み : 成功
-[11:50:58] >> ------ エフェクト読み込み終了 -------
-[11:50:58] >> ------- スレッドロード開始 ------
-[11:50:58] >> Data\Sprite\Fade.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\Mask.png 読み込み : 成功
-[11:50:59] >> ------ 画像読み込み開始 -------
-[11:50:59] >> Data\Sprite\debugBack.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\DropItem\BeamName.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\DropItem\MachineGunName.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\DropItem\MissileName.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\Fade.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\loadBase.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\GageTest\fire.jpg 読み込み : 成功
-[11:50:59] >> Data\Sprite\GageTest\GageMask.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\hukidasi1.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\loadBase.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\loadUfo.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\Mask.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\pokemon.png 読み込み : 成功
-[11:50:59] >> Data\Sprite\WatercolorPainting\noise.jpg 読み込み : 成功
-[11:50:59] >> Data\Sprite\WatercolorPainting\norm.jpg 読み込み : 成功
-[11:50:59] >> ------ 画像読み込み終了 -------
-[11:50:59] >> ------ メッシュ読み込み開始 -------
-[11:51:0] >> Data\Mesh\Alien\a\a_s.X 読み込み : 成功
-[11:51:1] >> Data\Mesh\Alien\b\b_s.X 読み込み : 成功
-[11:51:2] >> Data\Mesh\Alien\c\c_s.Xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:2] >> Data\Mesh\Alien\c\c_s.X 読み込み : 成功
-[11:51:3] >> Data\Mesh\Alien\d\ultemate_s.X 読み込み : 成功
-[11:51:4] >> Data\Mesh\Boss\dragon_kari_s.X 読み込み : 成功
-[11:51:4] >> Data\Mesh\Box.xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:4] >> Data\Mesh\Box.x 読み込み : 成功
-[11:51:4] >> Data\Mesh\Capsule.xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:4] >> Data\Mesh\Capsule.x 読み込み : 成功
-[11:51:5] >> Data\Mesh\Enemy\enemy_bomb_s.X 読み込み : 成功
-[11:51:6] >> Data\Mesh\Enemy\enemy_normal_s.X 読み込み : 成功
-[11:51:6] >> Data\Mesh\Explosion\Explosion.xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:6] >> Data\Mesh\Explosion\Explosion.x 読み込み : 成功
-[11:51:6] >> Data\Mesh\Item\item_beam.X 読み込み : 成功
-[11:51:6] >> Data\Mesh\Item\item_machingun.X 読み込み : 成功
-[11:51:6] >> Data\Mesh\Item\item_tadan.X 読み込み : 成功
-[11:51:6] >> Data\Mesh\moon\moon.X 読み込み : 成功
-[11:51:8] >> Data\Mesh\Player\kaito\kaito_s.X 読み込み : 成功
-[11:51:8] >> Data\Mesh\Player\tank\beam_houtou_s.X 読み込み : 成功
-[11:51:9] >> Data\Mesh\Player\tank\beam_s.X 読み込み : 成功
-[11:51:9] >> Data\Mesh\Player\tank\houtou.X 読み込み : 成功
-[11:51:9] >> Data\Mesh\Player\tank\machingun_gun.X 読み込み : 成功
-[11:51:10] >> Data\Mesh\Player\tank\machingun_houtou_s.X 読み込み : 成功
-[11:51:11] >> Data\Mesh\Player\tank\machingun_s.X 読み込み : 成功
-[11:51:11] >> Data\Mesh\Player\tank\normal.X 読み込み : 成功
-[11:51:12] >> Data\Mesh\Player\tank\normal_houtou_s.X 読み込み : 成功
-[11:51:13] >> Data\Mesh\Player\tank\normal_s.X 読み込み : 成功
-[11:51:13] >> Data\Mesh\Player\tank\normal_tama.X 読み込み : 成功
-[11:51:13] >> Data\Mesh\Player\tank\syatai.X 読み込み : 成功
-[11:51:14] >> Data\Mesh\Player\tank\syatai_s.X 読み込み : 成功
-[11:51:14] >> Data\Mesh\Player\tank\tadan_gun.X 読み込み : 成功
-[11:51:15] >> Data\Mesh\Player\tank\tadan_houtou_s.X 読み込み : 成功
-[11:51:15] >> Data\Mesh\Player\tank\tadan_s.X 読み込み : 成功
-[11:51:15] >> Data\Mesh\Restraint\Restraint.xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:16] >> Data\Mesh\Restraint\Restraint.x 読み込み : 成功
-[11:51:16] >> Data\Mesh\space\space.X 読み込み : 成功
-[11:51:16] >> Data\Mesh\Sphere.xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:16] >> Data\Mesh\Sphere.x 読み込み : 成功
-[11:51:16] >> Data\Mesh\Stage\stage.X 読み込み : 成功
-[11:51:16] >> Data\Mesh\Stage\StageObject\Ground\Ground.X 読み込み : 成功
-[11:51:16] >> Data\Mesh\Stage\StageObject\Ground\Ground_I.X 読み込み : 成功
-[11:51:16] >> Data\Mesh\Stage\StageObject\Ground\Ground_L.X 読み込み : 成功
-[11:51:16] >> Data\Mesh\Stage\StageObject\itemSpeed.X 読み込み : 成功
-[11:51:16] >> Data\Mesh\Stage\StageObject\Tree\Tree.Xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:16] >> Data\Mesh\Stage\StageObject\Tree\Tree.X 読み込み : 成功
-[11:51:17] >> Data\Mesh\test\normTest.x 読み込み : 成功
-[11:51:17] >> Data\Mesh\test\新しいフォルダー\light.X 読み込み : 成功
-[11:51:17] >> Data\Mesh\test\新しいフォルダー\LightG.x 読み込み : 成功
-[11:51:17] >> Data\Mesh\test\新しいフォルダー\LightR.x 読み込み : 成功
-[11:51:18] >> Data\Mesh\test\素材（仮）\houtou_saki_s.Xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:18] >> Data\Mesh\test\素材（仮）\houtou_saki_s.X 読み込み : 成功
-[11:51:18] >> Data\Mesh\test\素材（仮）\tadan_left.Xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:18] >> Data\Mesh\test\素材（仮）\tadan_left.X 読み込み : 成功
-[11:51:18] >> Data\Mesh\test\素材（仮）\tadan_right.Xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:18] >> Data\Mesh\test\素材（仮）\tadan_right.X 読み込み : 成功
-[11:51:18] >> Data\Mesh\test\素材（仮）\tanku_houtou_nomi.Xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:18] >> Data\Mesh\test\素材（仮）\tanku_houtou_nomi.X 読み込み : 成功
-[11:51:18] >> Data\Mesh\test\素材（仮）\tanku_kari.Xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:18] >> Data\Mesh\test\素材（仮）\tanku_kari.X 読み込み : 成功
-[11:51:18] >> Data\Mesh\test\素材（仮）\tanku_kari_2.Xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:18] >> Data\Mesh\test\素材（仮）\tanku_kari_2.Xにテクスチャがないため別のテクスチャを差し込みます。
-[11:51:18] >> Data\Mesh\test\素材（仮）\tanku_kari_2.X 読み込み : 成功
-[11:51:18] >> Data\Mesh\ufo\ufo.X 読み込み : 成功
-[11:51:18] >> ------ メッシュ読み込み終了 -------
-[11:51:19] >> ------- スレッドロード終了 ------
+[17:36:59] >> ウィンドウ作成 : 成功
+[17:36:59] >> DIrectX9デバイス作成 : 成功
+[17:36:59] >> DirectX11デバイス作成 : 成功
+[17:36:59] >> 画像描画クラス作成 : 成功
+[17:36:59] >> 画像描画クラス作成 : 成功
+[17:36:59] >> 画像描画クラス作成 : 成功
+[17:37:0] >> ------ エフェクト読み込み開始 -------
+[17:37:0] >> Data\Effect\barrier_effect\barrier_effect.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\barrier_effect\barrier_effect_9.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\b_attackeffkt\b_attackeffkt.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\c_dead_effect\c_deadEffect.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\Explosion\Explosion.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\hiteffekt\hiteffekt.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\item effect\item_effect_ability.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\item effect\item_effect_attack.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\item effect\item_effect_cure.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\item effect\item_effect_speed.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\itemGet\item_get_ability.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\itemGet\item_get_attack.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\itemGet\item_get_cure.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\itemGet\item_get_speed.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\key\key.efk 読み込み : 成功
+[17:37:0] >> Data\Effect\sand_smoke effect\sandSmoke.efk 読み込み : 成功
+[17:37:1] >> Data\Effect\slash_base\slash_effect.efk 読み込み : 成功
+[17:37:1] >> Data\Effect\slash_effect\slash_effect_1.efk 読み込み : 成功
+[17:37:1] >> Data\Effect\slash_effect\slash_effect_2.efk 読み込み : 成功
+[17:37:2] >> Data\Effect\slash_effect\slash_effect_3.efk 読み込み : 成功
+[17:37:2] >> Data\Effect\spawn effect\spawnEffect.efk 読み込み : 成功
+[17:37:2] >> Data\Effect\test\uvtest.efk 読み込み : 成功
+[17:37:2] >> Data\Effect\ultemate attack effeck\ultemateAttackEffeck.efk 読み込み : 成功
+[17:37:2] >> ------ エフェクト読み込み終了 -------
+[17:37:2] >> ------- スレッドロード開始 ------
+[17:37:2] >> Data\Sprite\Fade.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\Mask.png 読み込み : 成功
+[17:37:2] >> ------ 画像読み込み開始 -------
+[17:37:2] >> Data\Sprite\debugBack.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\DropItem\BeamName.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\DropItem\MachineGunName.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\DropItem\MissileName.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\Fade.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\loadBase.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\GageTest\fire.jpg 読み込み : 成功
+[17:37:2] >> Data\Sprite\GageTest\GageMask.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\hukidasi1.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\loadBase.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\loadUfo.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\Mask.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\pokemon.png 読み込み : 成功
+[17:37:2] >> Data\Sprite\WatercolorPainting\noise.jpg 読み込み : 成功
+[17:37:2] >> Data\Sprite\WatercolorPainting\norm.jpg 読み込み : 成功
+[17:37:2] >> ------ 画像読み込み終了 -------
+[17:37:3] >> ------ メッシュ読み込み開始 -------
+[17:37:3] >> Data\Mesh\Alien\a\a_s.X 読み込み : 成功
+[17:37:4] >> Data\Mesh\Alien\b\b_s.X 読み込み : 成功
+[17:37:5] >> Data\Mesh\Alien\c\c_s.Xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:5] >> Data\Mesh\Alien\c\c_s.X 読み込み : 成功
+[17:37:6] >> Data\Mesh\Alien\d\ultemate_s.X 読み込み : 成功
+[17:37:7] >> Data\Mesh\Boss\dragon_kari_s.X 読み込み : 成功
+[17:37:7] >> Data\Mesh\Box.xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:7] >> Data\Mesh\Box.x 読み込み : 成功
+[17:37:7] >> Data\Mesh\Capsule.xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:7] >> Data\Mesh\Capsule.x 読み込み : 成功
+[17:37:8] >> Data\Mesh\Enemy\enemy_bomb_s.X 読み込み : 成功
+[17:37:9] >> Data\Mesh\Enemy\enemy_normal_s.X 読み込み : 成功
+[17:37:9] >> Data\Mesh\Explosion\Explosion.xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:9] >> Data\Mesh\Explosion\Explosion.x 読み込み : 成功
+[17:37:9] >> Data\Mesh\Item\item_beam.X 読み込み : 成功
+[17:37:9] >> Data\Mesh\Item\item_machingun.X 読み込み : 成功
+[17:37:9] >> Data\Mesh\Item\item_tadan.X 読み込み : 成功
+[17:37:10] >> Data\Mesh\moon\moon.X 読み込み : 成功
+[17:37:11] >> Data\Mesh\Player\kaito\kaito_s.X 読み込み : 成功
+[17:37:12] >> Data\Mesh\Player\tank\beam_houtou_s.X 読み込み : 成功
+[17:37:13] >> Data\Mesh\Player\tank\beam_s.X 読み込み : 成功
+[17:37:13] >> Data\Mesh\Player\tank\houtou.X 読み込み : 成功
+[17:37:13] >> Data\Mesh\Player\tank\machingun_gun.X 読み込み : 成功
+[17:37:13] >> Data\Mesh\Player\tank\machingun_houtou_s.X 読み込み : 成功
+[17:37:14] >> Data\Mesh\Player\tank\machingun_s.X 読み込み : 成功
+[17:37:14] >> Data\Mesh\Player\tank\normal.X 読み込み : 成功
+[17:37:15] >> Data\Mesh\Player\tank\normal_houtou_s.X 読み込み : 成功
+[17:37:16] >> Data\Mesh\Player\tank\normal_s.X 読み込み : 成功
+[17:37:16] >> Data\Mesh\Player\tank\normal_tama.X 読み込み : 成功
+[17:37:16] >> Data\Mesh\Player\tank\syatai.X 読み込み : 成功
+[17:37:17] >> Data\Mesh\Player\tank\syatai_s.X 読み込み : 成功
+[17:37:17] >> Data\Mesh\Player\tank\tadan_gun.X 読み込み : 成功
+[17:37:18] >> Data\Mesh\Player\tank\tadan_houtou_s.X 読み込み : 成功
+[17:37:19] >> Data\Mesh\Player\tank\tadan_s.X 読み込み : 成功
+[17:37:19] >> Data\Mesh\Restraint\Restraint.xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:19] >> Data\Mesh\Restraint\Restraint.x 読み込み : 成功
+[17:37:19] >> Data\Mesh\space\space.X 読み込み : 成功
+[17:37:19] >> Data\Mesh\Sphere.xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:19] >> Data\Mesh\Sphere.x 読み込み : 成功
+[17:37:19] >> Data\Mesh\Stage\stage.X 読み込み : 成功
+[17:37:20] >> Data\Mesh\Stage\StageObject\Ground\Ground.X 読み込み : 成功
+[17:37:20] >> Data\Mesh\Stage\StageObject\Ground\Ground_I.X 読み込み : 成功
+[17:37:20] >> Data\Mesh\Stage\StageObject\Ground\Ground_L.X 読み込み : 成功
+[17:37:20] >> Data\Mesh\Stage\StageObject\itemSpeed.X 読み込み : 成功
+[17:37:20] >> Data\Mesh\Stage\StageObject\Tree\Tree.Xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:20] >> Data\Mesh\Stage\StageObject\Tree\Tree.X 読み込み : 成功
+[17:37:20] >> Data\Mesh\test\normTest.x 読み込み : 成功
+[17:37:20] >> Data\Mesh\test\新しいフォルダー\light.X 読み込み : 成功
+[17:37:20] >> Data\Mesh\test\新しいフォルダー\LightG.x 読み込み : 成功
+[17:37:20] >> Data\Mesh\test\新しいフォルダー\LightR.x 読み込み : 成功
+[17:37:21] >> Data\Mesh\test\素材（仮）\houtou_saki_s.Xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:21] >> Data\Mesh\test\素材（仮）\houtou_saki_s.X 読み込み : 成功
+[17:37:21] >> Data\Mesh\test\素材（仮）\tadan_left.Xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:21] >> Data\Mesh\test\素材（仮）\tadan_left.X 読み込み : 成功
+[17:37:21] >> Data\Mesh\test\素材（仮）\tadan_right.Xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:21] >> Data\Mesh\test\素材（仮）\tadan_right.X 読み込み : 成功
+[17:37:21] >> Data\Mesh\test\素材（仮）\tanku_houtou_nomi.Xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:21] >> Data\Mesh\test\素材（仮）\tanku_houtou_nomi.X 読み込み : 成功
+[17:37:21] >> Data\Mesh\test\素材（仮）\tanku_kari.Xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:21] >> Data\Mesh\test\素材（仮）\tanku_kari.X 読み込み : 成功
+[17:37:21] >> Data\Mesh\test\素材（仮）\tanku_kari_2.Xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:21] >> Data\Mesh\test\素材（仮）\tanku_kari_2.Xにテクスチャがないため別のテクスチャを差し込みます。
+[17:37:21] >> Data\Mesh\test\素材（仮）\tanku_kari_2.X 読み込み : 成功
+[17:37:22] >> Data\Mesh\ufo\ufo.X 読み込み : 成功
+[17:37:22] >> ------ メッシュ読み込み終了 -------
+[17:37:22] >> ------- スレッドロード終了 ------
 
-[11:52:8] >> App End
+[17:38:40] >> App End

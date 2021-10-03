@@ -158,8 +158,15 @@ void CRenderingTexterManager::Render(
 				ImGui::TreePop();
 			}
 			if( ImGui::TreeNode("Bloom") ){
-				for( int i = 0; i <  m_pBloom->GetSRVCount(); i++ ){
-					ImGui::Image( m_pBloom->GetShaderResourceViewList()[i], imageSize );
+				ID3D11ShaderResourceView* pSRV[] = {
+					m_pBloom->GetShaderResourceViewList()[1],
+					m_pBloom->GetShaderResourceViewList()[3],
+					m_pBloom->GetShaderResourceViewList()[5],
+					m_pBloom->GetShaderResourceViewList()[7],
+					m_pBloom->GetShaderResourceViewList()[9],
+				};
+				for( int i = 0; i <  m_pBloom->GetSRVCount()/2; i++ ){
+					ImGui::Image( pSRV[i], imageSize );
 				}
 				ImGui::TreePop();
 			}
@@ -211,8 +218,15 @@ void CRenderingTexterManager::SynthesizeTexture( ID3D11ShaderResourceView* pSRV 
 	m_pContext11->PSSetShaderResources( 1, 1, &m_pGBuffer->GetShaderResourceViewList()[0] );
 
 	if( bit::IsBitFlag( m_RenderFlag, ERenderFlag_Bloom ) == true ){
+		ID3D11ShaderResourceView* pSRV[] = {
+			m_pBloom->GetShaderResourceViewList()[1],
+			m_pBloom->GetShaderResourceViewList()[3],
+			m_pBloom->GetShaderResourceViewList()[5],
+			m_pBloom->GetShaderResourceViewList()[7],
+			m_pBloom->GetShaderResourceViewList()[9],
+		};
 		// Bloom用のテクスチャを設定.
-		m_pContext11->PSSetShaderResources( 2, m_pBloom->GetSRVCount(), &m_pBloom->GetShaderResourceViewList()[0] );
+		m_pContext11->PSSetShaderResources( 2, m_pBloom->GetSRVCount()/2, &pSRV[0] );
 	}
 
 	m_pContext11->Draw( 4, 0 );

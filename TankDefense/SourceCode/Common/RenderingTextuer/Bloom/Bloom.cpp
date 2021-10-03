@@ -51,28 +51,70 @@ void CBloomRender::Render( const int& srvCount, const std::vector<ID3D11ShaderRe
 	m_pContext11->PSSetShader( m_pPixelShader, nullptr, 0 );	// ピクセルシェーダ.
 	m_pContext11->PSSetSamplers( 0, 1, &m_pSampleLinear );		// サンプラのセット.
 
+	UINT width	= m_WndWidth	/ 2;
+	UINT height	= m_WndHeight	/ 2;
+	float deviation = 2.5f;
+	float m = 1.0f;
 	ID3D11ShaderResourceView* srv = m_pDownSampling->GetShaderResourceViewList()[0];
-	for( int  i = 0; i < BLUR_SAMPLE_NUM; i++ ){
-		// ターゲットビューのクリア.
-		m_pContext11->ClearRenderTargetView( m_pRenderTargetViewList[i], CLEAR_BACK_COLOR );
-		// レンダーターゲットの設定.
-		m_pContext11->OMSetRenderTargets( 1, &m_pRenderTargetViewList[i], CDirectX11::GetDepthSV() );
-		// デプスステンシルバッファ.
-		m_pContext11->ClearDepthStencilView( CDirectX11::GetDepthSV(), D3D11_CLEAR_DEPTH, 1.0f, 0 );
+	for( int  i = 0; i < BLUR_SAMPLE_NUM*2; i+=2 ){
+		// ビューポートの設定.
+		D3D11_VIEWPORT vp;
+		vp.Width	= (FLOAT)width;
+		vp.Height	= (FLOAT)height;
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		vp.TopLeftX = 0.0f;
+		vp.TopLeftY = 0.0f;
 
+		m_pContext11->RSSetViewports( 1, &vp );
 
-		m_pContext11->VSSetConstantBuffers( 0, 1, &m_pConstantBuffersInit[i] );	// 頂点シェーダ.
-		m_pContext11->PSSetConstantBuffers( 0, 1, &m_pConstantBuffersInit[i] );	// ピクセルシェーダー.
+		//=======================================.
+		// 横方向にブラーをかけて描画.
+		// シェーダーのコンスタントバッファに各種データを渡す.
+		D3D11_MAPPED_SUBRESOURCE pData;
+		// バッファ内のデータの書き換え開始時にMap.
+		if( SUCCEEDED( m_pContext11->Map( m_pConstantBufferFrame, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData ))){
+			C_BUFFER_PER_FRAME cb = 
+				CalcBlurParam( { static_cast<float>(width),static_cast<float>(height) }, { 0.0f, 1.0f }, deviation, m );
 
-		m_pContext11->IASetVertexBuffers( 0, 1, &m_pVertexBuffers[i], &stride, &offset );
-
-		m_pContext11->PSSetShaderResources( 0, 1, &srv );
-		m_pContext11->Draw( 4, 0 );
-		std::vector<ID3D11ShaderResourceView*> resetSrvList(1);
-		m_pContext11->PSSetShaderResources( 0, 1, &resetSrvList[0] );
+			// メモリ領域をコピー.
+			memcpy_s( pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb) );
+			m_pContext11->Unmap( m_pConstantBufferFrame, 0 );
+		}
+		Render( i, srv );
 
 		srv = m_pShaderResourceViewList[i];
+
+		//=======================================.
+		// 縦方向にブラーをかけて描画.
+		// バッファ内のデータの書き換え開始時にMap.
+		if( SUCCEEDED( m_pContext11->Map( m_pConstantBufferFrame, 0, D3D11_MAP_WRITE_DISCARD, 0, &pData ))){
+			C_BUFFER_PER_FRAME cb = 
+				CalcBlurParam( { static_cast<float>(width),static_cast<float>(height) }, { 1.0f, 0.0f }, deviation, m );
+
+			// メモリ領域をコピー.
+			memcpy_s( pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb) );
+			m_pContext11->Unmap( m_pConstantBufferFrame, 0 );
+		}
+		Render( i+1, srv );
+
+		width	>>= 1;	if( width	<= 0 ) width	= 1;
+		height	>>= 1;	if( height	<= 0 ) height	= 1;
+		m *= 2.0f;
+
+		srv = m_pShaderResourceViewList[i+1];
 	}
+
+	// ビューポートの設定.
+	D3D11_VIEWPORT vp;
+	vp.Width	= (FLOAT)m_WndWidth;
+	vp.Height	= (FLOAT)m_WndHeight;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0.0f;
+	vp.TopLeftY = 0.0f;
+
+	m_pContext11->RSSetViewports( 1, &vp );
 }
 
 //------------------------------------.
@@ -104,16 +146,22 @@ HRESULT CBloomRender::InitBufferTex()
 	texDesc.CPUAccessFlags		= 0;								// CPUからはアクセスしない.
 	texDesc.MiscFlags			= 0;								// その他の設定なし.
 
-	m_pRenderTargetViewList.resize( BUFFER_COUNT_MAX );
-	m_pShaderResourceViewList.resize( BUFFER_COUNT_MAX );
-	m_pTexture2DList.resize( BUFFER_COUNT_MAX );
+	m_pRenderTargetViewList.resize( BUFFER_COUNT_MAX*2 );
+	m_pShaderResourceViewList.resize( BUFFER_COUNT_MAX*2 );
+	m_pTexture2DList.resize( BUFFER_COUNT_MAX*2 );
 
-	for( int i = 0; i < BUFFER_COUNT_MAX; i++ ){
+	for( int i = 0; i < BUFFER_COUNT_MAX*2; i+=2 ){
 		if( FAILED( CreateBufferTex(
 			texDesc,
 			&m_pRenderTargetViewList[i],
 			&m_pShaderResourceViewList[i],
 			&m_pTexture2DList[i] ))) return E_FAIL;
+		if( FAILED( CreateBufferTex(
+			texDesc,
+			&m_pRenderTargetViewList[i+1],
+			&m_pShaderResourceViewList[i+1],
+			&m_pTexture2DList[i+1] ))) return E_FAIL;
+
 		texDesc.Width	>>= 1;	if( texDesc.Width	<= 0 ) texDesc.Width	= 1;
 		texDesc.Height	>>= 1;	if( texDesc.Height	<= 0 ) texDesc.Height	= 1;
 	}
@@ -121,13 +169,15 @@ HRESULT CBloomRender::InitBufferTex()
 	return S_OK;
 }
 
+//------------------------------------.
 // 頂点バッファーの作成.
+//------------------------------------.
 HRESULT CBloomRender::InitVertexBuffer()
 {
 	UINT width	= m_WndWidth / 2;
 	UINT height	= m_WndHeight / 2;
-	m_pVertexBuffers.resize( BLUR_SAMPLE_NUM );
-	for( int i = 0; i < BUFFER_COUNT_MAX; i++ ){
+	m_pVertexBuffers.resize( BLUR_SAMPLE_NUM*2 );
+	for( int i = 0; i < BUFFER_COUNT_MAX*2; i += 2 ){
 		// 板ポリ(四角形)の頂点を作成.
 		VERTEX vertices[]=
 		{
@@ -161,6 +211,14 @@ HRESULT CBloomRender::InitVertexBuffer()
 			ERROR_MESSAGE( "頂点ﾊﾞｯﾌｧ作成失敗" );
 			return E_FAIL;
 		}
+		// 頂点バッファの作成.
+		if( FAILED( m_pDevice11->CreateBuffer(
+			&bd, 
+			&InitData, 
+			&m_pVertexBuffers[i+1]))){
+			ERROR_MESSAGE( "頂点ﾊﾞｯﾌｧ作成失敗" );
+			return E_FAIL;
+		}
 
 		width	>>= 1;	if( width	<= 0 ) width	= 1;
 		height	>>= 1;	if( height	<= 0 ) height	= 1;
@@ -168,42 +226,130 @@ HRESULT CBloomRender::InitVertexBuffer()
 	return S_OK;
 }
 
+//------------------------------------.
 // コンスタントバッファの作成.
+//------------------------------------.
 HRESULT CBloomRender::InitConstantBuffer()
 {
 
+	// コンスタントバッファの作成.
+	if( FAILED( shader::CreateConstantBuffer( m_pDevice11, &m_pConstantBufferFrame, sizeof(C_BUFFER_PER_FRAME) ))) return  E_FAIL;
+
 	UINT width = m_WndWidth / 2;
 	UINT height = m_WndHeight / 2;
-	m_pConstantBuffersInit.resize( BLUR_SAMPLE_NUM );
-	for( int  i = 0; i < BLUR_SAMPLE_NUM; i++ ){
+	m_pConstantBuffersInit.resize( BLUR_SAMPLE_NUM*2 );
+	for( int  i = 0; i < BLUR_SAMPLE_NUM*2; i+=2 ){
 		// コンスタントバッファの作成.
 		shader::CreateConstantBuffer( m_pDevice11, &m_pConstantBuffersInit[i], sizeof(C_BUFFER_PER_INIT) );
+		shader::CreateConstantBuffer( m_pDevice11, &m_pConstantBuffersInit[i+1], sizeof(C_BUFFER_PER_INIT) );
 
 		// シェーダーのコンスタントバッファに各種データを渡す.
 		D3D11_MAPPED_SUBRESOURCE pData;
 		// バッファ内のデータの書き換え開始時にMap.
-		if( SUCCEEDED( m_pContext11->Map( m_pConstantBuffersInit[i], 0, D3D11_MAP_WRITE_DISCARD, 0, &pData ))){
-			C_BUFFER_PER_INIT cb;	// コンスタントバッファ.
-			D3DXMatrixIdentity( &cb.mW );
-			D3DXMatrixTranspose( &cb.mW, &cb.mW );
-			// ビューポートの幅,高さを渡す.
-			cb.vViewPort.x = static_cast<float>(width);
-			cb.vViewPort.y = static_cast<float>(height);
-			// ピクセルのサイズを渡す.
-			cb.vPixelSize.x = 1.0f / static_cast<float>(width);
-			cb.vPixelSize.y = 1.0f / static_cast<float>(height);
-			// ウィンドウ比率を渡す.
-			cb.vWndRatio.x = static_cast<float>(m_WndWidth/width);
-			cb.vWndRatio.y = static_cast<float>(m_WndHeight/height);
+		C_BUFFER_PER_INIT cb;	// コンスタントバッファ.
+		D3DXMatrixIdentity( &cb.mW );
+		D3DXMatrixTranspose( &cb.mW, &cb.mW );
+		// ビューポートの幅,高さを渡す.
+		cb.vViewPort.x = static_cast<float>(width);
+		cb.vViewPort.y = static_cast<float>(height);
+		// ピクセルのサイズを渡す.
+		cb.vPixelSize.x = 1.0f / static_cast<float>(width);
+		cb.vPixelSize.y = 1.0f / static_cast<float>(height);
+		// ウィンドウ比率を渡す.
+		cb.vWndRatio.x = static_cast<float>(m_WndWidth/width);
+		cb.vWndRatio.y = static_cast<float>(m_WndHeight/height);
 
-			// メモリ領域をコピー.
-			memcpy_s( pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb) );
-			m_pContext11->Unmap( m_pConstantBuffersInit[i], 0 );
-		}
+		if( FAILED( m_pContext11->Map( m_pConstantBuffersInit[i], 0, D3D11_MAP_WRITE_DISCARD, 0, &pData ))) return  E_FAIL;
+		memcpy_s( pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb) );
+		m_pContext11->Unmap( m_pConstantBuffersInit[i], 0 );
+
+		if( FAILED( m_pContext11->Map( m_pConstantBuffersInit[i+1], 0, D3D11_MAP_WRITE_DISCARD, 0, &pData ))) return  E_FAIL;
+		memcpy_s( pData.pData, pData.RowPitch, (void*)(&cb), sizeof(cb) );
+		m_pContext11->Unmap( m_pConstantBuffersInit[i+1], 0 );
 
 		width	>>= 1;	if( width	<= 0 ) width	= 1;
 		height	>>= 1;	if( height	<= 0 ) height	= 1;
 	}
 
 	return S_OK;
+}
+
+//------------------------------------.
+// 描画.
+//------------------------------------.
+void CBloomRender::Render(
+	const int& index,
+	ID3D11ShaderResourceView* pSrv )
+{
+	// ターゲットビューのクリア.
+	m_pContext11->ClearRenderTargetView( m_pRenderTargetViewList[index], CLEAR_BACK_COLOR );
+	// レンダーターゲットの設定.
+	m_pContext11->OMSetRenderTargets( 1, &m_pRenderTargetViewList[index], CDirectX11::GetDepthSV() );
+	// デプスステンシルバッファ.
+	m_pContext11->ClearDepthStencilView( CDirectX11::GetDepthSV(), D3D11_CLEAR_DEPTH, 1.0f, 0 );
+
+	m_pContext11->VSSetConstantBuffers( 0, 1, &m_pConstantBuffersInit[index] );	// 頂点シェーダ.
+	m_pContext11->PSSetConstantBuffers( 0, 1, &m_pConstantBuffersInit[index] );	// ピクセルシェーダー.
+
+	m_pContext11->VSSetConstantBuffers( 1, 1, &m_pConstantBufferFrame );	// 頂点シェーダ.
+	m_pContext11->PSSetConstantBuffers( 1, 1, &m_pConstantBufferFrame );	// ピクセルシェーダー.
+
+	UINT stride = sizeof(VERTEX);
+	UINT offset = 0;
+	m_pContext11->IASetVertexBuffers( 0, 1, &m_pVertexBuffers[index], &stride, &offset );
+
+	m_pContext11->PSSetShaderResources( 0, 1, &pSrv );
+	m_pContext11->Draw( 4, 0 );
+
+	std::vector<ID3D11ShaderResourceView*> resetSrvList(1);
+	m_pContext11->PSSetShaderResources( 0, 1, &resetSrvList[0] );
+}
+
+//------------------------------------.
+// ガウスの重みを計算.
+//------------------------------------.
+float CBloomRender::GaussianDistriBution( const D3DXVECTOR2& pos, const float& rho )
+{
+	return exp( -( pos.x * pos.x + pos.y * pos.y ) / ( 2.0f * rho * rho ));
+}
+
+//------------------------------------.
+// ブラーのパラメータを計算.
+//------------------------------------.
+CBloomRender::C_BUFFER_PER_FRAME CBloomRender::CalcBlurParam( 
+	const D3DXVECTOR2& size, 
+	const D3DXVECTOR2& dir,
+	const float& deviation,
+	const float& multiply )
+{
+	C_BUFFER_PER_FRAME param;
+
+	const float tu = 1.0f / size.x;
+	const float tv = 1.0f / size.y;
+
+	param.Offset[0].x = 0.0f;
+	param.Offset[0].y = 0.0f;
+	param.Offset[0].z = GaussianDistriBution( { 0.0f, 0.0f }, deviation ) * multiply;
+
+	float totalWeight = param.Offset[0].z;
+
+	for( int i = 1; i < param.HALF_NUM_OFFSET; i++ ){
+		param.Offset[i].x = dir.x * i * tu;
+		param.Offset[i].y = dir.y * i * tv;
+		param.Offset[i].z = GaussianDistriBution( dir * static_cast<float>(i), deviation ) * multiply;
+
+		totalWeight += param.Offset[0].z * 2.0f;
+	}
+
+	for( int i = 0; i < param.HALF_NUM_OFFSET; i++ ){
+		param.Offset[i].z /= totalWeight;
+	}
+
+	for( int i = param.HALF_NUM_OFFSET; i < param.NUM_OFFSET-1; i++ ){
+		param.Offset[i].x = -param.Offset[i-7].x;
+		param.Offset[i].y = -param.Offset[i-7].y;
+		param.Offset[i].z =  param.Offset[i-7].z;
+	}
+
+	return param;
 }
