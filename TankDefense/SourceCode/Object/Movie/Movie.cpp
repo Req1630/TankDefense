@@ -11,6 +11,7 @@ CMovie::CMovie()
 	, m_CameraStateList		()
 	, m_pWidgetList			()
 	, m_PlayTime			( 0.0f )
+	, m_IsPlayMovie			( false )
 {
 }
 
@@ -42,6 +43,7 @@ void CMovie::Play()
 {
 	SettingCamera();
 	for( auto& w : m_pWidgetList ) w->Play();
+	m_IsPlayMovie = true;
 }
 
 //--------------------------.
@@ -49,9 +51,14 @@ void CMovie::Play()
 //--------------------------.
 void CMovie::Update()
 {
+	if( m_IsPlayMovie == false ) return;
+
 	const float deltaTime = GetDeltaTime();
 
-	if( m_PlayTime <= 0.0f ) return;
+	if( m_PlayTime <= 0.0f ){
+		m_IsPlayMovie = false;
+		return;
+	}
 
 	m_pCamera->Update( deltaTime );
 	m_pActorManager->Update();
@@ -78,6 +85,8 @@ void CMovie::Update()
 //--------------------------.
 void CMovie::ModelRender()
 {
+	if( m_IsPlayMovie == false ) return;
+
 	m_pActorManager->ModelRender();
 }
 
@@ -86,6 +95,8 @@ void CMovie::ModelRender()
 //--------------------------.
 void CMovie::SpriteRender()
 {
+	if( m_IsPlayMovie == false ) return;
+
 	for( auto& w : m_pWidgetList ) w->Render();
 }
 

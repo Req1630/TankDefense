@@ -74,7 +74,7 @@ public:
 		const char* fileName );
 
 	// •`‰æŠÖ”.
-	void Render();
+	void Render( const D3DXMATRIX* pRot = nullptr );
 
 	// ƒƒbƒVƒ…‚Ìæ“¾.
 	inline LPD3DXMESH GetMesh() const { return m_pMeshForRay; }

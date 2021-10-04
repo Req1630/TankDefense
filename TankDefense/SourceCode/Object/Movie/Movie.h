@@ -63,6 +63,7 @@ private:
 	std::vector<SMovieCamera>					m_CameraStateList;
 	std::vector<std::unique_ptr<CMovieWidget>>	m_pWidgetList;
 	float										m_PlayTime;
+	bool										m_IsPlayMovie;
 };
 
 #endif	// #ifndef MOVIE_H.

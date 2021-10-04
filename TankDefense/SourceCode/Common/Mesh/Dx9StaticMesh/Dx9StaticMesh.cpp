@@ -412,10 +412,10 @@ HRESULT CDX9StaticMesh::InitShader()
 }
 
 // 描画関数.
-void CDX9StaticMesh::Render()
+void CDX9StaticMesh::Render( const D3DXMATRIX* pRot )
 {
 	// ワールド行列.
-	D3DXMATRIX mWorld = m_Tranceform.GetWorldMatrix();
+	D3DXMATRIX mWorld = m_Tranceform.GetWorldMatrix( pRot );
 
 	// 頂点インプットレイアウトをセット.
 	m_pContext11->IASetInputLayout( m_pVertexLayout );

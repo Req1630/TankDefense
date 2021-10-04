@@ -128,7 +128,7 @@ public:
 	//Xファイルからスキンメッシュを作成する.
 	HRESULT LoadXMesh( const char* fileName );
 	//描画関数.
-	void Render( SAnimationController* pAC=NULL );
+	void Render( SAnimationController* pAC=NULL, const D3DXMATRIX* pRot = nullptr  );
 	//解放関数.
 	HRESULT Release();
 
@@ -237,9 +237,9 @@ private:
 	D3DXMATRIX GetCurrentPoseMatrix( SKIN_PARTS_MESH* pParts, int index );
 
 	//フレーム描画.
-	void DrawFrame( LPD3DXFRAME pFrame );
+	void DrawFrame( LPD3DXFRAME pFrame, const D3DXMATRIX* pRot );
 	//パーツ描画.
-	void DrawPartsMesh( SKIN_PARTS_MESH* p, D3DXMATRIX World, MYMESHCONTAINER* pContainer );
+	void DrawPartsMesh( SKIN_PARTS_MESH* p, D3DXMATRIX World, MYMESHCONTAINER* pContainer, const D3DXMATRIX* pRot );
 	void DrawPartsMeshStatic( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYMESHCONTAINER* pContainer );
 
 	// アニメーションの更新.

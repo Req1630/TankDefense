@@ -14,13 +14,16 @@
 #include "..\..\..\Utility\XAudio2\SoundManager.h"
 #include "..\..\..\Resource\SpriteResource\SpriteResource.h"
 #include "..\..\..\Object\GameObject\ActorManager\GameActorManager.h"
+#include "..\..\..\Object\Movie\Movie.h"
 
 CTitle::CTitle( CSceneManager* pSceneManager )
 	: CSceneBase		( pSceneManager )
 	, m_pStaticMesh		( nullptr )
 	, m_pGameObjManager	( nullptr )
+	, m_pMovie			( nullptr )
 {
 	m_pGameObjManager = std::make_unique<CGameActorManager>();
+	m_pMovie = std::make_unique<CMovie>();
 }
 
 CTitle::~CTitle()
@@ -35,6 +38,9 @@ bool CTitle::Load()
 	m_pStaticMesh = CMeshResorce::GetStatic("stage");
 	if( m_pGameObjManager->Init() == false ) return false;
 
+	// 再生したいムービー番号を指定して初期化.
+	m_pMovie->Init( EMovieNo::EnemySpawn );
+
 	return true;
 }
 
@@ -45,6 +51,13 @@ void CTitle::Update()
 {
 	m_DeltaTime = GetDeltaTime();
 	m_pGameObjManager->Update();
+
+	// 任意の箇所で再生.
+	if( CKeyInput::IsMomentPress('O') ) m_pMovie->Play();
+
+	m_pMovie->Update();
+
+
 	if( CKeyInput::IsPress('K') ){
 		SetEditSceneChange();
 	}
@@ -55,14 +68,10 @@ void CTitle::Update()
 //============================.
 void CTitle::ModelRender()
 {
-	static float alpha = 1.0f;
-
-	if( CKeyInput::IsPress('O') ) alpha += 0.001f;
-	if( CKeyInput::IsPress('L') ) alpha -= 0.001f;
-
-	m_pStaticMesh->SetAlpha( alpha );
 	m_pStaticMesh->Render();
 	m_pGameObjManager->Render();
+
+	m_pMovie->ModelRender();
 }
 
 //============================.
@@ -70,6 +79,7 @@ void CTitle::ModelRender()
 //============================.
 void CTitle::SpriteRender()
 {
+	m_pMovie->SpriteRender();
 }
 
 //============================.

@@ -380,7 +380,7 @@ HRESULT CDX9SkinMesh::CreateIndexBuffer( DWORD dwSize, int* pIndex, ID3D11Buffer
 }
 
 //レンダリング.
-void CDX9SkinMesh::Render( SAnimationController* pAC )
+void CDX9SkinMesh::Render( SAnimationController* pAC, const D3DXMATRIX* pRot )
 {
 	m_mView		= CCameraManager::GetViewMatrix();
 	m_mProj		= CCameraManager::GetProjMatrix();
@@ -393,7 +393,7 @@ void CDX9SkinMesh::Render( SAnimationController* pAC )
 	D3DXMATRIX m;
 	D3DXMatrixIdentity( &m );
 	m_pD3dxMesh->UpdateFrameMatrices( m_pD3dxMesh->m_pFrameRoot, &m );
-	DrawFrame( m_pD3dxMesh->m_pFrameRoot );
+	DrawFrame( m_pD3dxMesh->m_pFrameRoot, pRot );
 }
 
 
@@ -691,7 +691,7 @@ D3DXMATRIX CDX9SkinMesh::GetCurrentPoseMatrix( SKIN_PARTS_MESH* pParts, int inde
 
 
 //フレームの描画.
-VOID CDX9SkinMesh::DrawFrame( LPD3DXFRAME p )
+VOID CDX9SkinMesh::DrawFrame( LPD3DXFRAME p, const D3DXMATRIX* pRot )
 {
 	MYFRAME*			pFrame	= (MYFRAME*)p;
 	SKIN_PARTS_MESH*	pPartsMesh	= pFrame->pPartsMesh;
@@ -702,27 +702,28 @@ VOID CDX9SkinMesh::DrawFrame( LPD3DXFRAME p )
 		DrawPartsMesh(
 			pPartsMesh, 
 			pFrame->CombinedTransformationMatrix,
-			pContainer );
+			pContainer,
+			pRot );
 	}
 
 	//再帰関数.
 	//(兄弟)
 	if( pFrame->pFrameSibling != nullptr )
 	{
-		DrawFrame( pFrame->pFrameSibling );
+		DrawFrame( pFrame->pFrameSibling, pRot );
 	}
 	//(親子)
 	if( pFrame->pFrameFirstChild != nullptr )
 	{
-		DrawFrame( pFrame->pFrameFirstChild );
+		DrawFrame( pFrame->pFrameFirstChild, pRot );
 	}
 }
 
 //パーツメッシュを描画.
-void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYMESHCONTAINER* pContainer )
+void CDX9SkinMesh::DrawPartsMesh( SKIN_PARTS_MESH* pMesh, D3DXMATRIX World, MYMESHCONTAINER* pContainer, const D3DXMATRIX* pRot )
 {
 	//ワールド行列.
-	m_mWorld = m_Tranceform.GetWorldMatrix();
+	m_mWorld = m_Tranceform.GetWorldMatrix( pRot );
 
 	std::function<void()> func = [&]()
 	{

@@ -9,6 +9,7 @@
 
 //class CPlayer;
 class CGameActorManager;
+class CMovie;
 
 /**********************************
 *	タイトルシーンクラス.
@@ -34,6 +35,7 @@ private:
 	float m_DeltaTime;
 	CDX9StaticMesh*	m_pStaticMesh;
 	std::unique_ptr<CGameActorManager>	m_pGameObjManager;	// ゲームオブジェクト管理クラス.
+	std::unique_ptr<CMovie>				m_pMovie;
 };
 
 #endif	// #ifndef TITLE_H.

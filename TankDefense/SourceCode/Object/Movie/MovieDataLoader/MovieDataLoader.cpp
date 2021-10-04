@@ -39,7 +39,7 @@ CMovieDataLoader::~CMovieDataLoader()
 bool CMovieDataLoader::Init( const bool& isAllData )
 {
 	if( InitDataPathList() == false ) return false;
-	if( isAllData == false ) return false;
+//	if( isAllData == false ) return false;
  	if( InitDataList() == false ) return false;
 
 	return true;

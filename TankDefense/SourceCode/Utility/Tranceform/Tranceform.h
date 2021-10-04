@@ -35,14 +35,18 @@ struct stTranceform
 	{}
 
 	//　ワールド行列, スケール行列, 回転行列, 平行移動行列.
-	D3DXMATRIX GetWorldMatrix() const
+	D3DXMATRIX GetWorldMatrix( const D3DXMATRIX* pRot = nullptr ) const
 	{
 		D3DXMATRIX mScale, mRot, mTran;
 
 		// 拡大縮小行列作成.
 		D3DXMatrixScaling( &mScale, Scale.x, Scale.y, Scale.z );
 		// 回転行列を作成.
-		D3DXMatrixRotationYawPitchRoll( &mRot, Rotation.y, Rotation.x, Rotation.z );
+		if( pRot == nullptr ){
+			D3DXMatrixRotationYawPitchRoll( &mRot, Rotation.y, Rotation.x, Rotation.z );
+		} else {
+			mRot = *pRot;
+		}
 		// 平行移動行列.
 		D3DXMatrixTranslation( &mTran, Position.x, Position.y, Position.z );
 
